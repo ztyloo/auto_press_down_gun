@@ -6,11 +6,11 @@ from PIL import ImageGrab
 import itchat
 
 
-shield = cv2.imread('shield.png')
+shield = cv2.imread('part_screen_capture/shield.png')
 shield = shield / 255.0
 
-origin = cv2.imread('origin.png')
-itchat.login()
+origin = cv2.imread('part_screen_capture/origin.png')
+# itchat.login()
 if len(os.listdir('cap')) == 0:
     i = 0
 else:
@@ -25,7 +25,7 @@ while True:
     ryanshuai_grab = screen[46:81, 1620:1818, :]
 
     if np.sum(abs(ryanshuai_grab-origin) * shield) < 10:
-        itchat.send('is Ryanshuai   ' + str(i), 'filehelper')
+        # itchat.send('is Ryanshuai   ' + str(i), 'filehelper')
         print('is Ryanshuai   ' + str(i))
         cv2.imwrite('cap/'+str(i)+'.png', screen)
         i = i+1
