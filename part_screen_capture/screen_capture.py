@@ -28,6 +28,6 @@ while True:
         # itchat.send('is Ryanshuai   ' + str(i), 'filehelper')
         print('is Ryanshuai   ' + str(i))
         cv2.imwrite('cap/'+str(i)+'.png', screen)
-        i = i+1
+        i = i + 1
         time.sleep(10)
 
