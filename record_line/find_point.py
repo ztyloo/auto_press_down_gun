@@ -47,13 +47,15 @@ class Find:
         return 0, 0
 
     def is_point(self,area, y, x):
-        for i in range(-10, 11):
+        g_ = 30
+        l_ = 9
+        for i in range(-l_, l_+1):
             r, g, b = area[y, x+i]
-            if r>30 or g>30 or b>30:
+            if r>g_ or g>g_ or b>g_:
                 return False
-        for j in range(-10, 11):
+        for j in range(-l_, l_+1):
             r, g, b = area[y+j, x]
-            if r>30 or g>30 or b>30:
+            if r>g_ or g>g_ or b>g_:
                 return False
         return True
 

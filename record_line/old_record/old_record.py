@@ -1,10 +1,8 @@
-import time
 from pymouse import PyMouseEvent
 from pykeyboard import PyKeyboardEvent, PyKeyboard
-import pyautogui as pag
 
 from record_line.find_point import Find
-from record_line.record_press import mouse_move_rel
+from record_line.old_record.record_press import mouse_move_rel
 
 
 class Mouse_listern(PyMouseEvent):
