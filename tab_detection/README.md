@@ -1,2 +1,0 @@
-# auto_press_down_gun
-

@@ -3,79 +3,95 @@ user:
   x1: 1818
   y0: 46
   y1: 81
+  dir:
 helmet:
-  x0: 233
-  x1: 311
-  y0: 1319
-  y1: 1397
+  x0: 1319
+  x1: 1397
+  y0: 233
+  y1: 311
+  dir:
 pack:
-  x0: 496
-  x1: 574
-  y0: 1319
-  y1: 1397
+  x0: 1319
+  x1: 1397
+  y0: 496
+  y1: 574
+  dir:
 armor:
-  x0: 585
-  x1: 663
-  y0: 1319
-  y1: 1397
-weapen0:
+  x0: 1319
+  x1: 1397
+  y0: 585
+  y1: 663
+  dir:
+weapon:
   x0: 2231
   x1: 2553
   y0: 186
   y1: 226
-weapen1:
+  dir:
+_weapon:
   x0: 2231
   x1: 2553
   y0: 470
   y1: 510
-w0_muzzle:
+  dir:
+muzzle:
   x0: 2191
   x1: 2256
   y0: 380
   y1: 445
-w0_grip:
+  dir:
+grip:
   x0: 2191
   x1: 2256
   y0: 380
   y1: 445
-w0_magazine:
+  dir:
+magazine:
   x0: 2474
   x1: 2539
   y0: 380
   y1: 445
-w0_scope:
+  dir:
+scope:
   x0: 2554
   x1: 2619
   y0: 206
   y1: 271
-w0_butt:
+  dir:
+butt:
   x0: 2756
   x1: 2821
   y0: 380
   y1: 445
-w1_muzzle:
+  dir:
+_muzzle:
   x0: 2191
   x1: 2256
   y0: 664
   y1: 729
-w1_grip:
+  dir:
+_grip:
   x0: 2191
   x1: 2256
   y0: 664
   y1: 729
-w1_magazine:
+  dir:
+_magazine:
   x0: 2474
   x1: 2539
   y0: 664
   y1: 729
-w1_scope:
+  dir:
+_scope:
   x0: 2554
   x1: 2619
   y0: 490
   y1: 555
-w1_butt:
+  dir:
+_butt:
   x0: 2756
   x1: 2821
   y0: 664
   y1: 729
+  dir:
 
