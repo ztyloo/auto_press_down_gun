@@ -1,8 +1,16 @@
 import time
+import os
 import cv2
 import numpy as np
 from PIL import ImageGrab
 from pykeyboard import PyKeyboardEvent
+
+
+# if len(os.listdir('cap')) == 0:
+#     i = 0
+# else:
+#     i = max(os.listdir('cap'), key=lambda x: int(x[:-4]))
+#     i = int(i[:-4])
 
 
 class Key_listener(PyKeyboardEvent):
