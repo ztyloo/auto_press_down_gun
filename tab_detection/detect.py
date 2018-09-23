@@ -7,7 +7,7 @@ import yaml
 
 class Tab:
     def __init__(self):
-        self.yml = yaml.load(open("tab_position.yaml"))
+        self.yml = yaml.load(open("tab_detection/tab_position.yaml"))
         self.tab_dict = dict()
         self.png_dict = dict()
         self._fill_png_dict()
@@ -20,7 +20,8 @@ class Tab:
 
     def _fill_png_dict(self):
         for k, v in self.yml.items():
-            png_dir = os.path.join('pos', k)
+            dir = 'tab_detection/pos'
+            png_dir = os.path.join(dir, k)
             if os.path.exists(png_dir):  # weapon/scope/...
                 tmp_dict = dict()
                 for png_name in os.listdir(png_dir):   # png name
@@ -73,6 +74,10 @@ class Tab:
             else:
                 self.scope_time = int(scope)
             print(self.scope_time)
+            if self.gun_name != 'none':
+                return True
+
+        return False
 
 
 

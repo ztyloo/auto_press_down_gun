@@ -10,9 +10,9 @@ class Auto_down(Thread):
         super().__init__()
         self.m_listener = Mouse_listern(self.click_handler)
         self.k = PyKeyboard()
-        with open('../generate_distance/gun_distance.yaml', 'r') as f:
+        with open('generate_distance/gun_distance.yaml', 'r') as f:
             self.dis_dict = yaml.load(f)
-        with open('time_interval.yaml', 'r') as f:
+        with open('auto_press_gun/time_interval.yaml', 'r') as f:
             self.interval_dict = yaml.load(f)
 
     def reset(self, gun_name: str, scope: int):
@@ -40,9 +40,11 @@ class Auto_down(Thread):
             self.timer.cancel()
 
     def run(self):
+        print('press start')
         self.m_listener.run()
 
     def stop(self):
+        print('press stop')
         self.m_listener.stop()
 
 
