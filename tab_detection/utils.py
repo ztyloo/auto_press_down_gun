@@ -9,3 +9,9 @@ def get_pos(yml: yaml, pos: str, im: np.ndarray):
     y0 = yml[pos]['y0']
     y1 = yml[pos]['y1']
     return im[y0: y1, x0: x1, :]
+
+
+import itchat
+
+itchat.login()
+itchat.send(u'你好', 'filehelper')

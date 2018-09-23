@@ -14,5 +14,3 @@ class Tab_Listener(PyKeyboardEvent):
     def escape(self, event):
         return False
 
-
-# def test_user_name

@@ -19,6 +19,9 @@ class Tab:
         self._fill_png_dict()
         self.tab_listener = Tab_Listener(self.tab_down_func)
 
+        self.gun_name = 'none'
+        self.scope_time = 1
+
     def _fill_png_dict(self):
         for k, v in self.yml.items():
             png_dir = os.path.join('pos', k)
@@ -41,37 +44,55 @@ class Tab:
         return im[y0: y1, x0: x1, :]
 
     def detect(self, pos: str):
-        test_im = self.get_pos_im(pos)
+        test_im_ = self.get_pos_im(pos)
         for k, v in self.png_dict[pos].items():
+            test_im = test_im_
             target_im = v[:, :, 0:3]
             shield = v[:, :, [3]]//255
 
             test_im = test_im*shield
             target_im = target_im*shield
 
-            # cv2.imshow('test_im', test_im)
-            # cv2.waitKey(2000)
             # cv2.imshow('target_im', target_im)
             # cv2.waitKey(2000)
+            # cv2.imshow('test_im', test_im)
+            # cv2.waitKey(2000)
+            # print(np.sum(test_im - target_im))
 
-            if np.sum(test_im - target_im) < 10:
+            if np.sum(test_im - target_im) < 5000:
+                # print(np.sum(test_im - target_im))
                 return k
         return 'none'
 
     def tab_down_func(self):
-        screen = ImageGrab.grab()
-        screen = np.array(screen)
-        self.now_screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+        # screen = ImageGrab.grab()
+        # screen = np.array(screen)
+        # self.now_screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+        if self.detect('user') == 'Ryanshuai':
+            self.gun_name = self.detect('weapon')
+            print(self.gun_name)
+
+            scope = self.detect('scope')
+            if scope == 'none':
+                self.scope_time = 1
+            else:
+                self.scope_time = int(scope)
+            print(self.scope_time)
+
 
 
 if __name__ == '__main__':
     t = Tab()
-    t.tab_down_func()
-    t.now_screen = cv2.imread('2.png')
-    det = t.detect('user')
-    print(det)
-    det = t.detect('weapon')
-    print(det)
-    det = t.detect('scope')
-    print(det)
-    print()
+    dir = 'pos_from/weapon'
+    for im_name in os.listdir(dir):
+        im_path = os.path.join(dir, im_name)
+        t.now_screen = cv2.imread(im_path)
+
+        t.tab_down_func()
+
+        # det = t.detect('user')
+        # print(det)
+        # det = t.detect('weapon')
+        # print(det)
+        # det = t.detect('scope')
+        # print(det)
