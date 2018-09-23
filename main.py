@@ -17,7 +17,6 @@ class Key_Listener(PyKeyboardEvent):
         self.b = Bb()
         self.ad = Auto_down()
         self.t_set = False
-        self.not_start = True
 
     def tap(self, keycode, character, press):
         if keycode == 9 and press:
@@ -32,14 +31,11 @@ class Key_Listener(PyKeyboardEvent):
             self.b.set_screen(screen)
             self.b.test()
             if self.b.mode == 'full':
-                if self.not_start:
-                    print('start press')
-                    self.ad.start()
-                    self.not_start = False
+                self.ad.start()
             else:
-                self.not_start = True
                 print('stop press')
                 self.ad.stop()
+                self.ad = Auto_down()
 
     def get_screen(self):
         screen = ImageGrab.grab()
