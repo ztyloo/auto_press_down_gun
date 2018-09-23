@@ -3,13 +3,6 @@ import os
 import yaml
 import numpy as np
 
-def get_pos_im(yml: yaml, pos: str, im: np.ndarray):
-    x0 = yml[pos]['x0']
-    x1 = yml[pos]['x1']
-    y0 = yml[pos]['y0']
-    y1 = yml[pos]['y1']
-    return im[y0: y1, x0: x1, :]
-
 
 def get_shield(im: np.ndarray):
     im_1 = im.max(axis=-1)
@@ -27,7 +20,7 @@ yml = yaml.load(open("tab_position.yaml"))
 pos_from = 'pos_'
 to_pos = 'pos'
 
-name_filter = ['weapon']
+name_filter = ['weapon', 'user']
 for dir in os.listdir(pos_from):
     if dir in name_filter:
         to_a_dir = os.path.join(to_pos, dir)

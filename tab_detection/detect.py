@@ -48,7 +48,13 @@ class Tab:
 
             test_im = test_im*shield
             target_im = target_im*shield
-            if np.all(test_im == target_im):
+
+            # cv2.imshow('test_im', test_im)
+            # cv2.waitKey(2000)
+            # cv2.imshow('target_im', target_im)
+            # cv2.waitKey(2000)
+
+            if np.sum(test_im - target_im) < 10:
                 return k
         return 'none'
 
@@ -58,8 +64,14 @@ class Tab:
         self.now_screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
 
 
-t = Tab()
-t.tab_down_func()
-t.now_screen = cv2.imread('2.png')
-t.detect('weapon')
-print()
+if __name__ == '__main__':
+    t = Tab()
+    t.tab_down_func()
+    t.now_screen = cv2.imread('2.png')
+    det = t.detect('user')
+    print(det)
+    det = t.detect('weapon')
+    print(det)
+    det = t.detect('scope')
+    print(det)
+    print()
