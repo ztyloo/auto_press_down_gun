@@ -75,6 +75,8 @@ class Tab:
             else:
                 self.scope_time = int(scope)
             print(self.scope_time)
+            return True
+        return False
 
 
 

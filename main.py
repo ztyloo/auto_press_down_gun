@@ -1,7 +1,7 @@
+import threading
+import time
 import cv2
 import numpy as np
-
-
 from PIL import ImageGrab
 from pykeyboard import PyKeyboardEvent
 
@@ -17,26 +17,32 @@ class Key_Listener(PyKeyboardEvent):
         self.b = Bb()
         self.ad = Auto_down()
         self.t_set = False
+        self.gun_name = 'none'
+        self.scope_time = 1
 
     def tap(self, keycode, character, press):
-        if keycode == 9 and press:
+        if keycode == 9 and press:  # tab
+            self.ad.m_listener_stop()
             screen = self.get_screen()
             self.t.set_screen(screen)
-            self.t.test()
-            if self.t.gun_name != 'none':
-                self.ad.reset(self.t.gun_name, self.t.scope_time)
-                self.t_set = True
+            if self.t.test():
+                self.gun_name = self.t.gun_name
+                self.scope_time = self.t.scope_time
+                threading.Timer(0.5, self.check_fire_mode).start()
 
-        if keycode == 66 and not press and self.t_set:
-            screen = self.get_screen()
-            self.b.set_screen(screen)
-            self.b.test()
-            if self.b.mode == 'full':
-                self.ad.start()
-            else:
-                print('stop press')
-                self.ad.stop()
-                self.ad = Auto_down()
+        if keycode == 66 and not press:
+            self.check_fire_mode()
+
+    def check_fire_mode(self):
+        screen = self.get_screen()
+        self.b.set_screen(screen)
+        self.b.test()
+        if self.b.mode == 'full' and self.gun_name != 'none':
+            self.ad.reset(self.gun_name, self.scope_time)
+            self.ad.m_listener_run()
+        else:
+            print('stop press')
+            self.ad.m_listener_stop()
 
     def get_screen(self):
         screen = ImageGrab.grab()

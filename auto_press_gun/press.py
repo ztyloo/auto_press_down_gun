@@ -5,7 +5,7 @@ from auto_press_gun.my_timer import MyTimer
 from auto_press_gun.press_down_distence import Down_distence
 from auto_press_gun.press_utiles import *
 
-class Auto_down(Thread):
+class Auto_down:
     def __init__(self):
         self.no_start = True
         super().__init__()
@@ -24,7 +24,7 @@ class Auto_down(Thread):
         self.timer = MyTimer(x_interval, self.timer_handler)
 
     def timer_handler(self):
-        print('down')
+        # print('down')
         down_dis = self.dis.pop()
         mouse_down(down_dis)
 
@@ -40,11 +40,11 @@ class Auto_down(Thread):
             self.dis.reset()
             self.timer.cancel()
 
-    def run(self):
+    def m_listener_run(self):
         print('press start')
         self.m_listener.run()
 
-    def stop(self):
+    def m_listener_stop(self):
         print('press stop')
         self.m_listener.stop()
         self.m_listener = Mouse_listern(self.click_handler)
@@ -54,4 +54,4 @@ if __name__ == '__main__':
 
     ad = Auto_down()
     ad.reset('scar', 1)
-    ad.run()
+    ad.m_listener_run()
