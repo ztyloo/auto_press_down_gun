@@ -62,10 +62,10 @@ class Find:
 
 if __name__ == '__main__':
     f = Find()
-    screen = cv2.imread('screens/test_point.png')
+    screen = cv2.imread('scar/test_point.png')
     i, j = f.find_upper(screen)
     screen = cv2.circle(screen, (i, j), 5, (0, 0, 255), thickness=20)
 
     i, j = f.find_lower(screen)
     screen = cv2.circle(screen, (i, j), 5, (0, 0, 255), thickness=20)
-    cv2.imwrite('screens/' + '_' + str(1) + '.png', screen)
+    cv2.imwrite('scar/' + '_' + str(1) + '.png', screen)

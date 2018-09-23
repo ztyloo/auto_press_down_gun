@@ -27,7 +27,7 @@ class Key_listern(PyKeyboardEvent):
             self.t.cancel()
             self.t1 = time.time()
             print(self.t1-self.t0)
-            self.sc.save('screens/')
+            self.sc.save('scar/')
 
 
 kl = Key_listern()

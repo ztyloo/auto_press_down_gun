@@ -45,4 +45,4 @@ if __name__ == '__main__':
         sc.shot()
     t1 = time.time()
     print(t1-t0)
-    sc.save('screens/')
+    sc.save('scar/')
