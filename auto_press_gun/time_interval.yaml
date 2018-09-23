@@ -1,10 +1,12 @@
 akm: !!float 0.1
 m762: !!float 0.086
+groza: !!float 0.08
 
 m416: !!float 0.086
 scar: !!float 0.096
 m16:  !!float 0.075
 qbz: !!float 0.092
+aug: !!float 0.09
 
 vector: !!float 0.055
 ump9: !!float 0.092

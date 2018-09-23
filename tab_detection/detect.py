@@ -59,6 +59,8 @@ class Tab:
 
     def detect(self, pos: str):
         test_im = self.get_pos_im(pos)
+        if pos[0] == '_':
+            pos = pos[1:]
         for k, v in self.png_dict[pos].items():
             if self.im_area_sum(test_im, v) < 5000:
                 return k
@@ -67,7 +69,9 @@ class Tab:
     def test(self):
         if self.detect('user') == 'Ryanshuai':
             self.gun_name = self.detect('weapon')
+            self.gun_name_ = self.detect('_weapon')
             print(self.gun_name)
+            print(self.gun_name_)
 
             scope = self.detect('scope')
             if scope == 'none':
@@ -75,6 +79,14 @@ class Tab:
             else:
                 self.scope_time = int(scope)
             print(self.scope_time)
+
+            scope_ = self.detect('_scope')
+            if scope_ == 'none':
+                self.scope_time_ = 1
+            else:
+                self.scope_time_ = int(scope_)
+            print(self.scope_time_)
+
             return True
         return False
 
