@@ -7,10 +7,15 @@ class Screen:
         hdesktop = win32gui.GetDesktopWindow()
         self.desktop_dc = win32gui.GetWindowDC(hdesktop)
 
-        self.top = 625
-        self.left = 1709
-        self.w = 20
-        self.h = 100
+        # self.top = 625
+        # self.left = 1709
+        # self.w = 20
+        # self.h = 100
+
+        self.top = 1130
+        self.left = 1519
+        self.w = 400
+        self.h = 22
 
         self.dc_list = []
         self.bitmap_list = []
@@ -37,12 +42,12 @@ class Screen:
 
 
 if __name__ == '__main__':
-    # time.sleep(10)
+    time.sleep(5)
     sc = Screen()
 
     t0 = time.time()
-    for i in range(1000):
+    for i in range(100):
         sc.shot()
     t1 = time.time()
     print(t1-t0)
-    sc.save('scar/')
+    sc.save('test/')

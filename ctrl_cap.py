@@ -27,9 +27,7 @@ class Key_listener(PyKeyboardEvent):
             cv2.imwrite('ctrl_cap/' + str(self.i) + '.png', screen)
             self.i += 1
 
-            print(keycode)
-            print(character)
-            print(press)
+            print(keycode, press)
 
 
     def escape(self, event):

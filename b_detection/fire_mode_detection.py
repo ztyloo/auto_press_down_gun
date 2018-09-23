@@ -18,63 +18,58 @@ class Bb:
         self.screen = screen
 
     def test(self):
-        test_im = self.screen[1130: 1152, 1519: 1920, :]
-
-        if self.im_area_sum(test_im, self.target_single) < 100000:
-            print('single')
+        test_im = self.screen[1318: 1339, 1595: 1677, :]
+        s_area = self.im_area_sum(test_im, self.target_single)
+        b_area = self.im_area_sum(test_im, self.target_burst)
+        f_area = self.im_area_sum(test_im, self.target_full)
+        # print(s_area, b_area, f_area)
+        max_area = max(s_area, b_area, f_area)
+        if s_area == max_area:
             self.mode = 'single'
-            return True
-        elif self.im_area_sum(test_im, self.target_burst) < 100000:
-            print('burst')
+        elif s_area == max_area:
             self.mode = 'burst'
-            return True
-        elif self.im_area_sum(test_im, self.target_full) < 100000:
-            print('full')
-            self.mode = 'full'
-            return True
         else:
-            print('fire mode detection failed!!!')
-            return False
+            self.mode = 'full'
+        print(self.mode)
 
     def im_area_sum(self, im_3c: np.ndarray, im_4c: np.ndarray):
         test_im = im_3c.copy()
-        target_im = im_4c[:, :, 0:3]
         shield = im_4c[:, :, [3]] // 255
 
         test_im = test_im * shield
-        target_im = target_im * shield
 
-        cv2.imshow('target_im', target_im)
-        cv2.waitKey(2000)
-        cv2.imshow('test_im', test_im)
-        cv2.waitKey(2000)
-        print(np.sum(test_im - target_im))
+        # cv2.imshow('target_im', target_im)
+        # cv2.waitKey(2000)
+        # cv2.imshow('test_im', test_im)
+        # cv2.waitKey(2000)
+        # print(np.sum(test_im ))
 
-        return np.sum(test_im - target_im)
+        return np.sum(test_im)
 
 
 if __name__ == '__main__':
     from PIL import ImageGrab
 
 
-    def get_screen():
-        screen = ImageGrab.grab()
-        screen = np.array(screen)
-        screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-
-        # screen = cv2.imread('screens/burst.png')
-        # screen = cv2.imread('screens/single.png')
-        # screen = cv2.imread('screens/full.png')
+    def get_screen(dir=None):
+        if dir is None:
+            screen = ImageGrab.grab()
+            screen = np.array(screen)
+            screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+        else:
+            screen = cv2.imread(dir)
         return screen
 
-    time.sleep(5)
     b = Bb()
-    b.screen = get_screen()
-    b.test()
-    b.screen = get_screen()
-    b.test()
-    b.screen = get_screen()
-    b.test()
+    dir = '../ctrl_cap'
+    for path in os.listdir(dir):
+        a_path = os.path.join(dir, path)
+        print(a_path)
+        screen = get_screen(a_path)
+        b.set_screen(screen)
+        b.test()
+
+
 
 
 

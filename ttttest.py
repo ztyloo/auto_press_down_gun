@@ -1,16 +1,11 @@
 import cv2
 
-shield = cv2.imread('shield.png')
-shield = shield / 255.0
+im1 = cv2.imread('auto_hold_breath/test/17.png')
 
-screen = cv2.imread('cap/44.png')
-origin = screen[46:81, 1620:1818, :]
+im2 = cv2.imread('auto_hold_breath/test/94.png')
 
-screen2 = cv2.imread('cap/380.png')
-origin2 = screen2[46:81, 1620:1818, :]
 
-diff = abs(origin-origin2) * shield
-# diff = origin - origin2
+diff = abs(im1-im2)
 
 cv2.imshow('diff', diff)
 cv2.waitKey(0)

@@ -7,6 +7,7 @@ from auto_press_gun.press_utiles import *
 
 class Auto_down(Thread):
     def __init__(self):
+        self.no_start = True
         super().__init__()
         self.m_listener = Mouse_listern(self.click_handler)
         self.k = PyKeyboard()
@@ -46,6 +47,7 @@ class Auto_down(Thread):
     def stop(self):
         print('press stop')
         self.m_listener.stop()
+        self.m_listener = Mouse_listern(self.click_handler)
 
 
 if __name__ == '__main__':

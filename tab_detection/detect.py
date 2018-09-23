@@ -8,6 +8,7 @@ import yaml
 class Tab:
     def __init__(self):
         self.yml = yaml.load(open("tab_detection/tab_position.yaml"))
+        # self.yml = yaml.load(open("tab_position.yaml"))
         self.tab_dict = dict()
         self.png_dict = dict()
         self._fill_png_dict()
@@ -59,7 +60,7 @@ class Tab:
     def detect(self, pos: str):
         test_im = self.get_pos_im(pos)
         for k, v in self.png_dict[pos].items():
-            if self.im_area_sum(test_im, v)< 5000:
+            if self.im_area_sum(test_im, v) < 5000:
                 return k
         return 'none'
 
