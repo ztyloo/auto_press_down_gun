@@ -22,7 +22,8 @@ class Key_Listener(PyKeyboardEvent):
         if keycode == 9 and press:
             screen = self.get_screen()
             self.t.set_screen(screen)
-            if self.t.test():
+            self.t.test()
+            if self.t.gun_name != 'none':
                 self.ad.reset(self.t.gun_name, self.t.scope_time)
                 self.t_set = True
 

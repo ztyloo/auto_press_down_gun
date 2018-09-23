@@ -1,5 +1,7 @@
 akm: !!float 0.1
+m762: !!float 0.086
 m416: !!float 0.086
 scar: !!float 0.096
 m16:  !!float 0.075
+vector: !!float 0.055
 

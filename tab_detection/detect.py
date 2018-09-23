@@ -75,10 +75,7 @@ class Tab:
             else:
                 self.scope_time = int(scope)
             print(self.scope_time)
-            if self.gun_name != 'none':
-                return True
 
-        return False
 
 
 

@@ -15,7 +15,7 @@ class Find:
         self.x1 = self.x0-dx
         self.x2 = self.x0+dx
         self.y1 = self.y0-dy
-        self.y2 = self.y0
+        self.y2 = self.y0-40
         self.y3 = self.y0+dy
 
     def find_upper(self, img=None):
@@ -27,7 +27,12 @@ class Find:
             screen = img
         for j in range(self.y2, self.y1, -1):
             for i in range(self.x1, self.x2):
+
                 # print('checking:', i, j)
+                # im = cv2.circle(screen, (i, j), 5, (0, 0, 255), thickness=20)
+                # cv2.imshow('', im)
+                # cv2.waitKey(1)
+
                 if self.is_point(screen, j, i):
                     return i, j
         return 0, 0
