@@ -53,7 +53,7 @@ class Find:
 
     def is_point(self,area, y, x):
         g_ = 30
-        l_ = 9
+        l_ = 8
         for i in range(-l_, l_+1):
             r, g, b = area[y, x+i]
             if r>g_ or g>g_ or b>g_:
