@@ -3,12 +3,6 @@ import time
 import cv2
 import numpy as np
 import yaml
-from PIL import ImageGrab
-from pykeyboard import PyKeyboardEvent
-from pymouse import PyMouseEvent
-
-from tab_detection.tab_listener import Tab_Listener
-from tab_detection.utils import get_pos
 
 
 class Tab:
@@ -17,10 +11,12 @@ class Tab:
         self.tab_dict = dict()
         self.png_dict = dict()
         self._fill_png_dict()
-        self.tab_listener = Tab_Listener(self.tab_down_func)
 
         self.gun_name = 'none'
         self.scope_time = 1
+
+    def set_screen(self, screen: np.ndarray):
+        self.screen = screen
 
     def _fill_png_dict(self):
         for k, v in self.yml.items():
@@ -35,7 +31,7 @@ class Tab:
                     self.png_dict[k] = tmp_dict
 
     def get_pos_im(self, pos: str):
-        im = self.now_screen
+        im = self.screen
         yml = self.yml
         x0 = yml[pos]['x0']
         x1 = yml[pos]['x1']
@@ -43,31 +39,30 @@ class Tab:
         y1 = yml[pos]['y1']
         return im[y0: y1, x0: x1, :]
 
+    def im_area_sum(self, im_3c: np.ndarray, im_4c: np.ndarray):
+        test_im = im_3c.copy()
+        target_im = im_4c[:, :, 0:3]
+        shield = im_4c[:, :, [3]] // 255
+
+        test_im = test_im * shield
+        target_im = target_im * shield
+
+        # cv2.imshow('target_im', target_im)
+        # cv2.waitKey(2000)
+        # cv2.imshow('test_im', test_im)
+        # cv2.waitKey(2000)
+        # print(np.sum(test_im - target_im))
+
+        return np.sum(test_im - target_im)
+
     def detect(self, pos: str):
-        test_im_ = self.get_pos_im(pos)
+        test_im = self.get_pos_im(pos)
         for k, v in self.png_dict[pos].items():
-            test_im = test_im_
-            target_im = v[:, :, 0:3]
-            shield = v[:, :, [3]]//255
-
-            test_im = test_im*shield
-            target_im = target_im*shield
-
-            # cv2.imshow('target_im', target_im)
-            # cv2.waitKey(2000)
-            # cv2.imshow('test_im', test_im)
-            # cv2.waitKey(2000)
-            # print(np.sum(test_im - target_im))
-
-            if np.sum(test_im - target_im) < 5000:
-                # print(np.sum(test_im - target_im))
+            if self.im_area_sum(test_im, v)< 5000:
                 return k
         return 'none'
 
-    def tab_down_func(self):
-        # screen = ImageGrab.grab()
-        # screen = np.array(screen)
-        # self.now_screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+    def test(self):
         if self.detect('user') == 'Ryanshuai':
             self.gun_name = self.detect('weapon')
             print(self.gun_name)
@@ -88,7 +83,7 @@ if __name__ == '__main__':
         im_path = os.path.join(dir, im_name)
         t.now_screen = cv2.imread(im_path)
 
-        t.tab_down_func()
+        t.test()
 
         # det = t.detect('user')
         # print(det)

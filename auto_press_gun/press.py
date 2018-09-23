@@ -1,4 +1,3 @@
-import threading
 from threading import Thread
 import yaml
 from pykeyboard import PyKeyboardEvent, PyKeyboard
@@ -7,12 +6,21 @@ from auto_press_gun.press_down_distence import Down_distence
 from auto_press_gun.press_utiles import *
 
 class Auto_down(Thread):
-    def __init__(self, dis, x_interval):
+    def __init__(self):
         super().__init__()
-        self.dis = dis
-        self.timer = MyTimer(x_interval, self.timer_handler)
         self.m_listener = Mouse_listern(self.click_handler)
         self.k = PyKeyboard()
+        with open('../generate_distance/gun_distance.yaml', 'r') as f:
+            self.dis_dict = yaml.load(f)
+        with open('time_interval.yaml', 'r') as f:
+            self.interval_dict = yaml.load(f)
+
+    def reset(self, gun_name: str, scope: int):
+        dis_list = self.dis_dict[gun_name]
+        self.dis = Down_distence(dis_list, scope)
+
+        x_interval = self.interval_dict[gun_name]
+        self.timer = MyTimer(x_interval, self.timer_handler)
 
     def timer_handler(self):
         print('down')
@@ -39,22 +47,7 @@ class Auto_down(Thread):
 
 
 if __name__ == '__main__':
-    gun_name = 'scal'
 
-    with open('press_distance.yaml', 'r') as f:
-        yaml_dis = yaml.load(f)
-        dis_list = yaml_dis[gun_name]
-    with open('time_interval.yaml', 'r') as f:
-        yaml_time_interval = yaml.load(f)
-        time_interval = yaml_time_interval[gun_name]
-
-    dis = Down_distence(dis_list, 6.)
-    dp = Auto_down(dis, time_interval)
-
-
-
-
-    dp.run()
-    print('-----------------')
-    dp.stop()
-    print('====================')
+    ad = Auto_down()
+    ad.reset('scar', 1)
+    ad.run()
