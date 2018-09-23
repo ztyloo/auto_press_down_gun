@@ -1,3 +1,4 @@
+import os
 import time
 import cv2
 import numpy as np
@@ -15,16 +16,20 @@ class Tab:
         self.yml = yaml.load(open("tab_position.yaml"))
         self.tab_dict = dict()
         self.png_dict = dict()
-        self.fill_png_dict()
+        self._fill_png_dict()
         self.tab_listener = Tab_Listener(self.tab_down_func)
 
-    def fill_png_dict(self):
+    def _fill_png_dict(self):
         for k, v in self.yml.items():
-            png_dir = v['dir']
-            if png_dir is not None:
-                for png_name in png_dir:
-                    tmp_dict = dict()
-                    self.png_dict[k+'_png'] = cv2.imread(png_name)
+            png_dir = os.path.join('pos', k)
+            if os.path.exists(png_dir):  # weapon/scope/...
+                tmp_dict = dict()
+                for png_name in os.listdir(png_dir):   # png name
+                    png_path = os.path.join(png_dir, png_name)
+                    gun_name = png_name[:-4]
+                    png = cv2.imread(png_path, cv2.IMREAD_UNCHANGED)
+                    tmp_dict[gun_name] = png
+                    self.png_dict[k] = tmp_dict
 
     def get_pos_im(self, pos: str):
         im = self.now_screen
@@ -35,11 +40,26 @@ class Tab:
         y1 = yml[pos]['y1']
         return im[y0: y1, x0: x1, :]
 
-    def detect_pos_im(self, pos: str):
-        self.png_dict[]
+    def detect(self, pos: str):
+        test_im = self.get_pos_im(pos)
+        for k, v in self.png_dict[pos].items():
+            target_im = v[:, :, 0:3]
+            shield = v[:, :, [3]]//255
+
+            test_im = test_im*shield
+            target_im = target_im*shield
+            if np.all(test_im == target_im):
+                return k
+        return 'none'
 
     def tab_down_func(self):
         screen = ImageGrab.grab()
         screen = np.array(screen)
         self.now_screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
 
+
+t = Tab()
+t.tab_down_func()
+t.now_screen = cv2.imread('2.png')
+t.detect('weapon')
+print()

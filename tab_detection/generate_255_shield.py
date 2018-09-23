@@ -36,7 +36,6 @@ for dir in os.listdir(pos_from):
         a_dir = os.path.join(pos_from, dir)
         for name in os.listdir(a_dir):
             a_name = os.path.join(a_dir, name)
-            im = cv2.imread(a_name)
-            sub_im = get_pos_im(yml, dir, im)
+            sub_im = cv2.imread(a_name)
             sub_im = get_shield_im(sub_im)
             cv2.imwrite(os.path.join(to_a_dir, name), sub_im)
