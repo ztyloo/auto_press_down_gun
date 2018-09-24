@@ -70,22 +70,21 @@ class Tab:
         if self.detect('user') == 'Ryanshuai':
             self.gun_name = self.detect('weapon')
             self.gun_name_ = self.detect('_weapon')
-            print(self.gun_name)
-            print(self.gun_name_)
 
             scope = self.detect('scope')
             if scope == 'none':
                 self.scope_time = 1
             else:
                 self.scope_time = int(scope)
-            print(self.scope_time)
 
             scope_ = self.detect('_scope')
             if scope_ == 'none':
                 self.scope_time_ = 1
             else:
                 self.scope_time_ = int(scope_)
-            print(self.scope_time_)
+
+            print(self.gun_name, self.scope_time)
+            print(self.gun_name_, self.scope_time_)
 
             return True
         return False

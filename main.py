@@ -42,8 +42,11 @@ class Key_Listener(PyKeyboardEvent):
                 self.now_scope = self.scope_time
                 threading.Timer(0.5, self.check_fire_mode).start()
 
+        if keycode == 123 and press:  # F12
+            self.ad.m_listener_stop()
+
         if keycode == 66 and not press:  # b
-            self.check_fire_mode()
+            threading.Timer(0.2, self.check_fire_mode).start()
 
         if keycode == 49 and press:  # 1
             self.now_gun = self.gun_name
@@ -76,8 +79,8 @@ class Key_Listener(PyKeyboardEvent):
         # screen = cv2.imread('')
         return screen
 
-    def escape(self, event):
-        return False
+    # def escape(self, event):
+    #     return False
 
 k = Key_Listener()
 k.run()
