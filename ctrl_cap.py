@@ -28,8 +28,6 @@ class Key_listener(PyKeyboardEvent):
             self.i += 1
 
             print(keycode, press)
-
-
     def escape(self, event):
         return False
 
