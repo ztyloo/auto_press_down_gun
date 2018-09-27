@@ -35,10 +35,10 @@ class Key_Listener(PyKeyboardEvent):
             self.t.set_screen(screen)
             if self.t.test():
                 self.gun_name = self.t.gun_name
-                self.gun_name_ = self.t.gun_name_
-                self.now_gun = self.gun_name
                 self.scope_time = self.t.scope_time
+                self.gun_name_ = self.t.gun_name_
                 self.scope_time_ = self.t.scope_time_
+                self.now_gun = self.gun_name
                 self.now_scope = self.scope_time
                 threading.Timer(0.5, self.check_fire_mode).start()
 
