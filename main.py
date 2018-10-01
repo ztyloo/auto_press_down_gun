@@ -79,8 +79,8 @@ class Key_Listener(PyKeyboardEvent):
         # screen = cv2.imread('')
         return screen
 
-    # def escape(self, event):
-    #     return False
+    def escape(self, event):
+        return False
 
 k = Key_Listener()
 k.run()
