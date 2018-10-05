@@ -65,6 +65,57 @@ class Find:
         return True
 
 
+def find_upper(now_pos, screen):
+    x0, y0 = now_pos
+    for j in range(y0-5, y0-500, -1):
+        for i in range(x0-100, x0+100):
+            if is_point(screen, j, i):
+                if is_end(screen, j, i):
+                    return 0, 0
+                return i, j
+    return 0, 0
+
+
+def is_point(area, y, x):
+    g_ = 30
+    l_ = 8
+    for i in range(-l_, l_+1):
+        r, g, b = area[y, x+i]
+        if r>g_ or g>g_ or b>g_:
+            return False
+    for j in range(-l_, l_+1):
+        r, g, b = area[y+j, x]
+        if r>g_ or g>g_ or b>g_:
+            return False
+    return True
+
+
+def is_end(area, y, x):
+    g_ = 30
+    counter = 0
+    for i in range(-20, -10):
+        r, g, b = area[y, x+i]
+        if r<g_ and g<g_ and b<g_:
+            counter += 1
+            if counter > 10:
+                return True
+            continue
+    for i in range(10, 20):
+        r, g, b = area[y, x + i]
+        if r < g_ and g < g_ and b < g_:
+            counter += 1
+            if counter > 10:
+                return True
+            continue
+    for j in range(-20, -10):
+        r, g, b = area[y+j, x]
+        if r < g_ and g < g_ and b < g_:
+            counter += 1
+            if counter > 10:
+                return True
+            continue
+    return False
+
 if __name__ == '__main__':
     f = Find()
     screen = cv2.imread('scar/test_point.png')
