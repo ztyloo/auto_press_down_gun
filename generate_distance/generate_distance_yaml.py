@@ -1,44 +1,30 @@
 import cv2
-import os
-import sys
 import yaml
-import numpy as np
-from PIL import ImageGrab
 from pykeyboard import PyKeyboardEvent, PyKeyboard
 
+from utils import get_screen, move
 from generate_distance.find_point import find_upper
 from tab_detection.gun_name import Gun_Name_Detector
-
-gun_name_list = ['98k', 'akm', 'aug', 'awm', 'dp28', 'groza', 'm16', 'm24', 'm249', 'm416', 'm762', 'mini14', 'mk14',
-                 'mk47', 'qbu', 'qbz', 's12k', 's1987', 's686', 'scar', 'sks', 'slr', 'tommy', 'ump9', 'uzi', 'vector',
-                 'vss', 'win94']
-
-full_mode_gun_list = ['aug', 'dp28', 'groza', 'm16', 'm249', 'm416', 'm762', 'mk14', 'qbu', 'qbz', 'scar', 'slr', 'tommy', 'ump9', 'uzi', 'vector', 'vss']
-
-
-
-
-
-self.k.press_key(160)
-self.k.release_key(160)
-
+from tab_detection.utils import get_pos_im
 
 
 class Key_Listener(PyKeyboardEvent):
     def __init__(self):
         PyKeyboardEvent.__init__(self)
         self.gun_name_detector = Gun_Name_Detector()
+        self.yml = yaml.load(open("tab_detection/tab_position.yaml"))
+        self.gun_name = 'none'
 
     def tap(self, keycode, character, press):
         if keycode == 9 and not press:  # F11
-            gun_name = self.gun_name_detector.detect()
+            screen = get_screen()
+            im = get_pos_im(self.yml, screen, 'weapon')
+            self.gun_name = self.gun_name_detector.detect(im)
 
-    def f11(self, keycode, character, press):
-        if keycode == 122 and press:  # F11
-            pass
-
-
-
+    def f12(self, keycode, character, press):
+        if keycode == 123 and press:  # F12
+            res_list = detect_bullet_holes()
+            open_save_yaml(self.gun_name, res_list)
 
 
 def detect_bullet_holes():
@@ -47,12 +33,10 @@ def detect_bullet_holes():
     i0, j0 = 1719, 719
 
     while True:
-        screen = ImageGrab.grab()
-        screen = np.array(screen)
-        screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+        screen = get_screen()
 
         i1, j1 = find_upper(screen, (i0, j0))
-        if i1==0 and j1==0:
+        if i1 == 0 and j1 == 0:
             break
         res_list.append((j0 - j1) / 12)
 
@@ -61,22 +45,24 @@ def detect_bullet_holes():
 
         i0, j0 = i1, j1
         k += 1
+        move(0, j1-j0)
 
     return res_list
 
 
-def save_yaml(gun_name: str, distance_list: list):
+def open_save_yaml(gun_name: str, distance_list: list):
+    with open('gun_distance.yaml', 'r') as dumpfile:
+        gun_dis_dict = yaml.load(dumpfile)
+
+    if gun_dis_dict is None:
+        gun_dis_dict = dict()
+
     with open('gun_distance.yaml', 'w') as dumpfile:
         gun_dis_dict[gun_name] = distance_list
         dumpfile.write(yaml.dump(gun_dis_dict))
 
 
-k = PyKeyboard()
-with open('gun_distance.yaml', 'r') as dumpfile:
-    gun_dis_dict = yaml.load(dumpfile)
-
-if gun_dis_dict is None:
-    gun_dis_dict = dict()
-
-
+if __name__ == '__main__':
+    k = PyKeyboard()
+    k.run()
 
