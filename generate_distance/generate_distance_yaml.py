@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import yaml
 from pykeyboard import PyKeyboardEvent, PyKeyboard
@@ -13,21 +15,23 @@ class Key_Listener(PyKeyboardEvent):
         PyKeyboardEvent.__init__(self)
         self.gun_name_detector = Gun_Name_Detector()
         self.yml = yaml.load(open("tab_detection/tab_position.yaml"))
-        self.gun_name = 'none'
+        self.gun_name = None
 
     def tap(self, keycode, character, press):
         if keycode == 9 and not press:  # tab
             screen = get_screen()
             im = get_pos_im(self.yml, screen, 'weapon')
             self.gun_name = self.gun_name_detector.detect(im)
+            if self.gun_name is not None and os.path.exists(self.gun_name):
+                os.mkdir(self.gun_name)
 
     def f12(self, keycode, character, press):
         if keycode == 123 and press:  # F12
-            res_list = detect_bullet_holes()
+            res_list = detect_bullet_holes(self.gun_name)
             open_save_yaml(self.gun_name, res_list)
 
 
-def detect_bullet_holes():
+def detect_bullet_holes(save_dir):
     k = 0
     res_list = []
 
@@ -43,7 +47,7 @@ def detect_bullet_holes():
         res_list.append((j0 - j1) / 12)
 
         screen = cv2.circle(screen, (i1, j1), 5, (0, 0, 255), thickness=20)
-        cv2.imwrite(str(k)+'.png', screen)
+        cv2.imwrite(save_dir+str(k)+'.png', screen)
 
         i0, j0 = i1, j1
         k += 1

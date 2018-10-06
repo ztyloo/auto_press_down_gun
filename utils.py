@@ -52,4 +52,3 @@ class Detection:
         for item_name, png in self.png_dict.items():
             if detect_item_sum(im, png) < 10:
                 return item_name
-        return 'none'
