@@ -12,4 +12,4 @@ helmet_name_list = ['hm_3', 'hm_2', 'hm_1']
 backpack_name_list = ['bp_3', 'bp_2', 'bp_1']
 vest_name_list = ['vt_3', 'vt_2', 'vt_1']
 
-
+in_tab_list = ['time']

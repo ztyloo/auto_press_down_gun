@@ -44,3 +44,10 @@ class Vest_Name_Detector(Detection):
         self.item_list = vest_name_list
         super()._fill_png_dict()
 
+
+class In_Tab_Detector(Detection):
+    def __init__(self):
+        super().__init__()
+        self.png_dir = png_dir
+        self.item_list = in_tab_list
+        super()._fill_png_dict()

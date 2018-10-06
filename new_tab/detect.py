@@ -10,26 +10,29 @@ from new_tab.tab_utils import get_pos_im
 
 class Tab:
     def __init__(self):
-        yaml_path = 'tab_position.yaml'
-        self.yml = yaml.load(open(yaml_path))
+        with open('tab_position.yaml') as yml_file:
+            self.yml = yaml.load(yml_file)
 
+        self.in_tab_detector = In_Tab_Detector()
         self.gun_detector = Gun_Name_Detector()
         self.scope_detector = Scope_Name_Detector()
         self.hm_detector = Helmet_Name_Detector()
         self.bp_detector = Backpack_Name_Detector()
         self.vt_detector = Vest_Name_Detector()
 
-    def __del__(self):
-        self.yml.close()
-
     def detect(self, screen):
         gun1_im = get_pos_im(self.yml, screen, 'weapon')
-        gun2_im = get_pos_im(self.yml, screen, '_weapon')
         gun1 = self.gun_detector.detect(gun1_im)
-        gun2 = self.gun_detector.detect(gun2_im)
+        scope1_im = get_pos_im(self.yml, screen, 'scope')
+        scope1 = self.scope_detector.detect(scope1_im)
 
-        scope_im = get_pos_im(self.yml, screen, 'scope')
-        scope = self.scope_detector.detect(scope_im)
+        gun2_im = get_pos_im(self.yml, screen, '_weapon')
+        gun2 = self.gun_detector.detect(gun2_im)
+        scope2_im = get_pos_im(self.yml, screen, '_scope')
+        scope2 = self.scope_detector.detect(scope2_im)
+
+        print(gun1, scope1)
+        print(gun2, scope2)
 
         hm_im = get_pos_im(self.yml, screen, 'helmet')
         hm = self.hm_detector.detect(hm_im)
