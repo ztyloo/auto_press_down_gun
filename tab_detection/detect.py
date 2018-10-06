@@ -59,12 +59,21 @@ class Tab:
 
     def detect(self, pos: str):
         test_im = self.get_pos_im(pos)
-        cv2.imshow('',test_im)
-        cv2.waitKey(0)
+        # cv2.imshow('',test_im)
+        # cv2.waitKey(0)
         if pos[0] == '_':
             pos = pos[1:]
         for k, v in self.png_dict[pos].items():
+            if k == 'm762':
+                print(1)
+                cv2.imshow('v', v)
+                cv2.waitKey(0)
+                cv2.imshow('test_im', test_im)
+                cv2.waitKey(0)
+
             if self.im_area_sum(test_im, v) < 5000:
+                cv2.imshow('test_im', test_im)
+                cv2.waitKey(0)
                 print(k)
                 return k
         return 'none'

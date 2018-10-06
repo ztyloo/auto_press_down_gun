@@ -6,11 +6,11 @@ import numpy as np
 
 # im2 = cv2.imread('tab_detection/pos_from/weapon/98k.png')
 # im2 = cv2.imread('b_detection/screens/burst.png')
-im1 = cv2.imread('ctrl_cap/0.png')
-# im1 = cv2.imread('ctrl_cap/1.png')
-# im1 = cv2.imread('ctrl_cap/2.png')
-# im1 = cv2.imread('ctrl_cap/3.png')
-im2 = cv2.imread('ctrl_cap/1.png')
+im1 = cv2.imread('ctrl_cap/scar.png')
+# im1 = cv2.imread('ctrl_cap/akm.png')
+# im1 = cv2.imread('ctrl_cap/m416.png')
+# im1 = cv2.imread('ctrl_cap/qbz.png')
+im2 = cv2.imread('ctrl_cap/akm.png')
 
 
 def im_norm(im: np.ndarray):
