@@ -16,7 +16,7 @@ class Key_Listener(PyKeyboardEvent):
         self.gun_name = 'none'
 
     def tap(self, keycode, character, press):
-        if keycode == 9 and not press:  # F11
+        if keycode == 9 and not press:  # tab
             screen = get_screen()
             im = get_pos_im(self.yml, screen, 'weapon')
             self.gun_name = self.gun_name_detector.detect(im)
@@ -30,7 +30,9 @@ class Key_Listener(PyKeyboardEvent):
 def detect_bullet_holes():
     k = 0
     res_list = []
-    i0, j0 = 1719, 719
+
+    screen = get_screen()
+    i0, j0 = find_upper(screen, (1719, 719))
 
     while True:
         screen = get_screen()
@@ -45,7 +47,7 @@ def detect_bullet_holes():
 
         i0, j0 = i1, j1
         k += 1
-        move(0, j1-j0)
+        move(0, (j1-j0)//2)
 
     return res_list
 
