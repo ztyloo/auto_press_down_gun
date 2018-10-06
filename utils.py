@@ -30,6 +30,7 @@ def detect_item_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray):
 
     test_im = test_im * shield
     target_im = target_im * shield
+
     return np.sum(test_im - target_im)
 
 
@@ -38,7 +39,6 @@ class Detection:
         self.item_list = []
         self.png_dir = ''
         self.png_dict = dict()
-        self._fill_png_dict()
 
     def _fill_png_dict(self):
         for item_name in self.item_list:

@@ -17,13 +17,20 @@ pos_from = 'pos_from'
 to_pos = 'pos_'
 
 
-for dir in os.listdir(pos_from):
-    to_a_dir = os.path.join(to_pos, dir)
-    if not os.path.exists(to_a_dir):
-        os.mkdir(to_a_dir)
-    a_dir = os.path.join(pos_from, dir)
-    for name in os.listdir(a_dir):
-        a_name = os.path.join(a_dir, name)
-        im = cv2.imread(a_name)
-        sub_im = get_pos_im(yml, dir, im)
-        cv2.imwrite(os.path.join(to_a_dir, name), sub_im)
+# for dir in os.listdir(pos_from):
+#     to_a_dir = os.path.join(to_pos, dir)
+#     if not os.path.exists(to_a_dir):
+#         os.mkdir(to_a_dir)
+#     a_dir = os.path.join(pos_from, dir)
+#     for name in os.listdir(a_dir):
+#         a_name = os.path.join(a_dir, name)
+#         im = cv2.imread(a_name)
+#         sub_im = get_pos_im(yml, dir, im)
+#         cv2.imwrite(os.path.join(to_a_dir, name), sub_im)
+
+
+a_name = 'pos_from/user/time.png'
+im = cv2.imread(a_name)
+sub_im = get_pos_im(yml, 'user', im)
+cv2.imwrite(os.path.join('pos_/', 'time.png'), sub_im)
+
