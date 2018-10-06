@@ -4,7 +4,7 @@ import yaml
 import numpy as np
 
 from new_tab.tab_utils import get_pos_im
-from lists import gun_name_list
+from lists import gun_name_list, scope_name_list
 
 
 def get_white_shield(im: np.ndarray):
@@ -34,11 +34,13 @@ def get_diff_shield_im(im0: np.ndarray, im1: np.ndarray):
 def find_position(name: str):
     if name in gun_name_list:
         return 'weapon'
+    if name in scope_name_list:
+        return 'scope'
 
 
 if __name__ == '__main__':
     pos_white_list = ['weapon']
-    pos_diff_list = []
+    pos_diff_list = ['scope']
     from_dir = 'screens'
     to_dir = 'pngs'
 
@@ -58,12 +60,15 @@ if __name__ == '__main__':
 
         if pos in pos_diff_list:
             to_im_path = os.path.join(to_dir, im_name)
+
             from_im_path = os.path.join(from_dir, im_name)
             _from_im_path = os.path.join(from_dir, '_'+im_name)
 
             screen = cv2.imread(from_im_path)
-            screen_ = cv2.imread(from_im_path)
+            screen_ = cv2.imread(_from_im_path)
+
             sub_im = get_pos_im(yml, screen, pos)
             sub_im_ = get_pos_im(yml, screen_, pos)
+
             shield_im = get_diff_shield_im(sub_im, sub_im_)
             cv2.imwrite(to_im_path, shield_im)

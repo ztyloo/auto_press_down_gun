@@ -13,9 +13,6 @@ def get_pos(pos: str, im: np.ndarray):
 
 
 im = cv2.imread('body_screens/32.png')
-# im = cv2.imread()
-# im = cv2.imread()
-
 
 
 yml = yaml.load(open("tab_position.yaml"))
