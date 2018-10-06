@@ -12,9 +12,12 @@ class Tab:
     def __init__(self):
         yaml_path = 'tab_position.yaml'
         self.yml = yaml.load(open(yaml_path))
+
         self.gun_detector = Gun_Name_Detector()
         self.scope_detector = Scope_Name_Detector()
-        self.hm_detector =
+        self.hm_detector = Helmet_Name_Detector()
+        self.bp_detector = Backpack_Name_Detector()
+        self.vt_detector = Vest_Name_Detector()
 
     def __del__(self):
         self.yml.close()
@@ -29,13 +32,13 @@ class Tab:
         scope = self.scope_detector.detect(scope_im)
 
         hm_im = get_pos_im(self.yml, screen, 'helmet')
-        hm = self.scope_detector.detect(hm_im)
+        hm = self.hm_detector.detect(hm_im)
 
         bp_im = get_pos_im(self.yml, screen, 'backpack')
-        bp = self.scope_detector.detect(bp_im)
+        bp = self.bp_detector.detect(bp_im)
 
         vt_im = get_pos_im(self.yml, screen, 'vest')
-        vt = self.scope_detector.detect(vt_im)
+        vt = self.vt_detector.detect(vt_im)
 
 
 
