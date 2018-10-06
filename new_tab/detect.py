@@ -4,93 +4,41 @@ import cv2
 import numpy as np
 import yaml
 
+from utils import get_screen
+from new_tab.detectors import *
+from new_tab.tab_utils import get_pos_im
 
 class Tab:
     def __init__(self):
-        self.yml = yaml.load(open("tab_detection/tab_position.yaml"))
-        # self.yml = yaml.load(open("tab_position.yaml"))
-        self.tab_dict = dict()
-        self.png_dict = dict()
-        self._fill_png_dict()
+        yaml_path = 'tab_position.yaml'
+        self.yml = yaml.load(open(yaml_path))
+        self.gun_detector = Gun_Name_Detector()
+        self.scope_detector = Scope_Name_Detector()
+        self.hm_detector =
 
-        self.gun_name = 'none'
-        self.scope_time = 1
+    def __del__(self):
+        self.yml.close()
 
-    def set_screen(self, screen: np.ndarray):
-        self.screen = screen
+    def detect(self, screen):
+        gun1_im = get_pos_im(self.yml, screen, 'weapon')
+        gun2_im = get_pos_im(self.yml, screen, '_weapon')
+        gun1 = self.gun_detector.detect(gun1_im)
+        gun2 = self.gun_detector.detect(gun2_im)
 
-    def _fill_png_dict(self):
-        for k, v in self.yml.items():
-            dir = 'tab_detection/pos'
-            png_dir = os.path.join(dir, k)
-            if os.path.exists(png_dir):  # weapon/scope/...
-                tmp_dict = dict()
-                for png_name in os.listdir(png_dir):   # png name
-                    png_path = os.path.join(png_dir, png_name)
-                    gun_name = png_name[:-4]
-                    png = cv2.imread(png_path, cv2.IMREAD_UNCHANGED)
-                    tmp_dict[gun_name] = png
-                    self.png_dict[k] = tmp_dict
+        scope_im = get_pos_im(self.yml, screen, 'scope')
+        scope = self.scope_detector.detect(scope_im)
 
-    def get_pos_im(self, pos: str):
-        im = self.screen
-        yml = self.yml
-        x0 = yml[pos]['x0']
-        x1 = yml[pos]['x1']
-        y0 = yml[pos]['y0']
-        y1 = yml[pos]['y1']
-        return im[y0: y1, x0: x1, :]
+        hm_im = get_pos_im(self.yml, screen, 'helmet')
+        hm = self.scope_detector.detect(hm_im)
 
-    def im_area_sum(self, im_3c: np.ndarray, im_4c: np.ndarray):
-        test_im = im_3c.copy()
-        target_im = im_4c[:, :, 0:3]
-        shield = im_4c[:, :, [3]] // 255
+        bp_im = get_pos_im(self.yml, screen, 'backpack')
+        bp = self.scope_detector.detect(bp_im)
 
-        test_im = test_im * shield
-        target_im = target_im * shield
+        vt_im = get_pos_im(self.yml, screen, 'vest')
+        vt = self.scope_detector.detect(vt_im)
 
-        # cv2.imshow('target_im', target_im)
-        # cv2.waitKey(2000)
-        # cv2.imshow('test_im', test_im)
-        # cv2.waitKey(2000)
-        # print(np.sum(test_im - target_im))
 
-        return np.sum(test_im - target_im)
 
-    def detect(self, pos: str):
-        test_im = self.get_pos_im(pos)
-        cv2.imshow('',test_im)
-        cv2.waitKey(0)
-        if pos[0] == '_':
-            pos = pos[1:]
-        for k, v in self.png_dict[pos].items():
-            if self.im_area_sum(test_im, v) < 5000:
-                print(k)
-                return k
-        return 'none'
-
-    def test(self):
-        if self.detect('user') == 'time':
-            self.gun_name = self.detect('weapon')
-            self.gun_name_ = self.detect('_weapon')
-
-            scope = self.detect('scope')
-            if scope == 'none':
-                self.scope_time = 1
-            else:
-                self.scope_time = int(scope)
-
-            scope_ = self.detect('_scope')
-            if scope_ == 'none':
-                self.scope_time_ = 1
-            else:
-                self.scope_time_ = int(scope_)
-
-            print(self.gun_name, self.scope_time)
-            print(self.gun_name_, self.scope_time_)
-
-            return True
-        return False
 
 
 
