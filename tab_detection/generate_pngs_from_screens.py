@@ -3,7 +3,7 @@ import os
 import yaml
 import numpy as np
 
-from new_tab.tab_utils import get_pos_im
+from tab_detection.tab_utils import get_pos_im
 from lists import gun_name_list, scope_name_list
 
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     pos_white_list = ['weapon']
     pos_diff_list = ['scope']
     from_dir = 'screens'
-    to_dir = 'pngs'
+    to_dir = 'sub_im'
 
     yml = yaml.load(open("tab_position.yaml"))
     for im_name in os.listdir(from_dir):
@@ -82,8 +82,8 @@ if __name__ == '__main__':
             for i in range(13):
                 g_sub_im = get_pos_im(yml, screen, 'ground_' + str(i))
                 shield_im = get_white_shield_im(g_sub_im)
-                cv2.imwrite(to_im_path, shield_im)
+                cv2.imwrite(str(2*i)+to_im_path, shield_im)
 
                 b_sub_im = get_pos_im(yml, screen, 'backpack_' + str(i))
                 shield_im = get_white_shield_im(b_sub_im)
-                cv2.imwrite(to_im_path, shield_im)
+                cv2.imwrite(str(2*i+1)+to_im_path, shield_im)

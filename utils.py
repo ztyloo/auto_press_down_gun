@@ -48,7 +48,7 @@ class Detection:
                 png = cv2.imread(png_path, cv2.IMREAD_UNCHANGED)
                 self.png_dict[item_name] = png
 
-    def detect(self, im):
+    def detect(self, im, thr=10000):
         for item_name, png in self.png_dict.items():
-            if detect_item_sum(im, png) < 10:
+            if detect_item_sum(im, png) < thr:
                 return item_name

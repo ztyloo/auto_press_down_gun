@@ -3,7 +3,7 @@ from utils import Detection
 from lists import *
 
 
-png_dir = 'new_tab/pngs'
+png_dir = 'tab_detection/sub_im'
 
 class Gun_Name_Detector(Detection):
     def __init__(self):
