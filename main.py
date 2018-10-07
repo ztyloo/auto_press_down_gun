@@ -22,6 +22,7 @@ class Key_Listener(PyKeyboardEvent):
         self.ad = Auto_down()
 
     def tap(self, keycode, character, press):
+
         if keycode == 9 and press:  # tab
             self.ad.m_listener_stop()
             screen = get_screen()
@@ -29,6 +30,9 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.5, self.check_fire_mode).start()
 
         if keycode == 123 and press:  # F12
+            self.ad.m_listener_stop()
+
+        if keycode == 71 and press:  # F12
             self.ad.m_listener_stop()
 
         if keycode == 66 and not press:  # b
