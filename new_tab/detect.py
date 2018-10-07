@@ -10,7 +10,7 @@ from new_tab.tab_utils import get_pos_im
 
 class Tab:
     def __init__(self):
-        with open('tab_position.yaml') as yml_file:
+        with open('new_tab/tab_position.yaml') as yml_file:
             self.yml = yaml.load(yml_file)
 
         self.in_tab_detector = In_Tab_Detector()
@@ -21,6 +21,9 @@ class Tab:
         self.vt_detector = Vest_Name_Detector()
 
     def detect(self, screen):
+        is_in_tab_im = get_pos_im(self.yml, screen, 'is_in_tab')
+        is_in_tab = self.in_tab_detector.detect(is_in_tab_im)
+
         gun1_im = get_pos_im(self.yml, screen, 'weapon')
         gun1 = self.gun_detector.detect(gun1_im)
         scope1_im = get_pos_im(self.yml, screen, 'scope')
@@ -30,9 +33,6 @@ class Tab:
         gun2 = self.gun_detector.detect(gun2_im)
         scope2_im = get_pos_im(self.yml, screen, '_scope')
         scope2 = self.scope_detector.detect(scope2_im)
-
-        print(gun1, scope1)
-        print(gun2, scope2)
 
         hm_im = get_pos_im(self.yml, screen, 'helmet')
         hm = self.hm_detector.detect(hm_im)
@@ -50,17 +50,4 @@ class Tab:
 
 
 if __name__ == '__main__':
-    t = Tab()
-    dir = 'pos_from/weapon'
-    for im_name in os.listdir(dir):
-        im_path = os.path.join(dir, im_name)
-        t.now_screen = cv2.imread(im_path)
-
-        t.test()
-
-        # det = t.detect('user')
-        # print(det)
-        # det = t.detect('weapon')
-        # print(det)
-        # det = t.detect('scope')
-        # print(det)
+    pass

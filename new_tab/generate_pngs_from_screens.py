@@ -38,6 +38,7 @@ def find_position(name: str):
         return 'scope'
 
 
+
 if __name__ == '__main__':
     pos_white_list = ['weapon']
     pos_diff_list = ['scope']
@@ -50,8 +51,8 @@ if __name__ == '__main__':
         pos = find_position(item_name)
 
         if pos in pos_white_list:
-            from_im_path = os.path.join(from_dir, im_name)
             to_im_path = os.path.join(to_dir, im_name)
+            from_im_path = os.path.join(from_dir, im_name)
 
             screen = cv2.imread(from_im_path)
             sub_im = get_pos_im(yml, screen, pos)
@@ -72,3 +73,17 @@ if __name__ == '__main__':
 
             shield_im = get_diff_shield_im(sub_im, sub_im_)
             cv2.imwrite(to_im_path, shield_im)
+
+        if pos[0:2] == 'gb':
+            to_im_path = os.path.join(to_dir, im_name)
+            from_im_path = os.path.join(from_dir, im_name)
+
+            screen = cv2.imread(from_im_path)
+            for i in range(13):
+                g_sub_im = get_pos_im(yml, screen, 'ground_' + str(i))
+                shield_im = get_white_shield_im(g_sub_im)
+                cv2.imwrite(to_im_path, shield_im)
+
+                b_sub_im = get_pos_im(yml, screen, 'backpack_' + str(i))
+                shield_im = get_white_shield_im(b_sub_im)
+                cv2.imwrite(to_im_path, shield_im)
