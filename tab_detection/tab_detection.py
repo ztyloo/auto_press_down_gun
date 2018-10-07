@@ -30,12 +30,14 @@ class Tab_Detector:
         gun1_im = get_pos_im(self.yml, screen, 'weapon1')
         self.state.gun1 = self.gun_detector.detect(gun1_im)
         scope1_im = get_pos_im(self.yml, screen, 'scope1')
-        self.state.scope1 = self.scope_detector.detect(scope1_im)
+        scope1 = self.scope_detector.detect(scope1_im)
+        self.state.scope1 = 1 if scope1 is None else int(scope1[1])
 
         gun2_im = get_pos_im(self.yml, screen, 'weapon2')
         self.state.gun2 = self.gun_detector.detect(gun2_im)
         scope2_im = get_pos_im(self.yml, screen, 'scope2')
-        self.state.scope2 = self.scope_detector.detect(scope2_im)
+        scope2 = self.scope_detector.detect(scope2_im)
+        self.state.scope2 = 1 if scope2 is None else int(scope2[1])
 
         hm_im = get_pos_im(self.yml, screen, 'helmet')
         self.state.hm = self.hm_detector.detect(hm_im)
@@ -43,11 +45,6 @@ class Tab_Detector:
         self.state.bp = self.bp_detector.detect(bp_im)
         vt_im = get_pos_im(self.yml, screen, 'vest')
         self.state.vt = self.vt_detector.detect(vt_im)
-
-
-
-
-
 
 
 if __name__ == '__main__':

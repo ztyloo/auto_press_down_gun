@@ -18,14 +18,17 @@ class State:
         self.bp = None
         self.vt = None
 
-    def use_gun1(self):
-        self.gun0 = self.gun1
-        self.scope0 = self.scope1
-        self.gun_state = 1
+    def update(self):
+        self.update_gun()
 
-    def use_gun2(self):
-        self.gun0 = self.gun2
-        self.scope0 = self.scope2
-        self.gun_state = 2
+    def update_gun(self):
+        if self.gun_state == 1:
+            self.gun0 = self.gun1
+            self.scope0 = self.scope1
+        elif self.gun_state == 2:
+            self.gun0 = self.gun2
+            self.scope0 = self.scope2
+
+
 
 
