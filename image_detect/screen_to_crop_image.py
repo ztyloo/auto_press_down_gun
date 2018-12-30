@@ -2,7 +2,7 @@ import cv2
 import os
 import numpy as np
 
-from image_detect.crop_position import *
+from image_detect.crop_position import position
 
 
 def get_white_shield(im: np.ndarray):
@@ -67,7 +67,7 @@ def diff_shield_screen_to_crop(from_dir, crop_position):
             crop_im0 = screen0[y0: y1, x0: x1, :]
             crop_im1 = screen1[y0: y1, x0: x1, :]
             shield_im = get_diff_shield_im(crop_im0, crop_im1)
-            cv2.imwrite(os.path.join(to_dir, name), shield_im)
+            cv2.imwrite(os.path.join(to_dir, name[1:]), shield_im)
 
 
 def interval_shield_screen_to_crop(from_dir, crop_position, mid, radius):
@@ -83,4 +83,17 @@ def interval_shield_screen_to_crop(from_dir, crop_position, mid, radius):
 
 
 if __name__ == '__main__':
-    pass
+
+    from_dir = os.path.join(os.path.dirname(__file__), 'weapon')
+    crop_position = position['weapon_1']
+    white_shield_screen_to_crop(from_dir, crop_position)
+
+    # from_dir = os.path.join(os.path.dirname(__file__), 'scope')
+    # crop_position = position['scope_1']
+    # diff_shield_screen_to_crop(from_dir, crop_position)
+
+    # from_dir = os.path.join(os.path.dirname(__file__), 'fire_mode')
+    # crop_position = position['fire_mode']
+    # interval_shield_screen_to_crop(from_dir, crop_position, 205, 10)
+
+

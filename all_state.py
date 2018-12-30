@@ -2,33 +2,22 @@
 
 class State:
     def __init__(self):
-        self.gun_state = 1
-        self.fire_mode1 = None
+        self.now_weapon = 1
 
-        self.gun0 = None  # gun in use
-        self.scope0 = 1
+        self.weapon_1 = None
+        self.scope_1 = 1
+        self.muzzle_1 = None
+        self.grip_1 = None
+        self.fire_mode_1 = 'single'
 
-        self.gun1 = None
-        self.scope1 = 1
-
-        self.gun2 = None
-        self.scope2 = 1
+        self.weapon_2 = None
+        self.scope_2 = 1
+        self.muzzle_2 = None
+        self.grip_2 = None
+        self.fire_mode_2 = 'single'
 
         self.hm = None
         self.bp = None
         self.vt = None
-
-    def update(self):
-        self.update_gun()
-
-    def update_gun(self):
-        if self.gun_state == 1:
-            self.gun0 = self.gun1
-            self.scope0 = self.scope1
-        elif self.gun_state == 2:
-            self.gun0 = self.gun2
-            self.scope0 = self.scope2
-
-
 
 
