@@ -42,20 +42,24 @@ def get_interval_shield_im(im: np.ndarray, mid, radius):
     return shield_im
 
 
-def white_shield_screen_to_crop(from_dir, to_dir, position):
+def white_shield_screen_to_crop(from_dir, crop_position):
+    to_dir = from_dir + '_crop'
+    os.makedirs(to_dir, exist_ok=True)
     for name in os.listdir(from_dir):
         abs_screen_name = os.path.join(from_dir, name)
         screen = cv2.imread(abs_screen_name)
-        x0, x1, y0, y1 = position['x0'], position['x1'], position['y0'], position['y1']
+        x0, x1, y0, y1 = crop_position['x0'], crop_position['x1'], crop_position['y0'], crop_position['y1']
         crop_im = screen[y0: y1, x0: x1, :]
         shield_im = get_white_shield_im(crop_im)
         cv2.imwrite(os.path.join(to_dir, name), shield_im)
 
 
-def diff_shield_screen_to_crop(from_dir, to_dir, position):
+def diff_shield_screen_to_crop(from_dir, crop_position):
+    to_dir = from_dir + '_crop'
+    os.makedirs(to_dir, exist_ok=True)
     for name in os.listdir(from_dir):
         if name[:1] == '_':
-            x0, x1, y0, y1 = position['x0'], position['x1'], position['y0'], position['y1']
+            x0, x1, y0, y1 = crop_position['x0'], crop_position['x1'], crop_position['y0'], crop_position['y1']
             abs_screen_name0 = os.path.join(from_dir, name[1:])
             abs_screen_name1 = os.path.join(from_dir, name)
             screen0 = cv2.imread(abs_screen_name0)
@@ -66,11 +70,13 @@ def diff_shield_screen_to_crop(from_dir, to_dir, position):
             cv2.imwrite(os.path.join(to_dir, name), shield_im)
 
 
-def interval_shield_screen_to_crop(from_dir, to_dir, position, mid, radius):
+def interval_shield_screen_to_crop(from_dir, crop_position, mid, radius):
+    to_dir = from_dir + '_crop'
+    os.makedirs(to_dir, exist_ok=True)
     for name in os.listdir(from_dir):
         abs_screen_name = os.path.join(from_dir, name)
         screen = cv2.imread(abs_screen_name)
-        x0, x1, y0, y1 = position['x0'], position['x1'], position['y0'], position['y1']
+        x0, x1, y0, y1 = crop_position['x0'], crop_position['x1'], crop_position['y0'], crop_position['y1']
         crop_im = screen[y0: y1, x0: x1, :]
         shield_im = get_interval_shield_im(crop_im, mid, radius)
         cv2.imwrite(os.path.join(to_dir, name), shield_im)

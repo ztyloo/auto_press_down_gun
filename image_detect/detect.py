@@ -5,7 +5,7 @@ import os
 
 class Detector:
     def __init__(self, crop_position, png_dir):
-        self.crop_position = crop_position
+        self.x0, self.x1, self.y0, self.y1 = crop_position['x0'], crop_position['x1'], crop_position['y0'], crop_position['y1']
         self.png_dict = dict()
 
         for png_name in os.listdir(png_dir):
@@ -13,9 +13,10 @@ class Detector:
             png = cv2.imread(abs_png_name, cv2.IMREAD_UNCHANGED)
             self.png_dict[png_name[:-4]] = png
 
-    def __call__(self, im, thr=10000):
+    def __call__(self, screen, thr=10000):
+        crop_im = screen[self.y0: self.y1, self.x0: self.x1, :]
         for item_name, png in self.png_dict.items():
-            if detect_item_sum(im, png) < thr:
+            if detect_item_sum(crop_im, png) < thr:
                 return item_name
 
 
