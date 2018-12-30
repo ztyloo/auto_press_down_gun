@@ -29,13 +29,13 @@ class Key_Listener(PyKeyboardEvent):
 
         self.weapon_1_detect = Detector('weapon_1', 'weapon')
         self.scope_1_detect = Detector('scope_1', 'scope')
-        self.muzzle_1_detect = Detector('muzzle_1', 'muzzle')
-        self.grip_1_detect = Detector('grip_1', 'grip')
+        # self.muzzle_1_detect = Detector('muzzle_1', 'muzzle')
+        # self.grip_1_detect = Detector('grip_1', 'grip')
 
         self.weapon_2_detect = Detector('weapon_2', 'weapon')
         self.scope_2_detect = Detector('scope_2', 'scope')
-        self.muzzle_2_detect = Detector('muzzle_2', 'muzzle')
-        self.grip_2_detect = Detector('grip_2', 'grip')
+        # self.muzzle_2_detect = Detector('muzzle_2', 'muzzle')
+        # self.grip_2_detect = Detector('grip_2', 'grip')
 
         self.ad = Auto_down()
         # itchat.auto_login(hotReload=True)
@@ -47,13 +47,13 @@ class Key_Listener(PyKeyboardEvent):
         if 'in' == self.in_tab_detect(screen):
             self.all_state.weapon_1 = self.weapon_1_detect(screen)
             self.all_state.scope_1 = self.scope_1_detect(screen)
-            self.all_state.muzzle_1 = self.muzzle_1_detect(screen)
-            self.all_state.grip_1 = self.grip_1_detect(screen)
+            # self.all_state.muzzle_1 = self.muzzle_1_detect(screen)
+            # self.all_state.grip_1 = self.grip_1_detect(screen)
 
             self.all_state.weapon_2 = self.weapon_2_detect(screen)
             self.all_state.scope_2 = self.scope_2_detect(screen)
-            self.all_state.muzzle_2 = self.muzzle_2_detect(screen)
-            self.all_state.grip_2 = self.grip_2_detect(screen)
+            # self.all_state.muzzle_2 = self.muzzle_2_detect(screen)
+            # self.all_state.grip_2 = self.grip_2_detect(screen)
 
     def b_func(self):
         screen = get_screen()

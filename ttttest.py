@@ -4,7 +4,7 @@ import yaml
 import numpy as np
 
 
-# im2 = cv2.imread('tab_detection/pos_from/weapon/98k.png')
+# im2 = cv2.imread('tab_detection/pos_from/weapon_screen/98k.png')
 # im2 = cv2.imread('b_detection/screens/burst.png')
 im1 = cv2.imread('ctrl_cap/scar.png')
 # im1 = cv2.imread('ctrl_cap/akm.png')

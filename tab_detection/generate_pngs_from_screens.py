@@ -33,15 +33,15 @@ def get_diff_shield_im(im0: np.ndarray, im1: np.ndarray):
 
 def find_position(name: str):
     if name in gun_name_list:
-        return 'weapon'
+        return 'weapon_screen'
     if name in scope_name_list:
-        return 'scope'
+        return 'scope_screen'
 
 
 
 if __name__ == '__main__':
-    pos_white_list = ['weapon']
-    pos_diff_list = ['scope']
+    pos_white_list = ['weapon_screen']
+    pos_diff_list = ['scope_screen']
     from_dir = 'screens'
     to_dir = 'sub_im'
 

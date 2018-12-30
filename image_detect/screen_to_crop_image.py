@@ -43,7 +43,7 @@ def get_interval_shield_im(im: np.ndarray, mid, radius):
 
 
 def white_shield_screen_to_crop(from_dir, crop_position):
-    to_dir = from_dir + '_crop'
+    to_dir = from_dir[:-7]
     os.makedirs(to_dir, exist_ok=True)
     for name in os.listdir(from_dir):
         abs_screen_name = os.path.join(from_dir, name)
@@ -55,7 +55,7 @@ def white_shield_screen_to_crop(from_dir, crop_position):
 
 
 def diff_shield_screen_to_crop(from_dir, crop_position):
-    to_dir = from_dir + '_crop'
+    to_dir = from_dir[:-7]
     os.makedirs(to_dir, exist_ok=True)
     for name in os.listdir(from_dir):
         if name[:1] == '_':
@@ -71,7 +71,7 @@ def diff_shield_screen_to_crop(from_dir, crop_position):
 
 
 def interval_shield_screen_to_crop(from_dir, crop_position, mid, radius):
-    to_dir = from_dir + '_crop'
+    to_dir = from_dir[:-7]
     os.makedirs(to_dir, exist_ok=True)
     for name in os.listdir(from_dir):
         abs_screen_name = os.path.join(from_dir, name)
@@ -84,16 +84,20 @@ def interval_shield_screen_to_crop(from_dir, crop_position, mid, radius):
 
 if __name__ == '__main__':
 
-    from_dir = os.path.join(os.path.dirname(__file__), 'weapon')
+    from_dir = os.path.join(os.path.dirname(__file__), 'in_tab_screen')
+    crop_position = position['in_tab']
+    white_shield_screen_to_crop(from_dir, crop_position)
+
+    from_dir = os.path.join(os.path.dirname(__file__), 'weapon_screen')
     crop_position = position['weapon_1']
     white_shield_screen_to_crop(from_dir, crop_position)
 
-    # from_dir = os.path.join(os.path.dirname(__file__), 'scope')
-    # crop_position = position['scope_1']
-    # diff_shield_screen_to_crop(from_dir, crop_position)
+    from_dir = os.path.join(os.path.dirname(__file__), 'scope_screen')
+    crop_position = position['scope_1']
+    diff_shield_screen_to_crop(from_dir, crop_position)
 
-    # from_dir = os.path.join(os.path.dirname(__file__), 'fire_mode')
-    # crop_position = position['fire_mode']
-    # interval_shield_screen_to_crop(from_dir, crop_position, 205, 10)
+    from_dir = os.path.join(os.path.dirname(__file__), 'fire_mode_screen')
+    crop_position = position['fire_mode']
+    interval_shield_screen_to_crop(from_dir, crop_position, 205, 10)
 
 
