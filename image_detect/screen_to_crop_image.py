@@ -42,16 +42,39 @@ def get_interval_shield_im(im: np.ndarray, mid, radius):
     return shield_im
 
 
-from_dir = 'screens'
-to_dir = 'sub_im'
+def white_shield_screen_to_crop(from_dir, to_dir, position):
+    for name in os.listdir(from_dir):
+        abs_screen_name = os.path.join(from_dir, name)
+        screen = cv2.imread(abs_screen_name)
+        x0, x1, y0, y1 = position['x0'], position['x1'], position['y0'], position['y1']
+        crop_im = screen[y0: y1, x0: x1, :]
+        shield_im = get_white_shield_im(crop_im)
+        cv2.imwrite(os.path.join(to_dir, name), shield_im)
 
-name_list = ['single.png', 'burst.png', 'full.png']
-for name in name_list:
-    screen = cv2.imread(os.path.join(from_dir, name))
-    sub_im = screen[1128: 1153, 1496: 1942, :]
-    # cv2.imshow('sub_im', sub_im)
-    # cv2.waitKey(1000)
-    sub_im = get_shield_im(sub_im)
-    # cv2.imshow('sub_im', sub_im)
-    # cv2.waitKey(1000)
-    cv2.imwrite(os.path.join(to_dir, name), sub_im)
+
+def diff_shield_screen_to_crop(from_dir, to_dir, position):
+    for name in os.listdir(from_dir):
+        if name[:1] == '_':
+            x0, x1, y0, y1 = position['x0'], position['x1'], position['y0'], position['y1']
+            abs_screen_name0 = os.path.join(from_dir, name[1:])
+            abs_screen_name1 = os.path.join(from_dir, name)
+            screen0 = cv2.imread(abs_screen_name0)
+            screen1 = cv2.imread(abs_screen_name1)
+            crop_im0 = screen0[y0: y1, x0: x1, :]
+            crop_im1 = screen1[y0: y1, x0: x1, :]
+            shield_im = get_diff_shield_im(crop_im0, crop_im1)
+            cv2.imwrite(os.path.join(to_dir, name), shield_im)
+
+
+def interval_shield_screen_to_crop(from_dir, to_dir, position, mid, radius):
+    for name in os.listdir(from_dir):
+        abs_screen_name = os.path.join(from_dir, name)
+        screen = cv2.imread(abs_screen_name)
+        x0, x1, y0, y1 = position['x0'], position['x1'], position['y0'], position['y1']
+        crop_im = screen[y0: y1, x0: x1, :]
+        shield_im = get_interval_shield_im(crop_im, mid, radius)
+        cv2.imwrite(os.path.join(to_dir, name), shield_im)
+
+
+if __name__ == '__main__':
+    pass
