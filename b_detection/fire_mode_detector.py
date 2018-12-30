@@ -24,7 +24,7 @@ class Fire_Mode_Detector(Detection):
             if area_max == area:
                 return item_name
 
-    # def detect(self, im, thr=10000):
+    # def image_detect(self, im, thr=10000):
     #     for item_name, png in self.png_dict.items():
     #         print(detect_item_sum(im, png))
     #         if detect_item_sum(im, png) < thr:
