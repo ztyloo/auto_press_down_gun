@@ -24,6 +24,23 @@ class Fire_Mode_Detector(Detection):
             if area_max == area:
                 return item_name
 
+    # def detect(self, im, thr=10000):
+    #     for item_name, png in self.png_dict.items():
+    #         print(detect_item_sum(im, png))
+    #         if detect_item_sum(im, png) < thr:
+    #             return item_name
+
+
+def detect_item_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray):
+    test_im = detect_im_3c.copy()
+    target_im = target_im_4c[:, :, 0:3]
+    shield = target_im_4c[:, :, [3]] // 255
+
+    test_im = test_im * shield
+    target_im = target_im * shield
+
+    return np.sum(test_im - target_im)
+
 
 def im_area_sum(im_3c: np.ndarray, im_4c: np.ndarray):
     test_im = im_3c.copy()

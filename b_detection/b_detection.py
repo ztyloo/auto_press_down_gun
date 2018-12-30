@@ -12,6 +12,6 @@ class B_Detector:
         self.fire_mode_detector = Fire_Mode_Detector()
 
     def detect(self, screen):
-        fire_mode_im = screen[1318: 1339, 1595: 1677, :]
+        fire_mode_im = screen[1128: 1153, 1496: 1942, :]
         self.state.fire_mode1 = self.fire_mode_detector.detect(fire_mode_im)
 

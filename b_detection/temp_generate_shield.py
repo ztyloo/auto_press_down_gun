@@ -7,9 +7,7 @@ import numpy as np
 def get_shield(im: np.ndarray):
     shield = im.copy()
     shield = shield.mean(axis=-1)
-    im_mean = np.mean(shield)
-    shield = shield - im_mean
-    shield = np.where(shield > 10, 255, 0).astype(np.uint8)
+    shield = np.where(abs(shield-205) < 10, 255, 0).astype(np.uint8)
 
     # im = np.where(im > 50, 255, 0).astype(np.uint8)
     # im_mean = np.mean(im)
@@ -31,7 +29,7 @@ to_dir = 'sub_im'
 name_list = ['single.png', 'burst.png', 'full.png']
 for name in name_list:
     screen = cv2.imread(os.path.join(from_dir, name))
-    sub_im = screen[1318: 1339, 1595: 1677, :]
+    sub_im = screen[1128: 1153, 1496: 1942, :]
     # cv2.imshow('sub_im', sub_im)
     # cv2.waitKey(1000)
     sub_im = get_shield_im(sub_im)

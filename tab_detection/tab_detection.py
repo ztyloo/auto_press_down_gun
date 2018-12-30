@@ -46,6 +46,8 @@ class Tab_Detector:
         vt_im = get_pos_im(self.yml, screen, 'vest')
         self.state.vt = self.vt_detector.detect(vt_im)
 
+        print('gun1:'+str(self.state.gun1)+'gun2:'+str(self.state.gun2))
+
 
 if __name__ == '__main__':
     pass

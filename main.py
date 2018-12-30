@@ -10,6 +10,7 @@ from auto_press_gun.press import Auto_down
 from lists import *
 from all_state import State
 from utils import get_screen
+import itchat
 
 
 class Key_Listener(PyKeyboardEvent):
@@ -20,19 +21,19 @@ class Key_Listener(PyKeyboardEvent):
         self.t = Tab_Detector(self.all_state)
         self.b = B_Detector(self.all_state)
         self.ad = Auto_down()
+        itchat.auto_login(hotReload=True)
 
     def tap(self, keycode, character, press):
-
+        print(keycode, character)
         if keycode == 9 and press:  # tab
             self.ad.m_listener_stop()
             screen = get_screen()
             threading.Timer(0.01, self.t.detect, args=[screen]).start()
-            threading.Timer(0.5, self.check_fire_mode).start()
 
         if keycode == 123 and press:  # F12
             self.ad.m_listener_stop()
 
-        if keycode == 71 and press:  # F12
+        if keycode == 71 and press:  # g
             self.ad.m_listener_stop()
 
         if keycode == 66 and not press:  # b
@@ -42,13 +43,11 @@ class Key_Listener(PyKeyboardEvent):
             self.all_state.gun_state = 1
             self.all_state.update()
             print('gun0_name', self.all_state.gun0)
-            threading.Timer(0.1, self.check_fire_mode).start()
 
         if keycode == 50 and press:  # 2
             self.all_state.gun_state = 2
             self.all_state.update()
             print('gun0_name', self.all_state.gun0)
-            threading.Timer(0.1, self.check_fire_mode).start()
 
     def check_fire_mode(self):
         self.all_state.update()
@@ -56,6 +55,7 @@ class Key_Listener(PyKeyboardEvent):
             screen = get_screen()
             self.b.detect(screen)
             print(self.all_state.fire_mode1)
+            itchat.send(str(self.all_state.gun0)+str(self.all_state.scope0)+str(self.all_state.fire_mode1))
             if self.all_state.fire_mode1 == 'full' and self.all_state.gun0 is not None:
                 self.ad.reset(self.all_state.gun0, self.all_state.scope0)
                 print(self.all_state.gun0, self.all_state.scope0)
