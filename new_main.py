@@ -42,6 +42,7 @@ class Key_Listener(PyKeyboardEvent):
         print('Initial done!!!')
 
     def tab_func(self):
+        self.ad.m_listener_stop()
         screen = get_screen()
         if 'in' == self.in_tab_detect(screen):
             self.all_state.weapon_1 = self.weapon_1_detect(screen)
@@ -54,46 +55,58 @@ class Key_Listener(PyKeyboardEvent):
             self.all_state.muzzle_2 = self.muzzle_2_detect(screen)
             self.all_state.grip_2 = self.grip_2_detect(screen)
 
+    def b_func(self):
+        screen = get_screen()
+        if self.all_state.now_weapon == 1:
+            self.all_state.fire_mode_1 = self.fire_mode_detect(screen)
+        elif self.all_state.now_weapon == 2:
+            self.all_state.fire_mode_2 = self.fire_mode_detect(screen)
+        else:
+            raise Exception('now_weapon error')
+
+    def ad_stop_func(self):
+        self.ad.m_listener_stop()
+
+    def set_auto_down(self):
+        if self.all_state.now_weapon == 1:
+            if self.all_state.weapon_1 in full_mode_gun and self.all_state.fire_mode_1 == 'full':
+                self.ad.reset(self.all_state.weapon_1, self.all_state.scope_1)
+                self.ad.m_listener_run()
+            else:
+                self.ad.m_listener_stop()
+        elif self.all_state.now_weapon == 2:
+            if self.all_state.weapon_2 in full_mode_gun and self.all_state.fire_mode_2 == 'full':
+                self.ad.reset(self.all_state.weapon_2, self.all_state.scope_2)
+                self.ad.m_listener_run()
+            else:
+                self.ad.m_listener_stop()
+        else:
+            raise Exception('now_weapon error')
 
     def tap(self, keycode, character, press):
         print(keycode, character, press)
         if keycode == 9 and press:  # tab
-            self.ad.m_listener_stop()
-            threading.Timer(0.001, self.get_screen).start()
-            threading.Timer(0.1, self.t.detect, args=[self.screen]).start()
+            threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 123 and press:  # F12
-            self.ad.m_listener_stop()
+            threading.Timer(0.001, self.ad_stop_func).start()
 
         if keycode == 71 and press:  # g
-            self.ad.m_listener_stop()
+            threading.Timer(0.001, self.ad_stop_func).start()
+
+        if keycode == 53 and press:  # 5
+            threading.Timer(0.001, self.ad_stop_func).start()
 
         if keycode == 66 and not press:  # b
-            threading.Timer(0.1, self.check_fire_mode).start()
+            threading.Timer(0.1, self.b_func).start()
 
         if keycode == 49 and press:  # 1
             self.all_state.gun_state = 1
-            self.all_state.update()
-            print('gun0_name', self.all_state.gun0)
 
         if keycode == 50 and press:  # 2
             self.all_state.gun_state = 2
-            self.all_state.update()
-            print('gun0_name', self.all_state.gun0)
 
-    def check_fire_mode(self):
-        self.all_state.update()
-        if self.all_state.gun0 in full_mode_gun:
-            screen = get_screen()
-            self.b.detect(screen)
-            print(self.all_state.fire_mode1)
-            itchat.send(str(self.all_state.gun0)+str(self.all_state.scope0)+str(self.all_state.fire_mode1))
-            if self.all_state.fire_mode1 == 'full' and self.all_state.gun0 is not None:
-                self.ad.reset(self.all_state.gun0, self.all_state.scope0)
-                print(self.all_state.gun0, self.all_state.scope0)
-                self.ad.m_listener_run()
-            else:
-                self.ad.m_listener_stop()
+        threading.Timer(0.001, self.set_auto_down).start()
 
     def escape(self, event):
         return False

@@ -41,11 +41,11 @@ class Auto_down:
             self.timer.cancel()
 
     def m_listener_run(self):
-        print('press start')
+        # print('press start')
         self.m_listener.run()
 
     def m_listener_stop(self):
-        print('press stop')
+        # print('press stop')
         self.m_listener.stop()
         self.m_listener = Mouse_listern(self.click_handler)
 
