@@ -24,7 +24,7 @@ class Key_Listener(PyKeyboardEvent):
         PyKeyboardEvent.__init__(self)
         self.all_state = State()
 
-        self.fire_mode_detect = Detector('fire_mode', 'fire_mode')
+        self.fire_mode_detect = Detector('fire_mode', 'fire_mode', thr=0)
         self.in_tab_detect = Detector('in_tab', 'in_tab')
 
         self.weapon_1_detect = Detector('weapon_1', 'weapon')
@@ -46,14 +46,22 @@ class Key_Listener(PyKeyboardEvent):
         screen = get_screen()
         if 'in' == self.in_tab_detect(screen):
             self.all_state.weapon_1 = self.weapon_1_detect(screen)
-            self.all_state.scope_1 = self.scope_1_detect(screen)
+            scope_res = self.scope_1_detect(screen)
+            self.all_state.scope_1 = 1 if scope_res is None else int(scope_res[0])
             # self.all_state.muzzle_1 = self.muzzle_1_detect(screen)
             # self.all_state.grip_1 = self.grip_1_detect(screen)
 
             self.all_state.weapon_2 = self.weapon_2_detect(screen)
-            self.all_state.scope_2 = self.scope_2_detect(screen)
+            scope_res = self.scope_2_detect(screen)
+            self.all_state.scope_2 = 1 if scope_res is None else int(scope_res[0])
             # self.all_state.muzzle_2 = self.muzzle_2_detect(screen)
             # self.all_state.grip_2 = self.grip_2_detect(screen)
+
+            self.set_auto_down()
+
+            print('now_weapon', self.all_state.now_weapon)
+            print('in_tab', self.all_state.weapon_1, self.all_state.scope_1, self.all_state.fire_mode_1)
+            print('in_tab', self.all_state.weapon_2, self.all_state.scope_2, self.all_state.fire_mode_2)
 
     def b_func(self):
         screen = get_screen()
@@ -63,6 +71,11 @@ class Key_Listener(PyKeyboardEvent):
             self.all_state.fire_mode_2 = self.fire_mode_detect(screen)
         else:
             raise Exception('now_weapon error')
+        self.set_auto_down()
+
+        print('now_weapon', self.all_state.now_weapon)
+        print('in_b', self.all_state.weapon_1, self.all_state.scope_1, self.all_state.fire_mode_1)
+        print('in_b', self.all_state.weapon_2, self.all_state.scope_2, self.all_state.fire_mode_2)
 
     def ad_stop_func(self):
         self.ad.m_listener_stop()
@@ -84,7 +97,6 @@ class Key_Listener(PyKeyboardEvent):
             raise Exception('now_weapon error')
 
     def tap(self, keycode, character, press):
-        print(keycode, character, press)
         if keycode == 9 and press:  # tab
             threading.Timer(0.001, self.tab_func).start()
 
@@ -101,12 +113,14 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.1, self.b_func).start()
 
         if keycode == 49 and press:  # 1
-            self.all_state.gun_state = 1
+            self.all_state.now_weapon = 1
+            threading.Timer(0.001, self.set_auto_down).start()
 
         if keycode == 50 and press:  # 2
-            self.all_state.gun_state = 2
+            self.all_state.now_weapon = 2
+            threading.Timer(0.001, self.set_auto_down).start()
 
-        threading.Timer(0.001, self.set_auto_down).start()
+
 
     def escape(self, event):
         return False

@@ -31,12 +31,12 @@ class Auto_down:
     def click_handler(self, x, y, button, press):
         if button == 1 and press:
             self.k.press_key(160)
-            print('press')
+            # print('press')
             self.timer.start()
 
         if button == 1 and (not press):
             self.k.release_key(160)
-            print('not press')
+            # print('not press')
             self.dis.reset()
             self.timer.cancel()
 
