@@ -1,13 +1,30 @@
 import os
-
+import numpy as np
 import cv2
 import yaml
 from pykeyboard import PyKeyboardEvent, PyKeyboard
+from PIL import ImageGrab
 
-from utils import get_screen, move
 from generate_distance.find_point import find_upper
-from tab_detection.gun_name import Gun_Name_Detector
-from tab_detection.utils import get_pos_im
+import win32api
+import win32con
+
+
+def get_screen():
+    screen = ImageGrab.grab()
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+    return screen
+
+
+def move(x, y):
+    try:
+        x = int(x)
+        y = int(y)
+        win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, x, y)
+    except:
+        print('Move Error')
+
 
 
 class Key_Listener(PyKeyboardEvent):

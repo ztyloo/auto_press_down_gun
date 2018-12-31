@@ -1,8 +1,5 @@
 
 from pymouse import PyMouse
-from utils import Detection
-
-
 
 
 class Pick(Detection):
