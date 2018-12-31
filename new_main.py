@@ -59,9 +59,10 @@ class Key_Listener(PyKeyboardEvent):
 
             self.set_auto_down()
 
-            print('now_weapon', self.all_state.now_weapon)
-            print('in_tab', self.all_state.weapon_1, self.all_state.scope_1, self.all_state.fire_mode_1)
-            print('in_tab', self.all_state.weapon_2, self.all_state.scope_2, self.all_state.fire_mode_2)
+            if self.all_state.now_weapon == 1:
+                print(self.all_state.weapon_1, self.all_state.scope_1, self.all_state.fire_mode_1)
+            else:
+                print(self.all_state.weapon_2, self.all_state.scope_2, self.all_state.fire_mode_2)
 
     def b_func(self):
         screen = get_screen()
@@ -73,9 +74,10 @@ class Key_Listener(PyKeyboardEvent):
             raise Exception('now_weapon error')
         self.set_auto_down()
 
-        print('now_weapon', self.all_state.now_weapon)
-        print('in_b', self.all_state.weapon_1, self.all_state.scope_1, self.all_state.fire_mode_1)
-        print('in_b', self.all_state.weapon_2, self.all_state.scope_2, self.all_state.fire_mode_2)
+        if self.all_state.now_weapon == 1:
+            print(self.all_state.weapon_1, self.all_state.scope_1, self.all_state.fire_mode_1)
+        else:
+            print(self.all_state.weapon_2, self.all_state.scope_2, self.all_state.fire_mode_2)
 
     def ad_stop_func(self):
         self.ad.m_listener_stop()
@@ -119,8 +121,6 @@ class Key_Listener(PyKeyboardEvent):
         if keycode == 50 and press:  # 2
             self.all_state.now_weapon = 2
             threading.Timer(0.001, self.set_auto_down).start()
-
-
 
     def escape(self, event):
         return False
