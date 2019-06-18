@@ -18,4 +18,7 @@ in_tab_list = ['time']
 single_shot_gun = ['98k', 'awm', 'm16', 'm24', 'mini14', 's12k', 's1987', 's686', 'sks', 'slr', 'win94']
 full_shot_gun = ['dp28', 'm249']
 single_burst_gun = ['m16', ]
-full_mode_gun = ['akm', 'aug', 'groza', 'm416', 'm762', 'qbz', 'scar',  'ump9','vector']  # 'mk14', 'tommy', 'uzi', 'vss',
+full_mode_gun = ['akm', 'aug', 'groza', 'm416', 'm762', 'qbz', 'scar',  'ump9', 'vector']  # 'mk14', 'tommy', 'uzi', 'vss',
+
+two_state_list = ['akm', 'aug', 'groza', 'm416', 'qbz', 'scar']
+three_state_list = ['m762', 'ump9', 'vector']

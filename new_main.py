@@ -38,7 +38,7 @@ class Key_Listener(PyKeyboardEvent):
         # self.grip_2_detect = Detector('grip_2', 'grip')
 
         self.ad = Auto_down()
-        # itchat.auto_login(hotReload=True)
+        itchat.auto_login(hotReload=True)
         print('Initial done!!!')
 
     def tab_func(self):
@@ -57,30 +57,75 @@ class Key_Listener(PyKeyboardEvent):
             # self.all_state.muzzle_2 = self.muzzle_2_detect(screen)
             # self.all_state.grip_2 = self.grip_2_detect(screen)
 
-            self.set_auto_down()
-
             if self.all_state.now_weapon == 1:
                 print(self.all_state.weapon_1, self.all_state.scope_1, self.all_state.fire_mode_1)
+                itchat.send(str(self.all_state.weapon_1)+' '+str(self.all_state.scope_1)+' '+str(self.all_state.fire_mode_1))
             else:
                 print(self.all_state.weapon_2, self.all_state.scope_2, self.all_state.fire_mode_2)
+                itchat.send(str(self.all_state.weapon_2)+' '+str(self.all_state.scope_2)+' '+str(self.all_state.fire_mode_2))
+
+            self.set_auto_down()
 
     def b_func(self):
-        screen = get_screen()
-        if self.all_state.now_weapon == 1:
-            self.all_state.fire_mode_1 = self.fire_mode_detect(screen)
-        elif self.all_state.now_weapon == 2:
-            self.all_state.fire_mode_2 = self.fire_mode_detect(screen)
-        else:
-            raise Exception('now_weapon error')
-        self.set_auto_down()
+        self.ad.m_listener_stop()
 
         if self.all_state.now_weapon == 1:
+            if self.all_state.weapon_1 in two_state_list:
+                if self.all_state.fire_mode_1 == 'full':
+                    self.all_state.fire_mode_1 = 'single'
+                elif self.all_state.fire_mode_1 == 'single':
+                    self.all_state.fire_mode_1 = 'full'
+            elif self.all_state.weapon_1 in three_state_list:
+                if self.all_state.fire_mode_1 == 'full':
+                    self.all_state.fire_mode_1 = 'single'
+                elif self.all_state.fire_mode_1 == 'single':
+                    self.all_state.fire_mode_1 = 'burst'
+                elif self.all_state.fire_mode_1 == 'burst':
+                    self.all_state.fire_mode_1 = 'full'
+            else:
+                print('wrong state1')
+        elif self.all_state.now_weapon == 2:
+            if self.all_state.weapon_2 in two_state_list:
+                if self.all_state.fire_mode_2 == 'full':
+                    self.all_state.fire_mode_2 = 'single'
+                elif self.all_state.fire_mode_2 == 'single':
+                    self.all_state.fire_mode_2 = 'full'
+            elif self.all_state.weapon_2 in three_state_list:
+                if self.all_state.fire_mode_2 == 'full':
+                    self.all_state.fire_mode_2 = 'single'
+                elif self.all_state.fire_mode_2 == 'single':
+                    self.all_state.fire_mode_2 = 'burst'
+                elif self.all_state.fire_mode_2 == 'burst':
+                    self.all_state.fire_mode_2 = 'full'
+            else:
+                print('wrong state2')
+        if self.all_state.now_weapon == 1:
             print(self.all_state.weapon_1, self.all_state.scope_1, self.all_state.fire_mode_1)
+            itchat.send(str(self.all_state.weapon_1)+' '+str(self.all_state.scope_1)+' '+str(self.all_state.fire_mode_1))
         else:
             print(self.all_state.weapon_2, self.all_state.scope_2, self.all_state.fire_mode_2)
+            itchat.send(str(self.all_state.weapon_2)+' '+str(self.all_state.scope_2)+' '+str(self.all_state.fire_mode_2))
+
+        self.set_auto_down()
+
+        # screen = get_screen()
+        # if self.all_state.now_weapon == 1:
+        #     self.all_state.fire_mode_1 = self.fire_mode_detect(screen)
+        # elif self.all_state.now_weapon == 2:
+        #     self.all_state.fire_mode_2 = self.fire_mode_detect(screen)
+        # else:
+        #     raise Exception('now_weapon error')
+        # self.set_auto_down()
+        #
+
 
     def ad_stop_func(self):
         self.ad.m_listener_stop()
+
+    def f12_func(self):
+        self.ad.m_listener_stop()
+        self.all_state.fire_mode_1 = 'single'
+        self.all_state.fire_mode_2 = 'single'
 
     def set_auto_down(self):
         if self.all_state.now_weapon == 1:
@@ -103,7 +148,7 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 123 and press:  # F12
-            threading.Timer(0.001, self.ad_stop_func).start()
+            threading.Timer(0.001, self.f12_func).start()
 
         if keycode == 71 and press:  # g
             threading.Timer(0.001, self.ad_stop_func).start()
@@ -111,8 +156,8 @@ class Key_Listener(PyKeyboardEvent):
         if keycode == 53 and press:  # 5
             threading.Timer(0.001, self.ad_stop_func).start()
 
-        if keycode == 66 and not press:  # b
-            threading.Timer(0.1, self.b_func).start()
+        if keycode == 66 and press:  # b
+            threading.Timer(0.001, self.b_func).start()
 
         if keycode == 49 and press:  # 1
             self.all_state.now_weapon = 1
