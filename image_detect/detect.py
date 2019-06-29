@@ -25,7 +25,7 @@ class Detector:
             if detect_item_sum(crop_im, png) < sum_thr:
                 return item_name
 
-    def water_mark_classify(self, screen, sum_thr=10000, c_thr=5):
+    def water_mark_classify(self, screen, sum_thr=10000, c_thr=3):
         crop_im = screen[self.y0: self.y1, self.x0: self.x1, :]
         crop_im_r = crop_im[:, :, 0]
         crop_im_g = crop_im[:, :, 1]
@@ -35,8 +35,10 @@ class Detector:
         crop_im_g_diff = abs(crop_im_g - crop_im_c_mean)
         crop_im_b_diff = abs(crop_im_b - crop_im_c_mean)
         crop_im_c_diff_mean = (crop_im_r_diff+crop_im_g_diff+crop_im_b_diff)/3
-        shield = np.where(crop_im_c_diff_mean <= c_thr, 255, 0).astype(np.uint8)
+        shield = np.where(crop_im_c_diff_mean <= c_thr, 0, 1).astype(np.uint8)
         crop_im *= shield[:, :, np.newaxis]
+        # cv2.imshow('', shield*255)
+        # cv2.waitKey()
 
         for item_name, png in self.png_dict.items():
             if detect_item_sum(crop_im, png) < sum_thr:
@@ -51,4 +53,19 @@ def detect_item_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray):
     test_im = test_im * shield
     target_im = target_im * shield
 
+    cv2.imshow('test_im', test_im*255)
+    cv2.imshow('target_im', target_im*255)
+    cv2.waitKey()
+
     return np.sum(test_im - target_im)
+
+
+if __name__ == '__main__':
+    screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/burst/burst.png')
+    # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/full/full.png')
+    screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/single/single.png')
+    fire_mode_detect = Detector('fire_mode', 'fire_mode')
+    a = fire_mode_detect.water_mark_classify(screen)
+    print(a)
+
+

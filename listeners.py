@@ -27,13 +27,13 @@ class Key_Listener(PyKeyboardEvent):
         self.in_tab_detect = Detector('in_tab', 'in_tab')
         self.in_scope_detect = Detector('in_scope', 'in_scope')
 
-        self.weapon_1_detect = Detector('weapon_1', 'weapon')
-        self.scope_1_detect = Detector('scope_1', 'scope')
+        self.weapon_1_detect = Detector('weapon', 'weapon')
+        self.scope_1_detect = Detector('scope', 'scope')
         # self.muzzle_1_detect = Detector('muzzle_1', 'muzzle')
         # self.grip_1_detect = Detector('grip_1', 'grip')
 
         self.weapon_2_detect = Detector('weapon_2', 'weapon')
-        self.scope_2_detect = Detector('2', 'scope')
+        self.scope_2_detect = Detector('scope_2', 'scope')
         # self.muzzle_2_detect = Detector('muzzle_2', 'muzzle')
         # self.grip_2_detect = Detector('grip_2', 'grip')
 
