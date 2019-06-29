@@ -37,7 +37,7 @@ class Key_Listener(PyKeyboardEvent):
     def tap(self, keycode, character, press):
         if keycode == 9 and not press:  # tab
             screen = get_screen()
-            im = get_pos_im(self.yml, screen, 'weapon_screen')
+            im = get_pos_im(self.yml, screen, 'weapon')
             self.gun_name = self.gun_name_detector.detect(im)
             if self.gun_name is not None and os.path.exists(self.gun_name):
                 os.mkdir(self.gun_name)
