@@ -66,12 +66,11 @@ if __name__ == '__main__':
     all_from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/'
     all_to_dir = 'D:/github_project/auto_press_down_gun/image_detect/states_4c_im/'
 
-    for fold in os.listdir(all_from_dir):
-        print(fold)
-        from_dir = os.path.join(all_from_dir, fold)
-        to_dir = os.path.join(all_to_dir, fold)
-        for name in os.listdir(from_dir):
-            to_im = os.path.join(to_dir, name+'.png')
+    for clas in os.listdir(all_from_dir):
+        temp_dir = os.path.join(all_from_dir, clas)
+        for state in os.listdir(temp_dir):
+            from_dir = os.path.join(all_from_dir, clas, state)
+            to_im = os.path.join(all_to_dir, clas, state+'.png')
             screen_to_crop(from_dir, to_im, position['in_scope'])
 
     # from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/in_scope'
