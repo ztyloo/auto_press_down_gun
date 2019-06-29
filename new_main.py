@@ -26,6 +26,7 @@ class Key_Listener(PyKeyboardEvent):
 
         self.fire_mode_detect = Detector('fire_mode', 'fire_mode', thr=0)
         self.in_tab_detect = Detector('in_tab', 'in_tab')
+        self.in_scope_detect = Detector('in_tab', 'in_tab')
 
         self.weapon_1_detect = Detector('weapon_1', 'weapon')
         self.scope_1_detect = Detector('scope_1', 'scope')
