@@ -1,4 +1,3 @@
-from pykeyboard import PyKeyboardEvent, PyKeyboard
 from auto_press_gun.my_timer import MyTimer
 from auto_press_gun.press_down_distence import Down_distence
 from auto_press_gun.press_utiles import *
@@ -11,7 +10,6 @@ class Auto_down:
         self.no_start = True
         super().__init__()
         self.m_listener = Mouse_listern(self.click_handler)
-        self.k = PyKeyboard()
         self.dis_interval_dict = dis_interval
         self.time_interval_dict = time_interval
 
@@ -29,11 +27,9 @@ class Auto_down:
 
     def click_handler(self, x, y, button, press):
         if button == 1 and press:
-            self.k.press_key(160)
             self.timer.start()
 
         if button == 1 and (not press):
-            self.k.release_key(160)
             self.dis.reset()
             self.timer.cancel()
 
