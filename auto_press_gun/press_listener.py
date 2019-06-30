@@ -1,27 +1,30 @@
 import threading
-import win32api
-import win32con
 import pythoncom
 import PyHook3 as pyHook
+from auto_press_gun.press import Press
 
 
 class Press_Listener(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.hm = pyHook.HookManager()
-        self.hm.MouseAll = self.onMouseEvent
+        self.hm.MouseAll = self._onMouseEvent
         self._loop = True
+        self.press = Press()
 
-    def set_state(self):
-        pass
-
-    def onMouseEvent(self, event):
+    def _onMouseEvent(self, event):
+        print('---------------------------------------------')
         print("MessageName:", event.MessageName)
         print("Message:", event.Message)
         print("Time:", event.Time)
         print("Window:", event.Window)
         print("WindowName:", event.WindowName)
         print("Injected:", event.Injected)
+
+        if event.Message == 513:  # mouse left down
+            self.press.start()
+        if event.Message == 514:  # mouse left up
+            self.press.stop()
 
         return True
 

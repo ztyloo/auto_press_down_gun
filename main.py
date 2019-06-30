@@ -1,4 +1,4 @@
-from listeners import Key_Listener, Mouse_listern
+from listeners import Key_Listener
 
 
 class All_States():
@@ -8,17 +8,17 @@ class All_States():
 
         self.now_weapon = 1
 
+        self.fire_mode_1 = 'single'
         self.weapon_1 = None
         self.scope_1 = 1
         self.muzzle_1 = None
         self.grip_1 = None
-        self.fire_mode_1 = 'single'
 
+        self.fire_mode_2 = 'single'
         self.weapon_2 = None
         self.scope_2 = 1
         self.muzzle_2 = None
         self.grip_2 = None
-        self.fire_mode_2 = 'single'
 
         self.hm = None
         self.bp = None

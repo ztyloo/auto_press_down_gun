@@ -6,7 +6,7 @@ from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
 import itchat
 
-from auto_press_gun.press import Auto_down
+from auto_press_gun.press_listener import Press_Listener
 from lists import *
 from image_detect.detect import Detector
 
@@ -38,7 +38,7 @@ class Key_Listener(PyKeyboardEvent):
         # self.muzzle_2_detect = Detector('muzzle_2', 'muzzle')
         # self.grip_2_detect = Detector('grip_2', 'grip')
 
-        self.ad = Auto_down()
+        self.press_listener = Press_Listener()
         # itchat.auto_login(hotReload=True)
         # itchat.send('Initial done!!!')
         print('Initial done!!!')
@@ -48,13 +48,13 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 123 and press:  # F12
-            threading.Timer(0.001, self.ad_stop_func).start()
+            threading.Timer(0.001, self.press_listener.stop()).start()
 
         if keycode == 71 and press:  # g
-            threading.Timer(0.001, self.ad_stop_func).start()
+            threading.Timer(0.001, self.press_listener.stop()).start()
 
         if keycode == 53 and press:  # 5
-            threading.Timer(0.001, self.ad_stop_func).start()
+            threading.Timer(0.001, self.press_listener.stop()).start()
 
         if keycode == 66 and press:  # b
             threading.Timer(0.5, self.b_func).start()
@@ -72,11 +72,10 @@ class Key_Listener(PyKeyboardEvent):
 
     def tab_func(self):
         self.all_states.in_tab = False
-        self.ad.m_listener_stop()
+        self.press_listener.stop()
         screen = get_screen()
         if 'in' == self.in_tab_detect.diff_sum_classify(screen):
             self.all_states.in_tab = True
-
 
             self.all_states.weapon_2 = self.weapon_2_detect.diff_sum_classify(screen)
             scope_res = self.scope_2_detect.diff_sum_classify(screen)
@@ -90,57 +89,33 @@ class Key_Listener(PyKeyboardEvent):
             # self.all_states.muzzle_1 = self.muzzle_1_detect(screen)
             # self.all_states.grip_1 = self.grip_1_detect(screen)
 
-
             print_state(self.all_states)
 
             self.set_auto_down()
 
     def b_func(self):
-        self.ad.m_listener_stop()
+        self.press_listener.stop()
 
         screen = get_screen()
         if self.all_states.now_weapon == 1:
             self.all_states.fire_mode_1 = self.fire_mode_detect.water_mark_classify(screen)
         elif self.all_states.now_weapon == 2:
             self.all_states.fire_mode_2 = self.fire_mode_detect.water_mark_classify(screen)
-        else:
-            raise Exception('now_weapon error')
+
         print_state(self.all_states)
 
         self.set_auto_down()
 
-    def ad_stop_func(self):
-        self.ad.m_listener_stop()
-
     def set_auto_down(self):
+        self.press_listener.stop()
+        self.press_listener.press.set_states(self.all_states)
+
         if self.all_states.now_weapon == 1:
             if self.all_states.weapon_1 in full_mode_gun and self.all_states.fire_mode_1 == 'full':
-                self.ad.reset(self.all_states.weapon_1, self.all_states.scope_1)
-                self.ad.m_listener_run()
-            else:
-                self.ad.m_listener_stop()
+                self.press_listener.start()
         elif self.all_states.now_weapon == 2:
             if self.all_states.weapon_2 in full_mode_gun and self.all_states.fire_mode_2 == 'full':
-                self.ad.reset(self.all_states.weapon_2, self.all_states.scope_2)
-                self.ad.m_listener_run()
-            else:
-                self.ad.m_listener_stop()
-
-
-class Mouse_listern(PyMouseEvent):
-    def __init__(self, all_states):
-        PyMouseEvent.__init__(self)
-        self.all_states = all_states
-
-        self.fire_mode_detect = Detector('fire_mode', 'fire_mode')
-
-    def click(self, x, y, button, press):
-        if button == 2 and not press:
-            threading.Timer(0.001, self.right_click).start()
-
-    def right_click(self):
-        pass
-        # self.all_states
+                self.press_listener.start()
 
 
 def print_state(all_states):
