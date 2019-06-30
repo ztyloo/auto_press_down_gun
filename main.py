@@ -29,5 +29,3 @@ if __name__ == '__main__':
     states = All_States()
     k = Key_Listener(states)
     k.run()
-    # m = Mouse_listern(states)
-    # m.run()
