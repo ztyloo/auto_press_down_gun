@@ -79,7 +79,9 @@ def get_image_corner(image):
     ru_coor = find_corner_by_corner_canny(ru_c, canny)
     rd_coor = find_corner_by_corner_canny(rd_c, canny)
     ld_coor = find_corner_by_corner_canny(ld_c, canny)
-    possible_rect = get_possible_rects(lu_coor, ru_coor, rd_coor, ld_coor)
+    possible_rects = get_possible_rects(lu_coor, ru_coor, rd_coor, ld_coor)
+    last_rects = filter_rects(possible_rects)
+    return last_rects
 
 
 
