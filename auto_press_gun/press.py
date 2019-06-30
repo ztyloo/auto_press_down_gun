@@ -1,9 +1,10 @@
-from threading import Thread
-import yaml
 from pykeyboard import PyKeyboardEvent, PyKeyboard
 from auto_press_gun.my_timer import MyTimer
 from auto_press_gun.press_down_distence import Down_distence
 from auto_press_gun.press_utiles import *
+from auto_press_gun.time_interval_constant import time_interval
+from generate_distance.gun_distance_constant import dis_interval
+
 
 class Auto_down:
     def __init__(self):
@@ -11,16 +12,14 @@ class Auto_down:
         super().__init__()
         self.m_listener = Mouse_listern(self.click_handler)
         self.k = PyKeyboard()
-        with open('generate_distance/gun_distance.yaml', 'r') as f:
-            self.dis_dict = yaml.load(f)
-        with open('auto_press_gun/time_interval.yaml', 'r') as f:
-            self.interval_dict = yaml.load(f)
+        self.dis_interval_dict = dis_interval
+        self.time_interval_dict = time_interval
 
     def reset(self, gun_name: str, scope: int):
-        dis_list = self.dis_dict[gun_name]
+        dis_list = self.dis_interval_dict[gun_name]
         self.dis = Down_distence(dis_list, scope)
 
-        x_interval = self.interval_dict[gun_name]
+        x_interval = self.time_interval_dict[gun_name]
         self.timer = MyTimer(x_interval, self.timer_handler)
 
     def timer_handler(self):

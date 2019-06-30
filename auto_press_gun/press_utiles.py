@@ -48,6 +48,6 @@ if __name__ == '__main__':
     while True:
         i += 1
         time.sleep(1)
-        mouse_down(100)
+        mouse_down(5 )
         x, y = pag.position()
         print(str(i) + ':', x, y)
