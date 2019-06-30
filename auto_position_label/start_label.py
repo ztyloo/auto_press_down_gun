@@ -9,6 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from auto_position_label.image_qlabel import Image_QLabel
 
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -20,7 +21,6 @@ class Ui_Dialog(object):
         self.radioButton.setObjectName("radioButton")
 
         self.label = Image_QLabel(Dialog)
-        self.label.set_corner_rects([(150, 150, 200, 200), (500, 500, 600, 600), (1000, 1000, 1100, 1100)])
         self.label.setGeometry(QtCore.QRect(120, 10, 3311, 1421))
         self.label.setFrameShape(QtWidgets.QFrame.Box)
         self.label.setText("")

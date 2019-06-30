@@ -4,6 +4,8 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPen
 import sys
 import numpy as np
+import cv2
+from auto_position_label.find_image_corner import get_image_corner
 
 
 class Image_QLabel(QtWidgets.QLabel):
@@ -17,10 +19,9 @@ class Image_QLabel(QtWidgets.QLabel):
     c_dist = 1000000000
     corner_br = 3
 
-    def set_corner_rects(self, corner_rects):
-        self.corner_rects = corner_rects
-        self.len = len(corner_rects)
-        self.res_rects = [(0, 0, 0, 0)]*self.len
+    corner_rects = [(0, 0, 0, 0)] * 3
+    res_rects = [(0, 0, 0, 0)] * 3
+    len = 0
 
     def mousePressEvent(self, event):
         if self.c_dist < self.thr0:
@@ -34,9 +35,6 @@ class Image_QLabel(QtWidgets.QLabel):
                 self.c_x1, self.c_y1 = self.c_x, self.c_y
                 self.left_up = True
                 self.res_rects[self.rect_n] = (self.c_x0, self.c_y0, self.c_x1, self.c_y1)
-
-    def mouseReleaseEvent(self, event):
-        pass
 
     def mouseMoveEvent(self, event):
         self.x = event.x()
@@ -85,7 +83,13 @@ class Image_QLabel(QtWidgets.QLabel):
     def setImage(self):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Image", "", "Image Files (*.png)") # Ask for file
         if fileName: # If the user gives a file
-            pixmap = QtGui.QPixmap(fileName) # Setup pixmap with the provided image
+            img = cv2.imread(fileName)
+            corner_rects = get_image_corner(img)
+            self.corner_rects = corner_rects
+            self.len = len(corner_rects)
+            self.res_rects = [(0, 0, 0, 0)] * self.len
+
+            pixmap = QtGui.QPixmap(fileName)  # Setup pixmap with the provided image
             # pixmap = pixmap.scaled(self.width(), self.height(), QtCore.Qt.KeepAspectRatio) # Scale pixmap
             self.setPixmap(pixmap) # Set the pixmap onto the label
             self.setAlignment(QtCore.Qt.AlignLeading) # Align the label to center
@@ -104,13 +108,6 @@ class Example(QtWidgets.QWidget):
 
         self.label.setImage()
 
-        # height, width, bytesPerComponent = img.shape
-        # bytesPerLine = 3 * width
-        # cv2.cvtColor(img, cv2.COLOR_BGR2RGB, img)
-        # QImg = QtGui.QImage(img.data, width, height, bytesPerLine,QtGui.QImage.Format_RGB888)
-        # pixmap = QtGui.QPixmap.fromImage(QImg)
-        # self.label.setPixmap(pixmap)
-        # self.label.setCursor(QtCore.Qt.CrossCursor)
         self.show()
 
 

@@ -73,7 +73,7 @@ def filter_rects(rects, thr=3):
 
 
 def get_image_corner(image):
-    canny = cv2.Canny(img, 30, 100) / 255
+    canny = cv2.Canny(image, 30, 100) / 255
     lu_c, ru_c, rd_c, ld_c = get_rect_kernel()
     lu_coor = find_corner_by_corner_canny(lu_c, canny)
     ru_coor = find_corner_by_corner_canny(ru_c, canny)
