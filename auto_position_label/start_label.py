@@ -7,37 +7,45 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from auto_position_label.image_qlabel import Image_QLabel
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(3440, 1370)
         Dialog.setMouseTracking(True)
+
         self.radioButton = QtWidgets.QRadioButton(Dialog)
         self.radioButton.setGeometry(QtCore.QRect(10, 90, 89, 16))
         self.radioButton.setObjectName("radioButton")
-        self.label = QtWidgets.QLabel(Dialog)
+
+        self.label = Image_QLabel(Dialog)
+        self.label.set_corner_rects([(150, 150, 200, 200), (500, 500, 600, 600), (1000, 1000, 1100, 1100)])
         self.label.setGeometry(QtCore.QRect(120, 10, 3311, 1421))
         self.label.setFrameShape(QtWidgets.QFrame.Box)
         self.label.setText("")
         self.label.setObjectName("label")
-        self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(10, 10, 111, 51))
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(Dialog)
-        self.pushButton_2.setEnabled(True)
-        self.pushButton_2.setGeometry(QtCore.QRect(10, 1380, 111, 51))
-        self.pushButton_2.setObjectName("pushButton_2")
+        self.label.setMouseTracking(True)
+
+        self.startButton = QtWidgets.QPushButton(Dialog)
+        self.startButton.setGeometry(QtCore.QRect(10, 10, 111, 51))
+        self.startButton.setObjectName("pushButton")
+        self.endButten = QtWidgets.QPushButton(Dialog)
+        self.endButten.setEnabled(True)
+        self.endButten.setGeometry(QtCore.QRect(10, 1380, 111, 51))
+        self.endButten.setObjectName("pushButton_2")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+        self.startButton.clicked.connect(self.label.setImage)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Locate_rectangle"))
         self.radioButton.setText(_translate("Dialog", "RadioButton"))
-        self.pushButton.setText(_translate("Dialog", "Start"))
-        self.pushButton_2.setText(_translate("Dialog", "finish"))
+        self.startButton.setText(_translate("Dialog", "Start"))
+        self.endButten.setText(_translate("Dialog", "finish"))
 
 
 if __name__ == "__main__":

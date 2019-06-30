@@ -1,39 +1,86 @@
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 from PyQt5 import QtGui
-import cv2
+from PyQt5.QtGui import QPainter, QColor, QBrush, QPen
 import sys
+import numpy as np
 
 
 class Image_QLabel(QtWidgets.QLabel):
-    x0 = 0
-    y0 = 0
-    x1 = 0
-    y1 = 0
-    _pressed = False
-    corner_points = [(150, 150, 200, 200)]
+    x, c_x, c_x0, c_x1 = 0, 0, 0, 0
+    y, c_y, c_y0, c_y1 = 0, 0, 0, 0
+
+    rect_n = 0
+    left_up = True
+
+    thr0, thr1 = 30, 300
+    c_dist = 1000000000
+    corner_br = 3
+
+    def set_corner_rects(self, corner_rects):
+        self.corner_rects = corner_rects
+        self.len = len(corner_rects)
+        self.res_rects = [(0, 0, 0, 0)]*self.len
 
     def mousePressEvent(self, event):
-        self._pressed = True
-        self.x0 = event.x()
-        self.y0 = event.y()
+        if self.c_dist < self.thr0:
+            self.rect_n += 1
+            if self.rect_n == self.len:
+                self.rect_n = 0
+            if self.left_up:
+                self.c_x0, self.c_y0 = self.c_x, self.c_y
+                self.left_up = False
+            else:
+                self.c_x1, self.c_y1 = self.c_x, self.c_y
+                self.left_up = True
+                self.res_rects[self.rect_n] = (self.c_x0, self.c_y0, self.c_x1, self.c_y1)
 
     def mouseReleaseEvent(self, event):
-        self._pressed = False
+        pass
 
     def mouseMoveEvent(self, event):
-        if self._pressed:
-            self.x1 = event.x()
-            self.y1 = event.y()
-            self.update()
+        self.x = event.x()
+        self.y = event.y()
+
+        self.c_dist = 1000000000
+        for a, b, c, d in self.corner_rects:
+            temp_x, temp_y = (a, b) if self.left_up else (c, d)
+            temp_dist = np.linalg.norm(np.array([self.x, self.y]) - np.array([temp_x, temp_y])) // 1*2
+            if temp_dist < self.c_dist:
+                self.c_dist = temp_dist
+                self.c_x, self.c_y = temp_x, temp_y
+
+        self.update()
 
     def paintEvent(self, event):
         super().paintEvent(event)
-        rect =QtCore.QRect(self.x0, self.y0, abs(self.x1-self.x0), abs(self.y1-self.y0))
-        painter = QtGui.QPainter(self)
-        painter.setPen(QtGui.QPen(QtCore.Qt.red,2,QtCore.Qt.SolidLine))
-        painter.drawRect(rect)
-        painter.drawEllipse(150,150,100,100)
+
+        abcd_painter = QPainter(self)
+        for a, b, c, d in self.corner_rects:
+            abcd_painter.setPen(QPen(QtCore.Qt.red,self.corner_br,QtCore.Qt.SolidLine))
+            abcd_painter.drawPoint(a, b)
+            abcd_painter.setPen(QPen(QtCore.Qt.blue,self.corner_br,QtCore.Qt.SolidLine))
+            abcd_painter.drawPoint(c, b)
+            abcd_painter.setPen(QPen(QtCore.Qt.green,self.corner_br,QtCore.Qt.SolidLine))
+            abcd_painter.drawPoint(c, d)
+            abcd_painter.setPen(QPen(QtCore.Qt.yellow,self.corner_br,QtCore.Qt.SolidLine))
+            abcd_painter.drawPoint(a, d)
+
+        rect_painter = QPainter(self)
+        for a, b, c, d in self.res_rects:
+            rect =QtCore.QRect(a, b, c-a, d-b)
+            rect_painter.setPen(QPen(QtCore.Qt.cyan,1,QtCore.Qt.SolidLine))
+            rect_painter.drawRect(rect)
+
+        circle_painter = QPainter(self)
+        circle_painter.setPen(QPen(QtCore.Qt.transparent, 0))
+        if self.thr0 < self.c_dist < self.thr1:
+            circle_painter.setBrush(QColor(255, 255, 0, 50))
+            circle_painter.drawEllipse(self.c_x-self.c_dist//2, self.c_y-self.c_dist//2, self.c_dist, self.c_dist)
+
+        if self.c_dist < self.thr0:
+            circle_painter.setBrush(QColor(0, 255, 0, 100))
+            circle_painter.drawEllipse(self.c_x-self.thr0//2, self.c_y-self.thr0//2, self.thr0, self.thr0)
 
     def setImage(self):
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Image", "", "Image Files (*.png)") # Ask for file
