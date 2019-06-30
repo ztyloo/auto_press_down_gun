@@ -16,7 +16,7 @@ class Detector:
 
     def diff_sum_classify(self, crop_im, sum_thr=10000):
         for item_name, png in self.png_dict.items():
-            if sum_thr == 10:
+            if sum_thr == 10: ## TODO
                 cv2.imshow('corp', crop_im)
                 # cv2.imshow('png', png)
                 cv2.waitKey()
@@ -26,6 +26,13 @@ class Detector:
 
     def water_mark_classify(self, crop_im, sum_thr=10000, c_thr=10):
         most_color = find_most_color(crop_im)
+        diff_crop = crop_im - np.array(most_color)[np.newaxis, np.newaxis, :]
+        shield = (np.where(diff_crop.sum(axis=-1) <= 20 , 255, 0)//255)[:, :, np.newaxis].astype(np.uint8)
+
+        crop_im *= shield
+
+        cv2.imshow('corp', crop_im)
+        cv2.waitKey()
 
         min_item = None
         min_sum = 1000000
@@ -63,44 +70,44 @@ def find_most_color(im):
 
 
 if __name__ == '__main__':
+    from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 
 
-
-    # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/burst/burst.png')
-    # # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/full/full.png')
-    # # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/single/single.png')
-    # fire_mode_detect = Detector('fire_mode', 'fire_mode')
-    # a = fire_mode_detect.water_mark_classify(screen)
-    # print(a)
+    # screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/burst/burst.png')
+    screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/full/full.png')
+    # screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/single/single.png')
+    fire_mode_detect = Detector('fire_mode')
+    a = fire_mode_detect.water_mark_classify(crop_screen(screen, sc_pos['fire_mode']))
+    print(a)
 
     # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/98k/98k.png')
-    # fire_mode_detect = Detector('name', 'name')
-    # a = fire_mode_detect.diff_sum_classify(screen)
+    # fire_mode_detect = Detector('name')
+    # a = fire_mode_detect.diff_sum_classify(crop_screen(screen, sc_pos['weapon'][0]['name']))
     # print(a)
 
-    import cv2
-    import numpy as np
-    from PIL import ImageGrab
-    from pykeyboard import PyKeyboardEvent
-
-    weapon_detect = Detector('name', 'name')
-    class Key_listener(PyKeyboardEvent):
-        def __init__(self):
-            PyKeyboardEvent.__init__(self)
-            self.i = 0
-
-        def tap(self, keycode, character, press):
-
-            if keycode == 162 and press:
-                screen = ImageGrab.grab()
-                screen = np.array(screen)
-                screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-                a = weapon_detect.diff_sum_classify(screen)
-                self.i += 1
-
-        def escape(self, event):
-            return False
-
-
-    t = Key_listener()
-    t.run()
+    # import cv2
+    # import numpy as np
+    # from PIL import ImageGrab
+    # from pykeyboard import PyKeyboardEvent
+    #
+    # weapon_detect = Detector('name')
+    # class Key_listener(PyKeyboardEvent):
+    #     def __init__(self):
+    #         PyKeyboardEvent.__init__(self)
+    #         self.i = 0
+    #
+    #     def tap(self, keycode, character, press):
+    #
+    #         if keycode == 162 and press:
+    #             screen = ImageGrab.grab()
+    #             screen = np.array(screen)
+    #             screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+    #             a = weapon_detect.diff_sum_classify(screen)
+    #             self.i += 1
+    #
+    #     def escape(self, event):
+    #         return False
+    #
+    #
+    # t = Key_listener()
+    # t.run()

@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-from matplotlib import pyplot as plt
 
 
 def get_rect_kernel(corner_len=30, thick=2):
@@ -38,9 +37,9 @@ def find_corner_by_corner_canny(corner, canny):
     return coordinate  # (x, y)
 
 
-def get_possible_rectangle(lu_coord, ru_coord, rd_coord, ld_coord):
+def get_possible_rects(lu_coord, ru_coord, rd_coord, ld_coord):
     blur_thr = 2
-    possible_rectangle = list()
+    possible_rectangles = list()
     for a, b in lu_coord:
         for aa, bb in ru_coord:
             if abs(bb-b) <= blur_thr and aa-a > 30:
@@ -48,18 +47,44 @@ def get_possible_rectangle(lu_coord, ru_coord, rd_coord, ld_coord):
                     if abs(aaa-aa) <= blur_thr and bbb-bb > 30:
                         for aaaa, bbbb in ld_coord:
                             if abs(aaaa-a) <= blur_thr and abs(bbbb-bbb) <= blur_thr:
-                                possible_rectangle.append((a, b, aaa, bbb))
-    return possible_rectangle
+                                possible_rectangles.append((a, b, aaa, bbb))
+    return possible_rectangles
+
+
+def filter_rects(rects):
+    res_rects = list()
+    for i in range(len(rects)):
+        for j in range(i+1, len(rects)):
+            rect0 = rects[i]
+            rect1 = rects[j]
+            is_similar = True
+            for t in range(4):
+                if abs(rect0[t]-rect1[t]) >= 2:
+                    is_similar = False
+            res_rects.append(rect0)
+            if not is_similar:
+                res_rects.append(rect1)
+
+    return res_rects
+
+
+def get_image_corner(image):
+    canny = cv2.Canny(img, 30, 100) / 255
+    lu_c, ru_c, rd_c, ld_c = get_rect_kernel()
+    lu_coor = find_corner_by_corner_canny(lu_c, canny)
+    ru_coor = find_corner_by_corner_canny(ru_c, canny)
+    rd_coor = find_corner_by_corner_canny(rd_c, canny)
+    ld_coor = find_corner_by_corner_canny(ld_c, canny)
+    possible_rect = get_possible_rects(lu_coor, ru_coor, rd_coor, ld_coor)
+
 
 
 if __name__ == '__main__':
-    img = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/akm/akm.png')
-    # img = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/98k/98k.png')
+    img = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/name/akm/akm.png')
+    # img = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/name/98k/98k.png')
     # img = img[120:170, 0:2238]
     # cv2.imshow('img', img)
     # cv2.waitKey()
-
-
 
     canny = cv2.Canny(img, 30, 100)/255
     cv2.imshow("canny", canny)
@@ -73,28 +98,42 @@ if __name__ == '__main__':
 
     cp_img = img.copy()
     for x, y in lu_coor:
-        cv2.circle(cp_img, (x,y), 1, (255, 0, 0), -1)
+        cv2.circle(cp_img, (x,y), 1, (0, 0, 255), -1)
     for x, y in ru_coor:
-        cv2.circle(cp_img, (x,y), 1, (0, 255, 0), -1)
+        cv2.circle(cp_img, (x,y), 1, (255, 0, 0), -1)
     for x, y in rd_coor:
-        cv2.circle(cp_img, (x, y), 1, (0, 0, 255), -1)
+        cv2.circle(cp_img, (x, y), 1, (0, 255, 0), -1)
     for x, y in ld_coor:
         cv2.circle(cp_img, (x,y), 1, (0, 255, 255), -1)
-    cv2.imshow('img', cp_img)
+    cv2.imshow('cp_img', cp_img)
     cv2.waitKey()
 
-    possible_rect = get_possible_rectangle(lu_coor, ru_coor, rd_coor, ld_coor)
+    possible_rects = get_possible_rects(lu_coor, ru_coor, rd_coor, ld_coor)
 
     cp2_img = img.copy()
-    for x, y, x1, y1 in possible_rect:
-        cv2.circle(cp2_img, (x, y), 1, (255, 0, 0), -1)
-    for x, y, x1, y1 in possible_rect:
-        cv2.circle(cp2_img, (x1, y), 1, (0, 255, 0), -1)
-    for x, y, x1, y1 in possible_rect:
-        cv2.circle(cp2_img, (x1, y1), 1, (0, 0, 255), -1)
-    for x, y, x1, y1 in possible_rect:
+    for x, y, x1, y1 in possible_rects:
+        cv2.circle(cp2_img, (x, y), 1, (0, 0, 255), -1)
+    for x, y, x1, y1 in possible_rects:
+        cv2.circle(cp2_img, (x1, y), 1, (255, 0, 0), -1)
+    for x, y, x1, y1 in possible_rects:
+        cv2.circle(cp2_img, (x1, y1), 1, (0, 255, 0), -1)
+    for x, y, x1, y1 in possible_rects:
         cv2.circle(cp2_img, (x, y1), 1, (0, 255, 255), -1)
     cv2.imshow('cp2_img', cp2_img)
+    cv2.waitKey()
+
+    last_rects = filter_rects(possible_rects)
+
+    cp3_img = img.copy()
+    for x, y, x1, y1 in last_rects:
+        cv2.circle(cp3_img, (x, y), 1, (0, 0, 255), -1)
+    for x, y, x1, y1 in last_rects:
+        cv2.circle(cp3_img, (x1, y), 1, (255, 0, 0), -1)
+    for x, y, x1, y1 in last_rects:
+        cv2.circle(cp3_img, (x1, y1), 1, (0, 255, 0), -1)
+    for x, y, x1, y1 in last_rects:
+        cv2.circle(cp3_img, (x, y1), 1, (0, 255, 255), -1)
+    cv2.imshow('cp3_img', cp3_img)
     cv2.waitKey()
 
 

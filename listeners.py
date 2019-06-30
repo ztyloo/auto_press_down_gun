@@ -73,13 +73,13 @@ class Key_Listener(PyKeyboardEvent):
             self.all_states.in_tab = True
             for n in [0, 1]:
                 name_crop = crop_screen(screen, sc_pos['weapon'][n]['name'])
-                scope_crop = crop_screen(screen, sc_pos['weapon'][n]['scope'])
-                # muzzle_crop = crop_screen(screen, sc_pos['weapon'][n]['muzzle'])
-                # grip_crop = crop_screen(screen, sc_pos['weapon'][n]['grip'])
+                scope_crop = crop_screen(screen, sc_pos['name'][n]['scope'])
+                # muzzle_crop = crop_screen(screen, sc_pos['name'][n]['muzzle'])
+                # grip_crop = crop_screen(screen, sc_pos['name'][n]['grip'])
                 self.all_states.weapon[n].name = self.name_detect.diff_sum_classify(name_crop)
                 self.all_states.weapon[n].scope = self.scope_detect.diff_sum_classify(scope_crop, sum_thr=10)
-                # self.all_states.weapon[n].muzzle = self.muzzle_detect.diff_sum_classify(muzzle_crop)
-                # self.all_states.weapon[n].grip = self.grip_detect.diff_sum_classify(grip_crop)
+                # self.all_states.name[n].muzzle = self.muzzle_detect.diff_sum_classify(muzzle_crop)
+                # self.all_states.name[n].grip = self.grip_detect.diff_sum_classify(grip_crop)
 
             print_state(self.all_states)
             self.set_auto_down()
@@ -105,7 +105,7 @@ class Key_Listener(PyKeyboardEvent):
 
 def print_state(all_states):
     # n = all_states.weapon_n
-    # print_str = str(all_states.weapon[n].name) + ' ' + str(all_states.weapon[n].scope) + ' ' + str(all_states.fire_mode)
+    # print_str = str(all_states.name[n].name) + ' ' + str(all_states.name[n].scope) + ' ' + str(all_states.fire_mode)
     # print(print_str)
     # itchat.send('\n')
     # itchat.send(print_str)
