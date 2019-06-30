@@ -7,7 +7,8 @@ class Press(threading.Thread):
         self._loop = True
 
     def set_states(self, all_states):
-        gun_num = all_states.now_weapon
+        gun_n = all_states.weapon_n
+        gun_name = all_states
 
 
     def run(self):

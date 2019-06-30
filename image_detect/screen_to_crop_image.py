@@ -2,7 +2,7 @@ import cv2
 import os
 import numpy as np
 
-from image_detect.crop_position import position
+from auto_position_label.crop_position import screen_position
 
 
 def get_interval_shield(im, mid, radius):
@@ -70,23 +70,23 @@ if __name__ == '__main__':
         for state in os.listdir(temp_dir):
             from_dir = os.path.join(all_from_dir, clas, state)
             to_im = os.path.join(all_to_dir, clas, state+'.png')
-            screen_to_crop(from_dir, to_im, position[clas])
+            screen_to_crop(from_dir, to_im, screen_position[clas])
 
     from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/full'
     to_im = 'D:/github_project/auto_press_down_gun/image_detect/states_4c_im/fire_mode/full.png'
-    screen_to_crop(from_dir, to_im, position['fire_mode'], mid=215, radius=15)
+    screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
 
     from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/burst'
     to_im = 'D:/github_project/auto_press_down_gun/image_detect/states_4c_im/fire_mode/burst.png'
-    screen_to_crop(from_dir, to_im, position['fire_mode'], mid=215, radius=15)
+    screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
 
     from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/fire_mode/single'
     to_im = 'D:/github_project/auto_press_down_gun/image_detect/states_4c_im/fire_mode/single.png'
-    screen_to_crop(from_dir, to_im, position['fire_mode'], mid=215, radius=15)
+    screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
 
-    # for png_path in os.listdir('D:/github_project/auto_press_down_gun/image_detect/screen_captures/weapon'):
-    #     from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/weapon/' + png_path
-    #     to_im = 'D:/github_project/auto_press_down_gun/image_detect/states_4c_im/weapon/' + png_path
+    # for png_path in os.listdir('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name'):
+    #     from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/' + png_path
+    #     to_im = 'D:/github_project/auto_press_down_gun/image_detect/states_4c_im/name/' + png_path
     #     screen_to_crop(from_dir, to_im, position['weapon_1'])
     #
     # from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/in_scope'

@@ -1,15 +1,10 @@
 import numpy as np
 import cv2
 import os
-from image_detect.crop_position import position
 
 
 class Detector:
-    def __init__(self, position_name, category_name):
-
-        assert position_name in position
-        crop_position = position[position_name]
-        self.x0, self.x1, self.y0, self.y1 = crop_position['x0'], crop_position['x1'], crop_position['y0'], crop_position['y1']
+    def __init__(self, category_name):
         self.png_dict = dict()
 
         png_dir = os.path.join('D:/github_project/auto_press_down_gun/image_detect/states_4c_im', category_name)
@@ -19,27 +14,18 @@ class Detector:
             png = cv2.imread(abs_png_name, cv2.IMREAD_UNCHANGED)
             self.png_dict[png_name[:-4]] = png
 
-    def diff_sum_classify(self, screen, sum_thr=10000):
-        crop_im = screen[self.y0: self.y1, self.x0: self.x1, :]
+    def diff_sum_classify(self, crop_im, sum_thr=10000):
         for item_name, png in self.png_dict.items():
-            if detect_item_sum(crop_im, png) < sum_thr:
+            if sum_thr == 10:
+                cv2.imshow('corp', crop_im)
+                # cv2.imshow('png', png)
+                cv2.waitKey()
+            sum = detect_item_sum(crop_im, png)
+            if sum < sum_thr:
                 return item_name
 
-    def water_mark_classify(self, screen, sum_thr=10000, c_thr=10):
-        crop_im = screen[self.y0: self.y1, self.x0: self.x1, :]
-        max_color = find_most_color(crop_im)
-
-        crop_im_r = crop_im[:, :, 0] - max_color[0]
-        crop_im_g = crop_im[:, :, 1] - max_color[1]
-        crop_im_b = crop_im[:, :, 2] - max_color[2]
-        shield_r = np.where(crop_im_r <= c_thr, 1, 0)
-        shield_g = np.where(crop_im_g <= c_thr, 1, 0)
-        shield_b = np.where(crop_im_b <= c_thr, 1, 0)
-
-        shield = (shield_r*shield_g*shield_b).astype(np.uint8)
-
-        # cv2.imshow('', shield*255)
-        # cv2.waitKey()
+    def water_mark_classify(self, crop_im, sum_thr=10000, c_thr=10):
+        most_color = find_most_color(crop_im)
 
         min_item = None
         min_sum = 1000000
@@ -87,8 +73,8 @@ if __name__ == '__main__':
     # a = fire_mode_detect.water_mark_classify(screen)
     # print(a)
 
-    # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/weapon/98k/98k.png')
-    # fire_mode_detect = Detector('weapon', 'weapon')
+    # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/98k/98k.png')
+    # fire_mode_detect = Detector('name', 'name')
     # a = fire_mode_detect.diff_sum_classify(screen)
     # print(a)
 
@@ -97,7 +83,7 @@ if __name__ == '__main__':
     from PIL import ImageGrab
     from pykeyboard import PyKeyboardEvent
 
-    weapon_detect = Detector('weapon', 'weapon')
+    weapon_detect = Detector('name', 'name')
     class Key_listener(PyKeyboardEvent):
         def __init__(self):
             PyKeyboardEvent.__init__(self)

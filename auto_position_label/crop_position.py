@@ -1,7 +1,7 @@
 
 delta = 306
 
-position = {
+screen_position = {
 'fire_mode': {'x0': 1496, 'x1': 1942, 'y0': 1128, 'y1': 1153},
 'in_tab':    {'x0': 1053, 'x1': 1087, 'y0': 138, 'y1': 155},
 'in_scope':  {'x0': 1669, 'x1': 1766, 'y0': 1179, 'y1': 1208},
@@ -15,11 +15,11 @@ position = {
             'butt':     {'x0': 2644, 'x1': 2709, 'y0': 193, 'y1': 258},
             },{
             'name':   {'x0': 2245, 'x1': 2400, 'y0': 135+307, 'y1': 160+307},
-            'muzzle_2':   {'x0': 2191, 'x1': 2256, 'y0': 330+delta, 'y1': 395+delta},
-            'grip_2':     {'x0': 2327, 'x1': 2392, 'y0': 330+delta, 'y1': 395+delta},
-            'magazine_2': {'x0': 2474, 'x1': 2539, 'y0': 330+delta, 'y1': 395+delta},
-            'scope_2':    {'x0': 2554, 'x1': 2619, 'y0': 152+delta, 'y1': 217+delta},
-            'butt_2':     {'x0': 2644, 'x1': 2709, 'y0': 193+delta, 'y1': 258+delta},
+            'muzzle':   {'x0': 2191, 'x1': 2256, 'y0': 330+delta, 'y1': 395+delta},
+            'grip':     {'x0': 2327, 'x1': 2392, 'y0': 330+delta, 'y1': 395+delta},
+            'magazine': {'x0': 2474, 'x1': 2539, 'y0': 330+delta, 'y1': 395+delta},
+            'scope':    {'x0': 2554, 'x1': 2619, 'y0': 152+delta, 'y1': 217+delta},
+            'butt':     {'x0': 2644, 'x1': 2709, 'y0': 193+delta, 'y1': 258+delta},
             }],
 
 'helmet': {'x0': 1319, 'x1': 1397, 'y0': 226, 'y1': 304},
@@ -42,3 +42,8 @@ position = {
             {'x0': 675, 'x1': 870, 'y0': 1198, 'y1': 1218}
             ]
 }
+
+
+def crop_screen(screen, pos):
+    x0, x1, y0, y1 = pos['x0'], pos['x1'], pos['y0'], pos['y1']
+    return screen[y0:y1, x0:x1, :]

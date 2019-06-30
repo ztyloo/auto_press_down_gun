@@ -1,14 +1,14 @@
 import threading
 import cv2
 import numpy as np
-from pymouse import PyMouseEvent
 from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
 import itchat
 
-from auto_press_gun.press_listener import Press_Listener
 from lists import *
 from image_detect.detect import Detector
+from auto_press_gun.press_listener import Press_Listener
+from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 
 
 def get_screen():
@@ -24,19 +24,14 @@ class Key_Listener(PyKeyboardEvent):
 
         self.all_states = all_states
 
-        self.fire_mode_detect = Detector('fire_mode', 'fire_mode')
-        self.in_tab_detect = Detector('in_tab', 'in_tab')
-        self.in_scope_detect = Detector('in_scope', 'in_scope')
+        self.fire_mode_detect = Detector('fire_mode')
+        self.in_tab_detect = Detector('in_tab')
+        self.in_scope_detect = Detector('in_scope')
 
-        self.weapon_1_detect = Detector('weapon', 'weapon')
-        self.scope_1_detect = Detector('scope', 'scope')
-        # self.muzzle_1_detect = Detector('muzzle_1', 'muzzle')
-        # self.grip_1_detect = Detector('grip_1', 'grip')
-
-        self.weapon_2_detect = Detector('weapon_2', 'weapon')
-        self.scope_2_detect = Detector('scope_2', 'scope')
-        # self.muzzle_2_detect = Detector('muzzle_2', 'muzzle')
-        # self.grip_2_detect = Detector('grip_2', 'grip')
+        self.name_detect = Detector('name')
+        self.scope_detect = Detector('scope')
+        # self.muzzle_detect = Detector('muzzle')
+        # self.grip_detect = Detector('grip')
 
         self.press_listener = Press_Listener()
         # itchat.auto_login(hotReload=True)
@@ -60,11 +55,11 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.5, self.b_func).start()
 
         if keycode == 49 and press:  # 1
-            self.all_states.now_weapon = 1
+            self.all_states.weapon_n = 0
             threading.Timer(0.001, self.set_auto_down).start()
 
         if keycode == 50 and press:  # 2
-            self.all_states.now_weapon = 2
+            self.all_states.weapon_n = 1
             threading.Timer(0.001, self.set_auto_down).start()
 
     def escape(self, event):
@@ -74,61 +69,49 @@ class Key_Listener(PyKeyboardEvent):
         self.all_states.in_tab = False
         self.press_listener.stop()
         screen = get_screen()
-        if 'in' == self.in_tab_detect.diff_sum_classify(screen):
+        if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(screen, sc_pos['in_tab'])):
             self.all_states.in_tab = True
-
-            self.all_states.weapon_2 = self.weapon_2_detect.diff_sum_classify(screen)
-            scope_res = self.scope_2_detect.diff_sum_classify(screen)
-            self.all_states.scope_2 = 1 if scope_res is None else int(scope_res[0])
-            # self.all_states.muzzle_2 = self.muzzle_2_detect(screen)
-            # self.all_states.grip_2 = self.grip_2_detect(screen)
-
-            self.all_states.weapon_1 = self.weapon_1_detect.diff_sum_classify(screen)
-            scope_res = self.scope_1_detect.diff_sum_classify(screen)
-            self.all_states.scope_1 = 1 if scope_res is None else int(scope_res[0])
-            # self.all_states.muzzle_1 = self.muzzle_1_detect(screen)
-            # self.all_states.grip_1 = self.grip_1_detect(screen)
+            for n in [0, 1]:
+                name_crop = crop_screen(screen, sc_pos['weapon'][n]['name'])
+                scope_crop = crop_screen(screen, sc_pos['weapon'][n]['scope'])
+                # muzzle_crop = crop_screen(screen, sc_pos['weapon'][n]['muzzle'])
+                # grip_crop = crop_screen(screen, sc_pos['weapon'][n]['grip'])
+                self.all_states.weapon[n].name = self.name_detect.diff_sum_classify(name_crop)
+                self.all_states.weapon[n].scope = self.scope_detect.diff_sum_classify(scope_crop, sum_thr=10)
+                # self.all_states.weapon[n].muzzle = self.muzzle_detect.diff_sum_classify(muzzle_crop)
+                # self.all_states.weapon[n].grip = self.grip_detect.diff_sum_classify(grip_crop)
 
             print_state(self.all_states)
-
             self.set_auto_down()
 
     def b_func(self):
         self.press_listener.stop()
 
         screen = get_screen()
-        if self.all_states.now_weapon == 1:
-            self.all_states.fire_mode_1 = self.fire_mode_detect.water_mark_classify(screen)
-        elif self.all_states.now_weapon == 2:
-            self.all_states.fire_mode_2 = self.fire_mode_detect.water_mark_classify(screen)
+        fire_mode_crop = crop_screen(screen, sc_pos['fire_mode'])
+        n = self.all_states.weapon_n
+        self.all_states.weapon[n].fire_mode = self.fire_mode_detect.water_mark_classify(fire_mode_crop)
 
         print_state(self.all_states)
-
         self.set_auto_down()
 
     def set_auto_down(self):
         self.press_listener.stop()
         self.press_listener.press.set_states(self.all_states)
 
-        if self.all_states.now_weapon == 1:
-            if self.all_states.weapon_1 in full_mode_gun and self.all_states.fire_mode_1 == 'full':
-                self.press_listener.start()
-        elif self.all_states.now_weapon == 2:
-            if self.all_states.weapon_2 in full_mode_gun and self.all_states.fire_mode_2 == 'full':
-                self.press_listener.start()
-
+        n = self.all_states.weapon_n
+        if self.all_states.weapon[n].fire_mode == 'full':
+            self.press_listener.start()
 
 def print_state(all_states):
-    # if all_states.now_weapon == 1:
-    #     print_str = str(all_states.weapon_1) + ' ' + str(all_states.scope_1) + ' ' + str(all_states.fire_mode_1)
-    # else:
-    #     print_str = str(all_states.weapon_2) + ' ' + str(all_states.scope_2) + ' ' + str(all_states.fire_mode_2)
+    # n = all_states.weapon_n
+    # print_str = str(all_states.weapon[n].name) + ' ' + str(all_states.weapon[n].scope) + ' ' + str(all_states.fire_mode)
     # print(print_str)
-    # itchat.send('\n')
     # itchat.send('\n')
     # itchat.send(print_str)
 
-    print(str(all_states.now_weapon))
-    print(str(all_states.weapon_1) + ' ' + str(all_states.scope_1) + ' ' + str(all_states.fire_mode_1))
-    print(str(all_states.weapon_2) + ' ' + str(all_states.scope_2) + ' ' + str(all_states.fire_mode_2))
+    print(str(all_states.weapon_n))
+    for n in [0, 1]:
+        w = all_states.weapon[n]
+        print(str(w.name) + ' ' + str(w.scope) + ' ' + str(w.fire_mode))
 

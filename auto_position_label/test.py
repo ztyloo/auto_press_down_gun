@@ -53,8 +53,8 @@ def get_possible_rectangle(lu_coord, ru_coord, rd_coord, ld_coord):
 
 
 if __name__ == '__main__':
-    img = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/weapon/akm/akm.png')
-    # img = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/weapon/98k/98k.png')
+    img = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/akm/akm.png')
+    # img = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/98k/98k.png')
     # img = img[120:170, 0:2238]
     # cv2.imshow('img', img)
     # cv2.waitKey()
