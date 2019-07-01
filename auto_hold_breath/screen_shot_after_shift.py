@@ -3,7 +3,7 @@ import time
 import cv2
 import numpy as np
 from pykeyboard import PyKeyboardEvent, PyKeyboard
-from auto_press_gun.my_timer import MyTimer
+from press_gun.my_timer import MyTimer
 from auto_hold_breath.win32_screen_shot import Screen
 
 class Key_listern(PyKeyboardEvent):

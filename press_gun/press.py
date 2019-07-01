@@ -3,8 +3,8 @@ import win32api
 import win32con
 import time
 
-from auto_press_gun.time_interval_constant import time_intervals
-from generate_distance.gun_distance_constant import dis_intervals
+from press_gun.time_interval_constant import time_intervals
+from press_gun.generate_distance.gun_distance_constant import dis_intervals
 
 
 class Press(threading.Thread):

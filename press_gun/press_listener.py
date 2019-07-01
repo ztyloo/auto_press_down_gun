@@ -1,7 +1,7 @@
 import threading
 import pythoncom
 import PyHook3 as pyHook
-from auto_press_gun.press import Press
+from press_gun.press import Press
 
 
 class Press_Listener(threading.Thread):

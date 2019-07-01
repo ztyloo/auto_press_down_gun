@@ -7,7 +7,7 @@ import itchat
 
 from lists import *
 from image_detect.detect import Detector
-from auto_press_gun.press_listener import Press_Listener
+from press_gun.press_listener import Press_Listener
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 
 
