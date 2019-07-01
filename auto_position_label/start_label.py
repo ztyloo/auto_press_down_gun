@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from auto_position_label.q_control import Image_QLabel
 from auto_position_label.crop_position import screen_position
-from auto_position_label.utils import Deep_vs_Wide_Dict, cluster_rect_by_wh
+from auto_position_label.utils import Deep_vs_Wide_Dict, Cluster
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -70,7 +70,8 @@ class Ui_Dialog(object):
                 self.label.res_rect_n = i
 
     def print_res_d_dict(self):
-        self.dvw_dict.w_dict = cluster_rect_by_wh(self.dvw_dict.w_dict)
+        cluster = Cluster(self.dvw_dict.w_dict)
+        self.dvw_dict.w_dict = cluster.w_dict
         self.dvw_dict.w_to_d()
         print(self.dvw_dict.d_dict)
 
