@@ -50,7 +50,7 @@ def detect_item_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray, blur=1):
         for dy in range(-blur, blur+1):
             test_im = detect_im_3c.copy()
             M = np.float32([[1, 0, dx], [0, 1, dy]])
-            test_im = cv2.warpAffine(test_im, M, test_im.shape)
+            test_im = cv2.warpAffine(test_im, M, (test_im.shape[1], test_im.shape[0]))
 
             test_im = test_im * shield
             sum = np.sum(test_im - target_im)

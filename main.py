@@ -33,6 +33,5 @@ class All_States():
 
 if __name__ == '__main__':
     states = All_States()
-    states.weapon[1].name
     k = Key_Listener(states)
     k.run()

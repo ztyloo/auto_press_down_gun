@@ -73,7 +73,7 @@ class Key_Listener(PyKeyboardEvent):
             self.all_states.in_tab = True
             for n in [0, 1]:
                 name_crop = crop_screen(screen, sc_pos['weapon'][str(n)]['name'])
-                scope_crop = crop_screen(screen, sc_pos['name'][str(n)]['scope'])
+                scope_crop = crop_screen(screen, sc_pos['weapon'][str(n)]['scope'])
                 # muzzle_crop = crop_screen(screen, sc_pos['name'][str(n)]['muzzle'])
                 # grip_crop = crop_screen(screen, sc_pos['name'][str(n)]['grip'])
                 self.all_states.weapon[n].name = self.name_detect.diff_sum_classify(name_crop)
