@@ -72,10 +72,10 @@ class Key_Listener(PyKeyboardEvent):
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(screen, sc_pos['in_tab'])):
             self.all_states.in_tab = True
             for n in [0, 1]:
-                name_crop = crop_screen(screen, sc_pos['weapon'][n]['name'])
-                scope_crop = crop_screen(screen, sc_pos['name'][n]['scope'])
-                # muzzle_crop = crop_screen(screen, sc_pos['name'][n]['muzzle'])
-                # grip_crop = crop_screen(screen, sc_pos['name'][n]['grip'])
+                name_crop = crop_screen(screen, sc_pos['weapon'][str(n)]['name'])
+                scope_crop = crop_screen(screen, sc_pos['name'][str(n)]['scope'])
+                # muzzle_crop = crop_screen(screen, sc_pos['name'][str(n)]['muzzle'])
+                # grip_crop = crop_screen(screen, sc_pos['name'][str(n)]['grip'])
                 self.all_states.weapon[n].name = self.name_detect.diff_sum_classify(name_crop)
                 self.all_states.weapon[n].scope = self.scope_detect.diff_sum_classify(scope_crop, sum_thr=10)
                 # self.all_states.name[n].muzzle = self.muzzle_detect.diff_sum_classify(muzzle_crop)

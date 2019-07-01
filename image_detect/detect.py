@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
     # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/98k/98k.png')
     # fire_mode_detect = Detector('name')
-    # a = fire_mode_detect.diff_sum_classify(crop_screen(screen, sc_pos['weapon'][0]['name']))
+    # a = fire_mode_detect.diff_sum_classify(crop_screen(screen, sc_pos['weapon'][str(0)]['name']))
     # print(a)
 
     # import cv2

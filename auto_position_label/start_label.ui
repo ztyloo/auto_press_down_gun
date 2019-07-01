@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>3440</width>
-    <height>1300</height>
+    <height>1350</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -19,8 +19,8 @@
   <widget class="QRadioButton" name="radioButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>90</y>
+     <x>20</x>
+     <y>80</y>
      <width>89</width>
      <height>16</height>
     </rect>
@@ -33,9 +33,9 @@
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>10</y>
+     <y>0</y>
      <width>3311</width>
-     <height>1421</height>
+     <height>1431</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -49,7 +49,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>10</y>
+     <y>0</y>
      <width>111</width>
      <height>51</height>
     </rect>
@@ -72,6 +72,32 @@
    </property>
    <property name="text">
     <string>finish</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>120</y>
+     <width>89</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>RadioButton</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>160</y>
+     <width>89</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>RadioButton</string>
    </property>
   </widget>
  </widget>
