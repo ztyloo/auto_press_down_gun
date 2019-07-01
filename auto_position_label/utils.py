@@ -82,8 +82,8 @@ class Cluster:
             w, h = v['x1'] - v['x0'], v['y1'] - v['y0']
             for wh in self.cluster_center_list:
                 if self.is_similar([w, h], wh):
-                    self.w_dict[k]['x1'] = wh[0]
-                    self.w_dict[k]['y1'] = wh[1]
+                    self.w_dict[k]['x1'] = self.w_dict[k]['x0'] + wh[0]
+                    self.w_dict[k]['y1'] = self.w_dict[k]['y0'] + wh[1]
                     break
 
 

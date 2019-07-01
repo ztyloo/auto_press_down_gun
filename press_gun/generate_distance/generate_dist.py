@@ -1,17 +1,14 @@
 import cv2
 import os
-import sys
-import yaml
 
-from generate_distance.find_point import Find
+from press_gun.generate_distance.find_hole import Find_hole
 
 
 gun_name_list = ['98k', 'akm', 'aug', 'awm', 'dp28', 'groza', 'm16', 'm24', 'm249', 'm416', 'm762', 'mini14', 'mk14',
                  'mk47', 'qbu', 'qbz', 's12k', 's1987', 's686', 'scar', 'sks', 'slr', 'tommy', 'ump9', 'uzi', 'vector',
                  'vss', 'win94']
-# TODO
 
-f = Find()
+f = Find_hole()
 gun_dis_dict = dict()
 
 for gun_name in gun_name_list:

@@ -71,6 +71,11 @@ class Ui_Dialog(object):
                 self.label.res_rect_n = i
 
     def print_res_d_dict(self):
+        for i, k in enumerate(self.dvw_dict.w_dict):
+            self.dvw_dict.w_dict[k]['x0'] = self.label.res_rects[i][0]
+            self.dvw_dict.w_dict[k]['y0'] = self.label.res_rects[i][1]
+            self.dvw_dict.w_dict[k]['x1'] = self.label.res_rects[i][2]
+            self.dvw_dict.w_dict[k]['y1'] = self.label.res_rects[i][3]
         cluster = Cluster(self.dvw_dict.w_dict)
         self.dvw_dict.w_dict = cluster.w_dict
         self.dvw_dict.w_to_d()

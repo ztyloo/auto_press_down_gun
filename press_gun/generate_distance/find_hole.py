@@ -5,7 +5,7 @@ import numpy as np
 from PIL import ImageGrab
 
 
-class Find:
+class Find_hole:
     def __init__(self, dx=100, dy=500):
         self.margin = 12
         self.y0 = 719
@@ -117,7 +117,7 @@ def is_end(area, y, x):
     return False
 
 if __name__ == '__main__':
-    f = Find()
+    f = Find_hole()
     screen = cv2.imread('scar/test_point.png')
     i, j = f.find_upper(screen)
     screen = cv2.circle(screen, (i, j), 5, (0, 0, 255), thickness=20)

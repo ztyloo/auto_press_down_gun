@@ -5,7 +5,6 @@ from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
 import itchat
 
-from lists import *
 from image_detect.detect import Detector
 from press_gun.press_listener import Press_Listener
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
@@ -52,7 +51,7 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.001, self.whether_start_listen).start()
 
         if keycode == 66 and press:  # b
-            threading.Timer(0.5, self.b_func).start()
+            threading.Timer(0.2, self.b_func).start()
 
         if keycode == 49 and press:  # 1
             self.all_states.weapon_n = 0
@@ -91,6 +90,7 @@ class Key_Listener(PyKeyboardEvent):
         n = self.all_states.weapon_n
         self.all_states.weapon[n].fire_mode = self.fire_mode_detect.water_mark_classify(fire_mode_crop)
 
+        print_state(self.all_states)
         self.whether_start_listen()
 
     def stop_listen(self):

@@ -82,35 +82,3 @@ if __name__ == '__main__':
     fire_mode_detect = Detector('fire_mode')
     a = fire_mode_detect.water_mark_classify(crop_screen(screen, sc_pos['fire_mode']))
     print(a)
-
-    # screen = cv2.imread('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/98k/98k.png')
-    # fire_mode_detect = Detector('name')
-    # a = fire_mode_detect.diff_sum_classify(crop_screen(screen, sc_pos['weapon'][str(0)]['name']))
-    # print(a)
-
-    # import cv2
-    # import numpy as np
-    # from PIL import ImageGrab
-    # from pykeyboard import PyKeyboardEvent
-    #
-    # weapon_detect = Detector('name')
-    # class Key_listener(PyKeyboardEvent):
-    #     def __init__(self):
-    #         PyKeyboardEvent.__init__(self)
-    #         self.i = 0
-    #
-    #     def tap(self, keycode, character, press):
-    #
-    #         if keycode == 162 and press:
-    #             screen = ImageGrab.grab()
-    #             screen = np.array(screen)
-    #             screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-    #             a = weapon_detect.diff_sum_classify(screen)
-    #             self.i += 1
-    #
-    #     def escape(self, event):
-    #         return False
-    #
-    #
-    # t = Key_listener()
-    # t.run()

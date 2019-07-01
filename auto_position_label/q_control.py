@@ -23,7 +23,7 @@ class Image_QLabel(QtWidgets.QLabel):
     mid_mode = False
 
     corner_rects = [(0, 0, 0, 0)] * 3
-    res_rects = [(0, 0, 0, 0)] * 3
+    res_rects = [[0, 0, 0, 0]] * 3
     len = 0
     c_dist = 1000000000
     corner_br = 3
@@ -123,7 +123,7 @@ class Image_QLabel(QtWidgets.QLabel):
         corner_rects = get_image_corner(img)
         self.corner_rects = corner_rects
         self.len = len(corner_rects)
-        self.res_rects = [(0, 0, 0, 0)] * self.len
+        self.res_rects = [[0, 0, 0, 0]] * self.len
 
         pixmap = QPixmap(self.image_name)  # Setup pixmap with the provided image
         # pixmap = pixmap.scaled(self.width(), self.height(), Qt.KeepAspectRatio) # Scale pixmap
