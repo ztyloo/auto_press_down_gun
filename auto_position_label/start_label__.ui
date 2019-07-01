@@ -10,6 +10,9 @@
     <height>1350</height>
    </rect>
   </property>
+  <property name="cursor">
+   <cursorShape>CrossCursor</cursorShape>
+  </property>
   <property name="mouseTracking">
    <bool>true</bool>
   </property>
@@ -19,8 +22,8 @@
   <widget class="QRadioButton" name="radioButton">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>80</y>
+     <x>10</x>
+     <y>50</y>
      <width>89</width>
      <height>16</height>
     </rect>
@@ -45,40 +48,24 @@
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="startButton">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>0</y>
      <width>111</width>
-     <height>51</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>Start</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>1380</y>
-     <width>111</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>finish</string>
-   </property>
-  </widget>
   <widget class="QRadioButton" name="radioButton_2">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>120</y>
+     <x>10</x>
+     <y>70</y>
      <width>89</width>
      <height>16</height>
     </rect>
@@ -90,14 +77,27 @@
   <widget class="QRadioButton" name="radioButton_3">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>160</y>
+     <x>10</x>
+     <y>90</y>
      <width>89</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
     <string>RadioButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="stopButton">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>1320</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Stop</string>
    </property>
   </widget>
  </widget>
