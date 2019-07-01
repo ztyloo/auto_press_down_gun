@@ -1,4 +1,9 @@
 import threading
+import win32api
+import win32con
+
+from auto_press_gun.time_interval_constant import time_intervals
+from generate_distance.gun_distance_constant import dis_intervals
 
 
 class Press(threading.Thread):  # TODO
@@ -8,7 +13,11 @@ class Press(threading.Thread):  # TODO
 
     def set_states(self, all_states):
         gun_n = all_states.weapon_n
-        gun_name = all_states
+        gun_name = all_states.weapon[gun_n].name
+        gun_scope = all_states.weapon[gun_n].scope
+        dis_interval = dis_intervals[gun_name]
+        time_interval = time_intervals[gun_name]
+
 
 
     def run(self):
@@ -46,21 +55,9 @@ class Down_distence:
         self.x = 0
 
 
-
 if __name__ == '__main__':
-    pl = Press()
-    pl.run()
-
-
-import time
-import win32api
-import win32con
-from threading import Timer
-import pyautogui as pag
-
-
-
-if __name__ == '__main__':
+    import time
+    import pyautogui as pag
     i = 0
     x, y = pag.position()
     print(str(i) + ':', x, y)
@@ -70,3 +67,8 @@ if __name__ == '__main__':
         mouse_down(20)
         x, y = pag.position()
         print(str(i) + ':', x, y)
+
+
+    #
+    # pl = Press()
+    # pl.run()
