@@ -85,20 +85,20 @@ class Image_QLabel(QtWidgets.QLabel):
         super().paintEvent(a0)
         qp = QPainter(self)
 
-        if not self.before_choose_one:
-            self.draw_rect(qp, (self.c_x0, self.c_y0, self.c_x, self.c_y), (0, 255, 255))
         for rect in self.res_rects:
             self.draw_rect(qp, rect, (0, 255, 0))
             self.draw_coordinate(qp, (rect[0], rect[1]), (rect[0], rect[1]), (255, 0, 255))
             self.draw_coordinate(qp, (rect[2], rect[3]), (rect[2], rect[3]), (255, 0, 255))
 
         if self.mid_mode:
+            if not self.before_choose_one:
+                self.draw_rect(qp, (self.c_x0, self.c_y0, self.x, self.y), (0, 255, 255))
             self.draw_cross(qp, (self.x, self.y))
-            self.draw_coordinate(qp, (self.c_x0, self.c_y0), (self.x, self.y), (255, 0, 255))
         else:
+            if not self.before_choose_one:
+                self.draw_rect(qp, (self.c_x0, self.c_y0, self.c_x, self.c_y), (0, 255, 255))
             for rect in self.corner_rects:
                 self.draw_rect_corner(qp, rect)
-
             if self.circle_thr1 < self.c_dist:
                 self.draw_cross(qp, (self.x, self.y))
                 self.draw_coordinate(qp, (self.x, self.y), (self.x, self.y), (255, 0, 255))
