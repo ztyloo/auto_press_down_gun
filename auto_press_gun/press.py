@@ -8,29 +8,31 @@ from generate_distance.gun_distance_constant import dis_intervals
 
 
 class Press(threading.Thread):
-    def __init__(self):
+    def __init__(self, all_states):
         threading.Thread.__init__(self)
         self._loop = True
 
-        self.time_sequence = list()
-        self.dist_sequence = list()
+        self.set_states(all_states)
 
     def set_states(self, all_states):
         gun_n = all_states.weapon_n
         gun_name = all_states.weapon[gun_n].name
-        gun_scope = all_states.weapon[gun_n].scope
+        gun_scope = int(all_states.weapon[gun_n].scope.replace('r', '').replace('h', ''))
         dis_interval = dis_intervals[gun_name]*gun_scope
         time_interval = time_intervals[gun_name]
-        divide_num = ((time_interval/0.02)//1)  # 整数分割
+        divide_num = int(time_interval/0.02)  # 整数分割
 
+        self.time_sequence = list()
+        self.dist_sequence = list()
         for dist in dis_interval:
             for i in range(divide_num):
                 self.time_sequence.append(time_interval/divide_num)
                 self.dist_sequence.append(dist/divide_num)
+        self.seq_len = len(self.time_sequence)
 
     def run(self):
         i = 0
-        while self._loop:
+        while self._loop and i < self.seq_len:
             dt = self.time_sequence[i]
             dd = self.dist_sequence[i]
             mouse_down(dd)

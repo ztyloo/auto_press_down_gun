@@ -14,11 +14,12 @@ class Detector:
             png = cv2.imread(abs_png_name, cv2.IMREAD_UNCHANGED)
             self.png_dict[png_name[:-4]] = png
 
-    def diff_sum_classify(self, crop_im, sum_thr=10000):
+    def diff_sum_classify(self, crop_im, sum_thr=10000, absent_return=''):
         for item_name, png in self.png_dict.items():
             sum = detect_item_sum(crop_im, png)
             if sum < sum_thr:
                 return item_name
+        return absent_return
 
     def water_mark_classify(self, crop_im, sum_thr=10000, c_thr=10):
         most_color = find_most_color(crop_im)
@@ -26,9 +27,6 @@ class Detector:
         shield = (np.where(diff_crop.sum(axis=-1) <= 20 , 255, 0)//255)[:, :, np.newaxis].astype(np.uint8)
 
         crop_im *= shield
-
-        cv2.imshow('corp', crop_im)
-        cv2.waitKey()
 
         min_item = None
         min_sum = 1000000

@@ -12,10 +12,10 @@ class Back():
 class Weapon():
     def __init__(self):
         self.fire_mode = 'single'
-        self.name = None
-        self.scope = 1
-        self.muzzle = None
-        self.grip = None
+        self.name = ''
+        self.scope = '1'
+        self.muzzle = ''
+        self.grip = ''
 
 
 class All_States():
