@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from auto_position_label.image_qlabel import Image_QLabel
+from auto_position_label.q_control import Image_QLabel
 from auto_position_label.crop_position import screen_position
 
 
@@ -65,27 +65,29 @@ class Ui_Dialog(object):
         self.label.setText("")
         self.label.setObjectName("label")
         self.label.setMouseTracking(True)
+        self.label.setImage()
 
         dvw_dict = Deep_vs_Wide_Dict('x0')
         dvw_dict.d_dict = screen_position
         dvw_dict.d_to_w()
         self.w_dict = dvw_dict.w_dict
 
-        self.radioButtons = [QtWidgets.QRadioButton(Dialog)]*len(self.w_dict)
+        self.radioButtons = list()
         for i, k in enumerate(self.w_dict):
-            self.radioButtons[i].setGeometry(QtCore.QRect(20, 80+20*i, 89, 16))
+            self.radioButtons.append(QtWidgets.QRadioButton(Dialog))
+            self.radioButtons[i].setGeometry(QtCore.QRect(5, 80+20*i, 150, 16))
             self.radioButtons[i].setObjectName(k)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        self.startButton.clicked.connect(self.label.setImage)
+        self.startButton.clicked.connect(self.label.openImage)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Locate_rectangle"))
-        self.startButton.setText(_translate("Dialog", "Start"))
-        self.stopButton.setText(_translate("Dialog", "Stop"))
+        self.startButton.setText(_translate("Dialog", "Choose image"))
+        self.stopButton.setText(_translate("Dialog", "Done"))
         for i, k in enumerate(self.w_dict):
             self.radioButtons[i].setText(_translate("Dialog", k))
 

@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-from tqdm import tqdm
 
 
 def get_rect_kernel(corner_len=30, thick=2):
@@ -55,7 +54,7 @@ def get_possible_rects(lu_coord, ru_coord, rd_coord, ld_coord):
 
 def filter_rects(rects, thr=3):
     res_rects = list()
-    for i in tqdm(range(len(rects))):
+    for i in range(len(rects)):
         i_has_similar = False
         for j in range(i+1, len(rects)):
             is_similar = True
