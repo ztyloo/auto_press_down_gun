@@ -8,6 +8,7 @@ import numpy as np
 import cv2
 import sys
 
+from auto_position_label.utils import Deep_vs_Wide_Dict, Cluster
 from auto_position_label.find_image_corner import get_image_corner
 
 
@@ -94,6 +95,7 @@ class Image_QLabel(QtWidgets.QLabel):
             if not self.before_choose_one:
                 self.draw_rect(qp, (self.c_x0, self.c_y0, self.x, self.y), (0, 255, 255))
             self.draw_cross(qp, (self.x, self.y))
+            self.draw_coordinate(qp, (self.x, self.y), (self.x, self.y), (255, 0, 255))
         else:
             if not self.before_choose_one:
                 self.draw_rect(qp, (self.c_x0, self.c_y0, self.c_x, self.c_y), (0, 255, 255))

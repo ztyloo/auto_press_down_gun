@@ -11,6 +11,7 @@ from auto_position_label.q_control import Image_QLabel
 from auto_position_label.crop_position import screen_position
 from auto_position_label.utils import Deep_vs_Wide_Dict, Cluster
 
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -75,7 +76,7 @@ class Ui_Dialog(object):
         self.dvw_dict.w_to_d()
         print(self.dvw_dict.d_dict)
         print('\n')
-        for k, v in self.dvw_dict.w_dict:
+        for k, v in self.dvw_dict.w_dict.items():
             print(k, v)
 
 
