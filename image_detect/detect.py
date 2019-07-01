@@ -16,10 +16,6 @@ class Detector:
 
     def diff_sum_classify(self, crop_im, sum_thr=10000):
         for item_name, png in self.png_dict.items():
-            if sum_thr == 10: ## TODO
-                cv2.imshow('corp', crop_im)
-                # cv2.imshow('png', png)
-                cv2.waitKey()
             sum = detect_item_sum(crop_im, png)
             if sum < sum_thr:
                 return item_name
@@ -43,16 +39,25 @@ class Detector:
                 min_sum = sum
         return min_item
 
-def detect_item_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray):
-    test_im = detect_im_3c.copy()
+
+def detect_item_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray, blur=1):
     target_im = target_im_4c[:, :, 0:3]
-    shield = target_im_4c[:, :, [3]]//255
-    test_im = test_im * shield
+    shield = (target_im_4c[:, :, [3]] // 255).astype(np.uint8)
     target_im = target_im * shield
 
-    sum = np.sum(test_im - target_im)
-    # print(sum)
-    return sum
+    min_test_res = 1000000000000
+    for dx in range(-blur, blur+1):
+        for dy in range(-blur, blur+1):
+            test_im = detect_im_3c.copy()
+            M = np.float32([[1, 0, dx], [0, 1, dy]])
+            test_im = cv2.warpAffine(test_im, M, test_im.shape)
+
+            test_im = test_im * shield
+            sum = np.sum(test_im - target_im)
+            min_test_res = min(sum, min_test_res)
+
+    # print(min_test_res)
+    return min_test_res
 
 
 def find_most_color(im):
