@@ -102,8 +102,8 @@ class Key_Listener(PyKeyboardEvent):
         if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
             if self.press_listener is not None:
                 self.press_listener.stop()
-            print('start')
             self.press_listener = Press_Listener(self.all_states)
+            self.press_listener.start()
 
 
 def print_state(all_states):
