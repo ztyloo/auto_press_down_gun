@@ -66,6 +66,7 @@ class Ui_Dialog(object):
         self.label.setObjectName("label")
         self.label.setMouseTracking(True)
         self.label.setImage()
+        self.label.res_rect_n_signal[int].connect(self.change_radio_button)
 
         dvw_dict = Deep_vs_Wide_Dict('x0')
         dvw_dict.d_dict = screen_position
@@ -77,11 +78,15 @@ class Ui_Dialog(object):
             self.radioButtons.append(QtWidgets.QRadioButton(Dialog))
             self.radioButtons[i].setGeometry(QtCore.QRect(5, 80+20*i, 150, 16))
             self.radioButtons[i].setObjectName(k)
+        self.change_radio_button(0)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
         self.startButton.clicked.connect(self.label.openImage)
+
+        for i, k in enumerate(self.w_dict):
+            self.radioButtons[i].toggled.connect(self.change_res_rect_n)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -90,6 +95,15 @@ class Ui_Dialog(object):
         self.stopButton.setText(_translate("Dialog", "Done"))
         for i, k in enumerate(self.w_dict):
             self.radioButtons[i].setText(_translate("Dialog", k))
+
+    def change_radio_button(self, n):
+        self.radioButtons[n].setChecked(True)
+
+    def change_res_rect_n(self):
+        for i, k in enumerate(self.w_dict):
+            if self.radioButtons[i].isChecked():
+                self.label.res_rect_n = i
+
 
 
 if __name__ == "__main__":

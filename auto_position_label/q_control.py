@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication,QWidget,QVBoxLayout,QListView,QMessageBox
-from PyQt5.QtCore import Qt, QRect, QPoint, QStringListModel
+from PyQt5.QtCore import Qt, QRect, QPoint, QStringListModel, pyqtSignal
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QFont, QPixmap
 from PyQt5 import QtGui
 import numpy as np
@@ -16,7 +16,8 @@ class Image_QLabel(QtWidgets.QLabel):
     x, c_x, c_x0, c_x1 = 0, 0, 0, 0
     y, c_y, c_y0, c_y1 = 0, 0, 0, 0
 
-    rect_n = 0
+    res_rect_n = 0
+    res_rect_n_signal = pyqtSignal(int)
     before_choose_one = True
     shift_mode = False
 
@@ -42,20 +43,20 @@ class Image_QLabel(QtWidgets.QLabel):
         if ev.buttons() == Qt.LeftButton:
             if self.c_dist < self.circle_thr0:
                 if self.before_choose_one:
-                    self.rect_n += 1
-                    if self.rect_n == self.len:
-                        self.rect_n = 0
+                    if self.res_rect_n == self.len:
+                        self.set_res_rect_n(0)
                     self.c_x0, self.c_y0 = self.c_x, self.c_y
                     self.before_choose_one = False
                 else:
+                    self.set_res_rect_n(self.res_rect_n+1)
                     self.c_x1, self.c_y1 = self.c_x, self.c_y
                     self.before_choose_one = True
-                    self.res_rects[self.rect_n] = (self.c_x0, self.c_y0, self.c_x1, self.c_y1)
+                    self.res_rects[self.res_rect_n] = (self.c_x0, self.c_y0, self.c_x1, self.c_y1)
         if ev.buttons() == Qt.RightButton:
             if not self.before_choose_on:
                 self.before_choose_one = True
             else:
-                self.rect_n -= 1
+                self.set_res_rect_n(self.res_rect_n-1)
 
     def mouseMoveEvent(self, ev: QtGui.QMouseEvent) -> None:
         self.x = ev.x()
@@ -70,23 +71,6 @@ class Image_QLabel(QtWidgets.QLabel):
                 self.c_x, self.c_y = temp_x, temp_y
 
         self.update()
-
-    def openImage(self):
-        self.image_name, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Image", "", "Image Files (*.png)")
-        if self.image_name:
-            self.setImage()
-
-    def setImage(self):
-        img = cv2.imread(self.image_name)
-        corner_rects = get_image_corner(img)
-        self.corner_rects = corner_rects
-        self.len = len(corner_rects)
-        self.res_rects = [(0, 0, 0, 0)] * self.len
-
-        pixmap = QPixmap(self.image_name)  # Setup pixmap with the provided image
-        # pixmap = pixmap.scaled(self.width(), self.height(), Qt.KeepAspectRatio) # Scale pixmap
-        self.setPixmap(pixmap) # Set the pixmap onto the label
-        self.setAlignment(Qt.AlignLeading) # Align the label to center
 
     def paintEvent(self, a0: QtGui.QPaintEvent) -> None:
         super().paintEvent(a0)
@@ -118,6 +102,27 @@ class Image_QLabel(QtWidgets.QLabel):
                 self.draw_circle(qp, (self.c_x, self.c_y), self.circle_thr0, (0, 255, 0, 100))
                 self.draw_cross(qp, (self.c_x, self.c_y))
                 self.draw_coordinate(qp, (self.c_x, self.c_y), (self.c_x, self.c_y), (255, 0, 255))
+
+    def openImage(self):
+        self.image_name, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Image", "", "Image Files (*.png)")
+        if self.image_name:
+            self.setImage()
+
+    def setImage(self):
+        img = cv2.imread(self.image_name)
+        corner_rects = get_image_corner(img)
+        self.corner_rects = corner_rects
+        self.len = len(corner_rects)
+        self.res_rects = [(0, 0, 0, 0)] * self.len
+
+        pixmap = QPixmap(self.image_name)  # Setup pixmap with the provided image
+        # pixmap = pixmap.scaled(self.width(), self.height(), Qt.KeepAspectRatio) # Scale pixmap
+        self.setPixmap(pixmap) # Set the pixmap onto the label
+        self.setAlignment(Qt.AlignLeading) # Align the label to center
+
+    def set_res_rect_n(self, n):
+        self.res_rect_n = n
+        self.res_rect_n_signal.emit(n)
 
     def draw_circle(self, qp, xy, r, color=(255, 0, 255, 100)):
         qp.setPen(QPen(Qt.transparent, 0))
