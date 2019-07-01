@@ -1,7 +1,7 @@
 import threading
 
 
-class Press(threading.Thread):
+class Press(threading.Thread):  # TODO
     def __init__(self):
         threading.Thread.__init__(self)
         self._loop = True
