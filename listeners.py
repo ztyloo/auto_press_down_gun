@@ -102,18 +102,16 @@ class Key_Listener(PyKeyboardEvent):
         if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
             if self.press_listener is not None:
                 self.press_listener.stop()
+            print('start')
             self.press_listener = Press_Listener(self.all_states)
 
 
 def print_state(all_states):
-    # n = all_states.weapon_n
-    # print_str = str(all_states.name[n].name) + ' ' + str(all_states.name[n].scope) + ' ' + str(all_states.fire_mode)
-    # print(print_str)
-    # itchat.send('\n')
-    # itchat.send(print_str)
-
     print('now_weapon: ', str(all_states.weapon_n))
     for n in [0, 1]:
         w = all_states.weapon[n]
         print(str(w.name) + ' ' + str(w.scope) + ' ' + str(w.fire_mode))
+
+    # itchat.send('\n')
+    # itchat.send(print_str)
 

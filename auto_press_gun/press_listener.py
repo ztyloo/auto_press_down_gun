@@ -40,5 +40,11 @@ class Press_Listener(threading.Thread):
 
 
 if __name__ == '__main__':
-    pl = Press_Listener()
+    from main import All_States
+
+    all_states = All_States()
+    all_states.weapon[0].name = 'scar'
+    all_states.weapon[0].scope = '1'
+
+    pl = Press_Listener(all_states)
     pl.run()
