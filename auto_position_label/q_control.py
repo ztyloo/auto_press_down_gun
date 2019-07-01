@@ -12,7 +12,7 @@ from auto_position_label.find_image_corner import get_image_corner
 
 
 class Image_QLabel(QtWidgets.QLabel):
-    image_name = 'D:/github_project/auto_press_down_gun/auto_position_label/0.png'
+    image_name = 'D:/github_project/auto_press_down_gun/auto_position_label/1.png'
     x, c_x, c_x0, c_x1 = 0, 0, 0, 0
     y, c_y, c_y0, c_y1 = 0, 0, 0, 0
 
