@@ -74,6 +74,9 @@ class Ui_Dialog(object):
         self.dvw_dict.w_dict = cluster.w_dict
         self.dvw_dict.w_to_d()
         print(self.dvw_dict.d_dict)
+        print('\n')
+        for k, v in self.dvw_dict.w_dict:
+            print(k, v)
 
 
 if __name__ == "__main__":

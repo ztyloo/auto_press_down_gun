@@ -19,7 +19,7 @@ class Image_QLabel(QtWidgets.QLabel):
     res_rect_n = 0
     res_rect_n_signal = pyqtSignal(int)
     before_choose_one = True
-    shift_mode = False
+    mid_mode = False
 
     corner_rects = [(0, 0, 0, 0)] * 3
     res_rects = [(0, 0, 0, 0)] * 3
@@ -28,35 +28,44 @@ class Image_QLabel(QtWidgets.QLabel):
     corner_br = 3
     circle_thr0, circle_thr1 = 17, 100
 
-    def keyPressEvent(self, ev: QtGui.QKeyEvent) -> None:  # TODO
-        print(ev.key())
-        if ev.key() == QtCore.Qt.Key_Shift:
-            self.shift_mode = True
-            print(111111111111)
-
-    def keyReleaseEvent(self, a0: QtGui.QKeyEvent) -> None:  # TODO
-        if a0.key() == QtCore.Qt.Key_Shift:
-            self.shift_mode = False
-            print(0000000000000)
-
     def mousePressEvent(self, ev: QtGui.QMouseEvent) -> None:
-        if ev.buttons() == Qt.LeftButton:
-            if self.c_dist < self.circle_thr0:
+        if ev.button() == Qt.MiddleButton:
+            self.mid_mode = not self.mid_mode
+
+        if self.mid_mode:
+            if ev.buttons() == Qt.LeftButton:
                 if self.before_choose_one:
-                    if self.res_rect_n == self.len:
-                        self.set_res_rect_n(0)
-                    self.c_x0, self.c_y0 = self.c_x, self.c_y
+                    self.c_x0, self.c_y0 = self.x, self.y
                     self.before_choose_one = False
                 else:
-                    self.set_res_rect_n(self.res_rect_n+1)
-                    self.c_x1, self.c_y1 = self.c_x, self.c_y
+                    self.set_res_rect_n(self.res_rect_n + 1)
+                    self.c_x1, self.c_y1 = self.x, self.y
                     self.before_choose_one = True
                     self.res_rects[self.res_rect_n] = (self.c_x0, self.c_y0, self.c_x1, self.c_y1)
-        if ev.buttons() == Qt.RightButton:
-            if not self.before_choose_on:
-                self.before_choose_one = True
-            else:
-                self.set_res_rect_n(self.res_rect_n-1)
+            if ev.buttons() == Qt.RightButton:
+                if not self.before_choose_one:
+                    self.before_choose_one = True
+                else:
+                    self.set_res_rect_n(self.res_rect_n - 1)
+
+        else:
+            if ev.buttons() == Qt.LeftButton:
+                if self.c_dist < self.circle_thr0:
+                    if self.before_choose_one:
+                        if self.res_rect_n == self.len:
+                            self.set_res_rect_n(0)
+                        self.c_x0, self.c_y0 = self.c_x, self.c_y
+                        self.before_choose_one = False
+                    else:
+                        self.set_res_rect_n(self.res_rect_n+1)
+                        self.c_x1, self.c_y1 = self.c_x, self.c_y
+                        self.before_choose_one = True
+                        self.res_rects[self.res_rect_n] = (self.c_x0, self.c_y0, self.c_x1, self.c_y1)
+            if ev.buttons() == Qt.RightButton:
+                if not self.before_choose_one:
+                    self.before_choose_one = True
+                else:
+                    self.set_res_rect_n(self.res_rect_n-1)
 
     def mouseMoveEvent(self, ev: QtGui.QMouseEvent) -> None:
         self.x = ev.x()
@@ -76,20 +85,19 @@ class Image_QLabel(QtWidgets.QLabel):
         super().paintEvent(a0)
         qp = QPainter(self)
 
-        if self.shift_mode:
+        if not self.before_choose_one:
+            self.draw_rect(qp, (self.c_x0, self.c_y0, self.c_x, self.c_y), (0, 255, 255))
+        for rect in self.res_rects:
+            self.draw_rect(qp, rect, (0, 255, 0))
+            self.draw_coordinate(qp, (rect[0], rect[1]), (rect[0], rect[1]), (255, 0, 255))
+            self.draw_coordinate(qp, (rect[2], rect[3]), (rect[2], rect[3]), (255, 0, 255))
+
+        if self.mid_mode:
             self.draw_cross(qp, (self.x, self.y))
-            self.draw_coordinate(qp, (self.x, self.y), (self.x, self.y), (255, 0, 255))
-            if not self.before_choose_one:
-                self.draw_rect(qp, (self.c_x0, self.c_y0, self.c_x, self.c_y), (0,255,255))
+            self.draw_coordinate(qp, (self.c_x0, self.c_y0), (self.x, self.y), (255, 0, 255))
         else:
-            if not self.before_choose_one:
-                self.draw_rect(qp, (self.c_x0, self.c_y0, self.c_x, self.c_y), (0,255,255))
             for rect in self.corner_rects:
                 self.draw_rect_corner(qp, rect)
-            for rect in self.res_rects:
-                self.draw_rect(qp, rect, (0,255,0))
-                self.draw_coordinate(qp, (rect[0], rect[1]), (rect[0], rect[1]), (255, 0, 255))
-                self.draw_coordinate(qp, (rect[2], rect[3]), (rect[2], rect[3]), (255, 0, 255))
 
             if self.circle_thr1 < self.c_dist:
                 self.draw_cross(qp, (self.x, self.y))
@@ -121,6 +129,8 @@ class Image_QLabel(QtWidgets.QLabel):
         self.setAlignment(Qt.AlignLeading) # Align the label to center
 
     def set_res_rect_n(self, n):
+        if n == self.len or n < 0:
+            n = 0
         self.res_rect_n = n
         self.res_rect_n_signal.emit(n)
 
