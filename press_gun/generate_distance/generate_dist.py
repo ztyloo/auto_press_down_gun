@@ -1,6 +1,5 @@
 import cv2
 import os
-import numpy as np
 
 from press_gun.generate_distance.find_bullet_hole import search_for_bullet_hole
 from press_gun.generate_distance.find_aim_point import search_for_aim_point

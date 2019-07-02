@@ -40,6 +40,9 @@ class Key_Listener(PyKeyboardEvent):
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
             self.screen = get_screen()
+            if not self.all_states.in_tab:
+                self.stop_listen()
+                self.all_states.in_tab = True
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 123 and press:  # F12
@@ -52,6 +55,7 @@ class Key_Listener(PyKeyboardEvent):
             self.stop_listen()
 
         if keycode == 66 and press:  # b
+            self.stop_listen()
             threading.Timer(0.2, self.b_func).start()
 
         if keycode == 49 and press:  # 1
@@ -66,8 +70,8 @@ class Key_Listener(PyKeyboardEvent):
         return False
 
     def tab_func(self):
-        self.stop_listen()
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
+            self.all_states.in_tab = False
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
             for n in [0, 1]:
@@ -85,7 +89,6 @@ class Key_Listener(PyKeyboardEvent):
         self.whether_start_listen()
 
     def b_func(self):
-        self.stop_listen()
         self.screen = get_screen()
 
         n = self.all_states.weapon_n

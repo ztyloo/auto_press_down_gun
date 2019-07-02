@@ -14,10 +14,25 @@ class Press(threading.Thread):
 
         self.set_states(all_states)
 
+    def factor_scope(self, scope):
+        factor = 1
+        if scope == 1:
+            factor = 1.4
+        if scope == 2:
+            factor = 1.3
+        if scope == 3:
+            factor = 1.2
+        if scope == 4:
+            factor = 1.1
+        if scope == 6:
+            factor = 0.8
+        return scope*factor
+
     def set_states(self, all_states):
         gun_n = all_states.weapon_n
         gun_name = all_states.weapon[gun_n].name
         gun_scope = int(all_states.weapon[gun_n].scope.replace('r', '').replace('h', ''))
+        gun_scope = self.factor_scope(gun_scope)
         dis_interval = dis_intervals[gun_name]
         dis_interval = [i * gun_scope for i in dis_interval]
         time_interval = time_intervals[gun_name]
