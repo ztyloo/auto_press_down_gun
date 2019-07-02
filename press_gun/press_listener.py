@@ -1,6 +1,7 @@
 import threading
-import pythoncom
-import PyHook3 as pyHook
+from pynput import mouse
+from  pynput.mouse import Button
+
 from press_gun.press import Press
 
 
@@ -12,33 +13,20 @@ class Press_Listener(threading.Thread):
 
         self._loop = True
 
-    def _hook_on_mouse(self, event):
-        # print('---------------------------------------------')
-        # print("MessageName:", event.MessageName)
-        # print("Message:", event.Message)
-        # print("Time:", event.Time)
-        # print("Window:", event.Window)
-        # print("WindowName:", event.WindowName)
-        # print("Injected:", event.Injected)
-
-        if event.Message == 513:  # mouse left down
+    def on_click(self, x, y , button, pressed):
+        if button == Button.left and pressed:
             print('press.start')
             self.press.start()
-        if event.Message == 514:  # mouse left up
-            print('press.stop')
+        if button == Button.left and not pressed:
             self.press.stop()
             self.press = Press(self.all_states)
-            print('after Press')
-
-        return True
+        if not pressed:
+            return False
 
     def run(self):
-        print('run')
-        self.hm = pyHook.HookManager()
-        self.hm.MouseAllButtons = self._hook_on_mouse
-        self.hm.HookMouse()
         while self._loop:
-            pythoncom.PumpWaitingMessages()
+            with mouse.Listener(on_click=self.on_click, suppress = False) as listener:
+                listener.join()
 
     def stop(self):
         self._loop = False
