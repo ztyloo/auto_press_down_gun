@@ -98,14 +98,16 @@ def find_most_color(im):
 if __name__ == '__main__':
     from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 
+    fire_mode_detect = Detector('fire_mode')
+    for i in range(25):
+        path = 'D:/github_project/auto_press_down_gun/image_detect/temp_test_image/'+str(i)+'.png'
+        screen = cv2.imread(path)
+        crop_im = crop_screen(screen, sc_pos['fire_mode'])
+        a = fire_mode_detect.canny_classify(crop_im)
+        print(a)
+        cv2.imshow('crop_im', crop_im)
+        cv2.waitKey()
 
-    # screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/burst/burst.png')
-    screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/full/full.png')
-    screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/single/single.png')
-
-    # fire_mode_detect = Detector('fire_mode')
-    # a = fire_mode_detect.canny_classify(crop_screen(screen, sc_pos['fire_mode']))
-
-    fire_mode_detect = Detector('small_fire_mode')
-    a = fire_mode_detect.canny_classify(crop_screen(screen, sc_pos['small_fire_mode']))
-    print(a)
+    # fire_mode_detect = Detector('small_fire_mode')
+    # a = fire_mode_detect.canny_classify(crop_screen(screen, sc_pos['small_fire_mode']))
+    # print(a)
