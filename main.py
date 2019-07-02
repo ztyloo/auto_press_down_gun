@@ -17,6 +17,26 @@ class Weapon():
         self.muzzle = ''
         self.grip = ''
 
+    def set_fire_mode(self, fire_mode):
+        if fire_mode != '':
+            self.fire_mode = fire_mode
+
+    def set_name(self, name):
+        if name != '':
+            self.name = name
+
+    def set_scope(self, scope):
+        if scope != '':
+            self.scope = scope
+
+    def set_muzzle(self, muzzle):
+        if muzzle != '':
+            self.muzzle = muzzle
+
+    def set_grip(self, grip):
+        if grip != '':
+            self.grip = grip
+
 
 class All_States():
     def __init__(self):

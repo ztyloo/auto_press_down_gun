@@ -14,11 +14,16 @@ class Detector:
             png = cv2.imread(abs_png_name, cv2.IMREAD_UNCHANGED)
             self.png_dict[png_name[:-4]] = png
 
-    def diff_sum_classify(self, crop_im, sum_thr=10000, absent_return=''):
+    def diff_sum_classify(self, crop_im, sum_thr=10000, absent_return='', check=False):
         for item_name, png in self.png_dict.items():
             sum = detect_3d_sum(crop_im, png)
             if sum < sum_thr:
+                print('diff_sum_classify return : ', item_name)
                 return item_name
+        if check:
+            cv2.imshow('crop_im', crop_im)
+            cv2.waitKey()
+        print('diff_sum_classify return : ', absent_return)
         return absent_return
 
     def canny_classify(self, crop_im, sum_thr=10000):

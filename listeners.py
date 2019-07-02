@@ -23,6 +23,7 @@ class Key_Listener(PyKeyboardEvent):
 
         self.all_states = all_states
         self.mistake_counter = 0
+        self.screen = None
 
         self.fire_mode_detect = Detector('fire_mode')
         self.in_tab_detect = Detector('in_tab')
@@ -38,6 +39,7 @@ class Key_Listener(PyKeyboardEvent):
 
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
+            self.screen = get_screen()
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 123 and press:  # F12
@@ -65,38 +67,38 @@ class Key_Listener(PyKeyboardEvent):
 
     def tab_func(self):
         self.stop_listen()
-
-        screen = get_screen()
-        if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(screen, sc_pos['in_tab'])):
+        if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
+            cv2.imshow('screen', self.screen)
+            cv2.waitKey()
             for n in [0, 1]:
-                name_crop = crop_screen(screen, sc_pos['weapon'][str(n)]['name'])
-                scope_crop = crop_screen(screen, sc_pos['weapon'][str(n)]['scope'])
+                name_crop = crop_screen(self.screen, sc_pos['weapon'][str(n)]['name'])
+                scope_crop = crop_screen(self.screen, sc_pos['weapon'][str(n)]['scope'])
                 # muzzle_crop = crop_screen(screen, sc_pos['name'][str(n)]['muzzle'])
                 # grip_crop = crop_screen(screen, sc_pos['name'][str(n)]['grip'])
-                self.all_states.weapon[n].name = self.name_detect.diff_sum_classify(name_crop)
-                self.all_states.weapon[n].scope = self.scope_detect.diff_sum_classify(scope_crop, absent_return="1")
-                # self.all_states.name[n].muzzle = self.muzzle_detect.diff_sum_classify(muzzle_crop)
-                # self.all_states.name[n].grip = self.grip_detect.diff_sum_classify(grip_crop)
+                check = True if n == 0 else False
+                self.all_states.weapon[n].set_name(self.name_detect.diff_sum_classify(name_crop, check=check))
+                self.all_states.weapon[n].set_scope(self.scope_detect.diff_sum_classify(scope_crop, absent_return="1", check=check))
+                # self.all_states.name[n].set_muzzle(self.muzzle_detect.diff_sum_classify(muzzle_crop))
+                # self.all_states.name[n].set_grip(self.grip_detect.diff_sum_classify(grip_crop))
             print_state(self.all_states)
 
         self.whether_start_listen()
 
     def b_func(self):
         self.stop_listen()
-
-        screen = get_screen()
+        self.screen = get_screen()
 
         n = self.all_states.weapon_n
-        fire_mode_crop = crop_screen(screen, sc_pos['fire_mode'])
+        fire_mode_crop = crop_screen(self.screen, sc_pos['fire_mode'])
         pre_fire_mode = self.all_states.weapon[n].fire_mode
-        self.all_states.weapon[n].fire_mode = self.fire_mode_detect.canny_classify(fire_mode_crop)
+        self.all_states.weapon[n].set_fire_mode(self.fire_mode_detect.canny_classify(fire_mode_crop))
 
         # check if mistake
         if pre_fire_mode != '':
             next_fire_mode = gun_next_mode(self.all_states.weapon[n].name, pre_fire_mode)
-            if self.all_states.weapon[n].fire_mode != next_fire_mode:
+            if next_fire_mode != self.all_states.weapon[n].fire_mode:
                 root_path = 'D:/github_project/auto_press_down_gun/image_detect/temp_test_image/' + str(self.mistake_counter) + '.png'
-                cv2.imwrite(root_path, screen)
+                cv2.imwrite(root_path, self.screen)
                 # cv2.imshow('fire_mode_crop', fire_mode_crop)
                 # cv2.waitKey()
 
