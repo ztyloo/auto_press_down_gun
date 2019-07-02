@@ -40,9 +40,7 @@ class Key_Listener(PyKeyboardEvent):
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
             self.screen = get_screen()
-            if not self.all_states.in_tab:
-                self.stop_listen()
-                self.all_states.in_tab = True
+            self.stop_listen()
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 123 and press:  # F12
@@ -71,7 +69,6 @@ class Key_Listener(PyKeyboardEvent):
 
     def tab_func(self):
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
-            self.all_states.in_tab = False
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
             for n in [0, 1]:
@@ -96,19 +93,19 @@ class Key_Listener(PyKeyboardEvent):
         pre_fire_mode = self.all_states.weapon[n].fire_mode
         self.all_states.weapon[n].set_fire_mode(self.fire_mode_detect.canny_classify(fire_mode_crop))
 
-        # check if mistake
-        if pre_fire_mode != '':
-            next_fire_mode = gun_next_mode(self.all_states.weapon[n].name, pre_fire_mode)
-            if next_fire_mode != self.all_states.weapon[n].fire_mode:
-                root_path = 'D:/github_project/auto_press_down_gun/image_detect/temp_test_image/' + str(self.mistake_counter) + '.png'
-                cv2.imwrite(root_path, self.screen)
-                # cv2.imshow('fire_mode_crop', fire_mode_crop)
-                # cv2.waitKey()
+        # # check if mistake
+        # if pre_fire_mode != '':
+        #     next_fire_mode = gun_next_mode(self.all_states.weapon[n].name, pre_fire_mode)
+        #     if next_fire_mode != self.all_states.weapon[n].fire_mode:
+        #         root_path = 'D:/github_project/auto_press_down_gun/image_detect/temp_test_image/' + str(self.mistake_counter) + '.png'
+        #         cv2.imwrite(root_path, self.screen)
 
         print_state(self.all_states)
         self.whether_start_listen()
 
     def stop_listen(self):
+        self.all_states.weapon[0].fire_mode = 'single'
+        self.all_states.weapon[1].fire_mode = 'single'
         if self.press_listener.is_alive():
             self.press_listener.stop()
 
