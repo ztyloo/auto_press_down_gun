@@ -34,7 +34,7 @@ class Key_Listener(PyKeyboardEvent):
         # self.muzzle_detect = Detector('muzzle')
         # self.grip_detect = Detector('grip')
 
-        self.press_listener = None
+        self.press_listener = Press_Listener(self.all_states)
         print('Initial done!!!')
 
     def tap(self, keycode, character, press):
@@ -76,8 +76,8 @@ class Key_Listener(PyKeyboardEvent):
                 # muzzle_crop = crop_screen(screen, sc_pos['name'][str(n)]['muzzle'])
                 # grip_crop = crop_screen(screen, sc_pos['name'][str(n)]['grip'])
                 check = True if n == 0 else False
-                self.all_states.weapon[n].set_name(self.name_detect.diff_sum_classify(name_crop, check=check))
-                self.all_states.weapon[n].set_scope(self.scope_detect.diff_sum_classify(scope_crop, absent_return="1", check=check))
+                self.all_states.weapon[n].set_name(self.name_detect.diff_sum_classify(name_crop))
+                self.all_states.weapon[n].set_scope(self.scope_detect.diff_sum_classify(scope_crop, absent_return="1"))
                 # self.all_states.name[n].set_muzzle(self.muzzle_detect.diff_sum_classify(muzzle_crop))
                 # self.all_states.name[n].set_grip(self.grip_detect.diff_sum_classify(grip_crop))
             print_state(self.all_states)
@@ -106,10 +106,13 @@ class Key_Listener(PyKeyboardEvent):
         self.whether_start_listen()
 
     def stop_listen(self):
-        if self.press_listener is not None:
+        if self.press_listener.is_alive():
             self.press_listener.stop()
 
     def whether_start_listen(self):
+        if self.press_listener.is_alive():
+            self.press_listener.stop()
+
         n = self.all_states.weapon_n
         if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
             self.press_listener = Press_Listener(self.all_states)

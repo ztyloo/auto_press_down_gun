@@ -9,9 +9,13 @@ class Press_Listener(threading.Thread):
     def __init__(self, all_states):
         threading.Thread.__init__(self)
         self.all_states = all_states
-        self.press = Press(self.all_states)
+        n = self.all_states.weapon_n
+        if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
+            self.press = Press(self.all_states)
+            self._loop = True
+        else:
+            self._loop = False
 
-        self._loop = True
 
     def on_click(self, x, y , button, pressed):
         if button == Button.left and pressed:
