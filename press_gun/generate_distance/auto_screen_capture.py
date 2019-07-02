@@ -57,17 +57,21 @@ class Capture_Listener(PyKeyboardEvent):
 
     def cap_a_screen(self):
         screen = get_screen()
-        aim_point = search_for_aim_point(screen)
-        bullet_hole_centers = search_for_bullet_hole(screen, rect=(1500, 250, 1900, aim_point[1]-20))
-        if len(bullet_hole_centers) == 0:
-            return
+        # aim_point = search_for_aim_point(screen)
+        # bullet_hole_centers = search_for_bullet_hole(screen, rect=(1500, 250, 1900, aim_point[1]-40))
+        # if len(bullet_hole_centers) == 0:
+        #     return
+        #
+        # mv_x = bullet_hole_centers[-1][0] - aim_point[0]
+        # mv_y = bullet_hole_centers[-1][1] - aim_point[1]
+        # win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, int(mv_x//2), int(mv_y//2))
 
-        mv_x = bullet_hole_centers[-1][0] - aim_point[0]
-        mv_y = bullet_hole_centers[-1][1] - aim_point[1]
-        win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, int(mv_x//2), int(mv_y//2))
 
-        save_path = os.path.join(self.save_root, self.all_states.weapon[0].name, str(self.hole_counter)+'.png')
+        save_fold = os.path.join(self.save_root, self.all_states.weapon[0].name)
+        os.makedirs(save_fold, exist_ok=True)
+        save_path = os.path.join(save_fold, str(self.hole_counter)+'.png')
         cv2.imwrite(save_path, screen)
+        self.hole_counter += 1
 
 
 if __name__ == '__main__':
