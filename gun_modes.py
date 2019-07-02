@@ -8,7 +8,7 @@ single_guns = ['98k', 'awm', 'm16', 'm24', 'mini14', 's12k', 's1987', 's686', 's
 full_guns = ['dp28', 'm249']
 single_burst_guns = ['m16', ]
 single_full_guns = ['akm', 'aug', 'groza', 'm416', 'qbz', 'scar', 'mk14', 'tommy', 'uzi', 'vss']
-single_burst_full_guns = ['m762', 'ump9', 'vector']
+single_burst_full_guns = ['m762', 'ump45', 'vector']
 
 
 def gun_next_mode(gun_name, now_mode):

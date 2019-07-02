@@ -65,37 +65,37 @@ if __name__ == '__main__':
     all_from_dir = 'D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/'
     all_to_dir = 'D:/github_project/auto_press_down_gun/image_detect/states_4c_im/'
 
-    # for clas in os.listdir(all_from_dir):
-    #     temp_dir = os.path.join(all_from_dir, clas)
-    #     for state in os.listdir(temp_dir):
-    #         from_dir = os.path.join(all_from_dir, clas, state)
-    #         to_im = os.path.join(all_to_dir, clas, state+'.png')
-    #         screen_to_crop(from_dir, to_im, screen_position[clas])
+    for clas in os.listdir(all_from_dir):
+        temp_dir = os.path.join(all_from_dir, clas)
+        for state in os.listdir(temp_dir):
+            from_dir = os.path.join(all_from_dir, clas, state)
+            to_im = os.path.join(all_to_dir, clas, state+'.png')
+            screen_to_crop(from_dir, to_im, screen_position[clas])
 
-    from_dir = all_from_dir+'fire_mode/full'
-    to_im = all_to_dir+'fire_mode/full.png'
-    screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
-
-    from_dir = all_from_dir+'fire_mode/burst'
-    to_im = all_to_dir+'fire_mode/burst.png'
-    screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
-
-    from_dir = all_from_dir+'fire_mode/single'
-    to_im = all_to_dir+'fire_mode/single.png'
-    screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
-
-
-    from_dir = all_from_dir+'fire_mode/full'
-    to_im = all_to_dir+'small_fire_mode/full.png'
-    screen_to_crop(from_dir, to_im, screen_position['small_fire_mode'], mid=180, radius=20)
-
-    from_dir = all_from_dir+'fire_mode/burst'
-    to_im = all_to_dir+'small_fire_mode/burst.png'
-    screen_to_crop(from_dir, to_im, screen_position['small_fire_mode'], mid=180, radius=20)
-
-    from_dir = all_from_dir+'fire_mode/single'
-    to_im = all_to_dir+'small_fire_mode/single.png'
-    screen_to_crop(from_dir, to_im, screen_position['small_fire_mode'], mid=180, radius=20)
+    # from_dir = all_from_dir+'fire_mode/full'
+    # to_im = all_to_dir+'fire_mode/full.png'
+    # screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
+    #
+    # from_dir = all_from_dir+'fire_mode/burst'
+    # to_im = all_to_dir+'fire_mode/burst.png'
+    # screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
+    #
+    # from_dir = all_from_dir+'fire_mode/single'
+    # to_im = all_to_dir+'fire_mode/single.png'
+    # screen_to_crop(from_dir, to_im, screen_position['fire_mode'], mid=215, radius=15)
+    #
+    #
+    # from_dir = all_from_dir+'fire_mode/full'
+    # to_im = all_to_dir+'small_fire_mode/full.png'
+    # screen_to_crop(from_dir, to_im, screen_position['small_fire_mode'], mid=180, radius=20)
+    #
+    # from_dir = all_from_dir+'fire_mode/burst'
+    # to_im = all_to_dir+'small_fire_mode/burst.png'
+    # screen_to_crop(from_dir, to_im, screen_position['small_fire_mode'], mid=180, radius=20)
+    #
+    # from_dir = all_from_dir+'fire_mode/single'
+    # to_im = all_to_dir+'small_fire_mode/single.png'
+    # screen_to_crop(from_dir, to_im, screen_position['small_fire_mode'], mid=180, radius=20)
 
     # for png_path in os.listdir('D:/github_project/auto_press_down_gun/image_detect/screen_captures/name'):
     #     from_dir = 'D:/github_project/auto_press_down_gun/image_detect/screen_captures/name/' + png_path
