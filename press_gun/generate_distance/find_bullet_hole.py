@@ -18,12 +18,12 @@ def search_for_bullet_hole(im, rect=(1500, 250, 1900, 1050)):
     hole_kernel = get_hole_kernel()
     hole_confidence = cv2.filter2D(im_black, -1, hole_kernel)
     hole_position = np.where(hole_confidence > bullet_hole_min_confidence, 255, 0).astype(np.uint8)
-    cv2.imshow('hole_position', hole_position)
+    # cv2.imshow('hole_position', hole_position)
 
     _, labels, stats, centroids = cv2.connectedComponentsWithStats(hole_position)
 
     res_center = list()
-    last_y1, last_area = 0, 0
+    last_y1, last_area = 0, 10000
     for stat, center in zip(stats[1:], centroids[1:]):
         x0, y0, width, height, area = stat
         print(stat[-1])

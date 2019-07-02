@@ -1,7 +1,7 @@
 import cv2
 import os
 
-from press_gun.generate_distance.find_hole import Find_Hole
+from press_gun.generate_distance.find_bullet_hole import Find_Hole
 
 
 gun_name_list = ['98k', 'akm', 'aug', 'awm', 'dp28', 'groza', 'm16', 'm24', 'm249', 'm416', 'm762', 'mini14', 'mk14',
