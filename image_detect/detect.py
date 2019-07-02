@@ -16,29 +16,52 @@ class Detector:
 
     def diff_sum_classify(self, crop_im, sum_thr=10000, absent_return=''):
         for item_name, png in self.png_dict.items():
-            sum = detect_item_sum(crop_im, png)
+            sum = detect_3d_sum(crop_im, png)
             if sum < sum_thr:
                 return item_name
         return absent_return
 
-    def water_mark_classify(self, crop_im, sum_thr=10000, c_thr=10):
-        most_color = find_most_color(crop_im)
-        diff_crop = crop_im - np.array(most_color)[np.newaxis, np.newaxis, :]
-        shield = (np.where(diff_crop.sum(axis=-1) <= 20 , 255, 0)//255)[:, :, np.newaxis].astype(np.uint8)
+    def canny_classify(self, crop_im, sum_thr=10000):
+        canny = cv2.Canny(crop_im, 200, 200)
+        min_item = None
+        min_sum = 1000000
+        for item_name, png in self.png_dict.items():
+            sum = detect_1d_sum(canny, cv2.Canny(png, 200, 200))
+            if sum < min_sum:
+                min_item = item_name
+                min_sum = sum
+        return min_item
 
-        crop_im *= shield
+    def water_mark_classify(self, crop_im, sum_thr=10000, c_thr=10):
+        # most_color = find_most_color(crop_im)
+        # diff_crop = crop_im - np.array(most_color)[np.newaxis, np.newaxis, :]
+        # shield = (np.where(diff_crop.sum(axis=-1) <= 20 , 255, 0)//255)[:, :, np.newaxis].astype(np.uint8)
+        # crop_im *= shield
 
         min_item = None
         min_sum = 1000000
         for item_name, png in self.png_dict.items():
-            sum = detect_item_sum(crop_im, png)
+            sum = detect_3d_sum(crop_im, png)
             if sum < min_sum:
                 min_item = item_name
                 min_sum = sum
         return min_item
 
 
-def detect_item_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray, blur=1):
+def detect_1d_sum(detect_im, target_im, blur=1):
+    min_test_res = 1000000000000
+    for dx in range(-blur, blur+1):
+        for dy in range(-blur, blur+1):
+            test_im = detect_im.copy()
+            M = np.float32([[1, 0, dx], [0, 1, dy]])
+            test_im = cv2.warpAffine(test_im, M, (test_im.shape[1], test_im.shape[0]))
+
+            sum = np.sum(test_im - target_im)
+            min_test_res = min(sum, min_test_res)
+    return min_test_res
+
+
+def detect_3d_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray, blur=1):
     target_im = target_im_4c[:, :, 0:3]
     shield = (target_im_4c[:, :, [3]] // 255).astype(np.uint8)
     target_im = target_im * shield
@@ -78,7 +101,11 @@ if __name__ == '__main__':
 
     # screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/burst/burst.png')
     screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/full/full.png')
-    # screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/single/single.png')
-    fire_mode_detect = Detector('fire_mode')
-    a = fire_mode_detect.water_mark_classify(crop_screen(screen, sc_pos['fire_mode']))
+    screen = cv2.imread('D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/fire_mode/single/single.png')
+
+    # fire_mode_detect = Detector('fire_mode')
+    # a = fire_mode_detect.canny_classify(crop_screen(screen, sc_pos['fire_mode']))
+
+    fire_mode_detect = Detector('small_fire_mode')
+    a = fire_mode_detect.canny_classify(crop_screen(screen, sc_pos['small_fire_mode']))
     print(a)

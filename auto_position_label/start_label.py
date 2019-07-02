@@ -33,12 +33,12 @@ class Ui_Dialog(object):
         self.label.setImage()
         self.label.res_rect_n_signal[int].connect(self.change_radio_button)
 
-        self.dvw_dict = Deep_vs_Wide_Dict('x0')
-        self.dvw_dict.d_dict = screen_position
-        self.dvw_dict.d_to_w()
+        self.label.dvw_dict = Deep_vs_Wide_Dict('x0')
+        self.label.dvw_dict.d_dict = screen_position
+        self.label.dvw_dict.d_to_w()
 
         self.radioButtons = list()
-        for i, k in enumerate(self.dvw_dict.w_dict):
+        for i, k in enumerate(self.label.dvw_dict.w_dict):
             self.radioButtons.append(QtWidgets.QRadioButton(Dialog))
             self.radioButtons[i].setGeometry(QtCore.QRect(5, 80+20*i, 150, 16))
             self.radioButtons[i].setObjectName(k)
@@ -49,40 +49,26 @@ class Ui_Dialog(object):
 
         self.startButton.clicked.connect(self.label.openImage)
 
-        for i, k in enumerate(self.dvw_dict.w_dict):
+        for i, k in enumerate(self.label.dvw_dict.w_dict):
             self.radioButtons[i].toggled.connect(self.change_res_rect_n)
 
-        self.stopButton.clicked.connect(self.print_res_d_dict)
+        self.stopButton.clicked.connect(self.label.print_res)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Locate_rectangle"))
         self.startButton.setText(_translate("Dialog", "Choose image"))
         self.stopButton.setText(_translate("Dialog", "Done"))
-        for i, k in enumerate(self.dvw_dict.w_dict):
+        for i, k in enumerate(self.label.dvw_dict.w_dict):
             self.radioButtons[i].setText(_translate("Dialog", k))
 
     def change_radio_button(self, n):
         self.radioButtons[n].setChecked(True)
 
     def change_res_rect_n(self):
-        for i, k in enumerate(self.dvw_dict.w_dict):
+        for i, k in enumerate(self.label.dvw_dict.w_dict):
             if self.radioButtons[i].isChecked():
                 self.label.res_rect_n = i
-
-    def print_res_d_dict(self):
-        for i, k in enumerate(self.dvw_dict.w_dict):
-            self.dvw_dict.w_dict[k]['x0'] = self.label.res_rects[i][0]
-            self.dvw_dict.w_dict[k]['y0'] = self.label.res_rects[i][1]
-            self.dvw_dict.w_dict[k]['x1'] = self.label.res_rects[i][2]
-            self.dvw_dict.w_dict[k]['y1'] = self.label.res_rects[i][3]
-        cluster = Cluster(self.dvw_dict.w_dict)
-        self.dvw_dict.w_dict = cluster.w_dict
-        self.dvw_dict.w_to_d()
-        print(self.dvw_dict.d_dict)
-        print('\n')
-        for k, v in self.dvw_dict.w_dict.items():
-            print(k, v)
 
 
 if __name__ == "__main__":

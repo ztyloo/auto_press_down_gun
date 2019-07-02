@@ -19,6 +19,7 @@ class Image_QLabel(QtWidgets.QLabel):
 
     res_rect_n = 0
     res_rect_n_signal = pyqtSignal(int)
+    close_ev_signal = pyqtSignal()
     before_choose_one = True
     mid_mode = False
 
@@ -113,6 +114,9 @@ class Image_QLabel(QtWidgets.QLabel):
                 self.draw_cross(qp, (self.c_x, self.c_y))
                 self.draw_coordinate(qp, (self.c_x, self.c_y), (self.c_x, self.c_y), (255, 0, 255))
 
+    def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
+        self.print_res()
+
     def openImage(self):
         self.image_name, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Image", "", "Image Files (*.png)")
         if self.image_name:
@@ -173,3 +177,17 @@ class Image_QLabel(QtWidgets.QLabel):
         qp.drawPoint(x1, y1)
         qp.setPen(QPen(Qt.yellow, self.corner_br, Qt.SolidLine))
         qp.drawPoint(x0, y1)
+
+    def print_res(self):
+        for i, k in enumerate(self.dvw_dict.w_dict):
+            self.dvw_dict.w_dict[k]['x0'] = self.label.res_rects[i][0]
+            self.dvw_dict.w_dict[k]['y0'] = self.label.res_rects[i][1]
+            self.dvw_dict.w_dict[k]['x1'] = self.label.res_rects[i][2]
+            self.dvw_dict.w_dict[k]['y1'] = self.label.res_rects[i][3]
+        cluster = Cluster(self.dvw_dict.w_dict)
+        self.dvw_dict.w_dict = cluster.w_dict
+        self.dvw_dict.w_to_d()
+        print(self.dvw_dict.d_dict)
+        print('\n')
+        for k, v in self.dvw_dict.w_dict.items():
+            print(k, v)

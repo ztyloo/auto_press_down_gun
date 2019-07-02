@@ -38,7 +38,7 @@ class Press_Listener(threading.Thread):
         self.hm.MouseAllButtons = self._hook_on_mouse
         self.hm.HookMouse()
         while self._loop:
-            pythoncom.PumpWaitingMessages()
+            pythoncom.PumpWaitingMessages()  # 只有第一次能正常工作
 
     def stop(self):
         self._loop = False

@@ -3,8 +3,9 @@ import cv2
 import numpy as np
 from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
-import itchat
+# import itchat
 
+from gun_modes import gun_next_mode
 from image_detect.detect import Detector
 from press_gun.press_listener import Press_Listener
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
@@ -24,6 +25,7 @@ class Key_Listener(PyKeyboardEvent):
         self.all_states = all_states
 
         self.fire_mode_detect = Detector('fire_mode')
+        # self.fire_mode_detect = Detector('small_fire_mode')
         self.in_tab_detect = Detector('in_tab')
         self.in_scope_detect = Detector('in_scope')
 
@@ -42,24 +44,24 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 123 and press:  # F12
-            threading.Timer(0.001, self.whether_start_listen).start()
+            self.stop_listen()
 
         if keycode == 71 and press:  # g
-            threading.Timer(0.001, self.whether_start_listen).start()
+            self.stop_listen()
 
         if keycode == 53 and press:  # 5
-            threading.Timer(0.001, self.whether_start_listen).start()
+            self.stop_listen()
 
         if keycode == 66 and press:  # b
-            threading.Timer(0.2, self.b_func).start()
+            threading.Timer(0.02, self.b_func).start()
 
         if keycode == 49 and press:  # 1
             self.all_states.weapon_n = 0
-            threading.Timer(0.001, self.whether_start_listen).start()
+            self.whether_start_listen()
 
         if keycode == 50 and press:  # 2
             self.all_states.weapon_n = 1
-            threading.Timer(0.001, self.whether_start_listen).start()
+            self.whether_start_listen()
 
     def escape(self, event):
         return False
@@ -86,9 +88,11 @@ class Key_Listener(PyKeyboardEvent):
         self.stop_listen()
 
         screen = get_screen()
-        fire_mode_crop = crop_screen(screen, sc_pos['fire_mode'])
+
         n = self.all_states.weapon_n
-        self.all_states.weapon[n].fire_mode = self.fire_mode_detect.water_mark_classify(fire_mode_crop)
+        fire_mode_crop = crop_screen(screen, sc_pos['fire_mode'])
+        # fire_mode_crop = crop_screen(screen, sc_pos['small_fire_mode'])
+        self.all_states.weapon[n].fire_mode = self.fire_mode_detect.canny_classify(fire_mode_crop)
 
         print_state(self.all_states)
         self.whether_start_listen()
@@ -100,11 +104,11 @@ class Key_Listener(PyKeyboardEvent):
     def whether_start_listen(self):
         n = self.all_states.weapon_n
         if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
-            if self.press_listener is not None:
-                self.press_listener.stop()
+            print('before Press_Listener')
             self.press_listener = Press_Listener(self.all_states)
+            print('after Press_Listener')
             self.press_listener.start()
-
+            print('after press_listener.start')
 
 def print_state(all_states):
     print('now_weapon: ', str(all_states.weapon_n))
@@ -112,6 +116,8 @@ def print_state(all_states):
         w = all_states.weapon[n]
         print(str(w.name) + ' ' + str(w.scope) + ' ' + str(w.fire_mode))
 
-    # itchat.send('\n')
-    # itchat.send(print_str)
+    # itchat.send('now_weapon: ', str(all_states.weapon_n))
+    # for n in [0, 1]:
+    #     w = all_states.weapon[n]
+    #     itchat.send(str(w.name) + ' ' + str(w.scope) + ' ' + str(w.fire_mode))
 
