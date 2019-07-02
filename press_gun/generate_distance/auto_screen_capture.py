@@ -8,6 +8,7 @@ from PIL import ImageGrab
 
 from main import All_States
 from press_gun.generate_distance.find_bullet_hole import search_for_bullet_hole
+from press_gun.generate_distance.find_aim_point import search_for_aim_point
 from image_detect.detect import Detector
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 
@@ -36,6 +37,9 @@ class Capture_Listener(PyKeyboardEvent):
         if keycode == 9 and press:  # tab
             self.tab_func()
 
+        if keycode == 82 and press:  # r
+            self.hole_counter = 0
+
         if keycode == 162 and press:  # ctrl
             if self.all_states.weapon[0].name != '':
                 self.cap_a_screen()
@@ -53,19 +57,17 @@ class Capture_Listener(PyKeyboardEvent):
 
     def cap_a_screen(self):
         screen = get_screen()
-        bullet_hole_centers = search_for_bullet_hole(screen, rect=(1500, 250, 1900, 719))
+        aim_point = search_for_aim_point(screen)
+        bullet_hole_centers = search_for_bullet_hole(screen, rect=(1500, 250, 1900, aim_point[1]-20))
         if len(bullet_hole_centers) == 0:
             return
-        else:
-            next_center_x = bullet_hole_centers[-1][0]
-            print()
-            next_center_y = bullet_hole_centers[-1][1] - 0
-            mv_x = next_center_x-1719
-            mv_y = next_center_y-719
-            win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, int(mv_x//3), int(mv_y//3))
 
-            save_path = os.path.join(self.save_root, self.all_states.weapon[0].name, str(self.hole_counter)+'.png')
-            cv2.imwrite(save_path, screen)
+        mv_x = bullet_hole_centers[-1][0] - aim_point[0]
+        mv_y = bullet_hole_centers[-1][1] - aim_point[1]
+        win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, int(mv_x//2), int(mv_y//2))
+
+        save_path = os.path.join(self.save_root, self.all_states.weapon[0].name, str(self.hole_counter)+'.png')
+        cv2.imwrite(save_path, screen)
 
 
 if __name__ == '__main__':

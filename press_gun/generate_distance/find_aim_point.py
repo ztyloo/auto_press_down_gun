@@ -18,7 +18,7 @@ def search_for_aim_point(im, rect=(1420, 420, 2020, 1020)):
     hole_position = np.where(aim_point_confidence > aim_point_min_confidence, 255, 0).astype(np.uint8)
 
     _, labels, stats, centroids = cv2.connectedComponentsWithStats(hole_position)
-    return centroids[-1][0] + dx0, centroids[-1][1] + dy0
+    return int(centroids[-1][0] + dx0), int(centroids[-1][1] + dy0)
 
 
 def get_6_aim_point_kernel(radius=300):
@@ -39,9 +39,7 @@ if __name__ == '__main__':
     for i in range(20):
         screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/vector/'+str(i)+'.png')
 
-        center = search_for_aim_point(screen)
-
-        x, y = center
+        x, y = search_for_aim_point(screen)
         im = cv2.circle(screen, (int(x), int(y)), 5, (255, 0, 255), thickness=20)
 
         cv2.imshow('screen', screen)

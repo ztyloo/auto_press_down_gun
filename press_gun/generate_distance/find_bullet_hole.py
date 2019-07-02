@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-
 def search_for_bullet_hole(im, rect=(1500, 250, 1900, 1050)):
     height_resolution = 20
     bullet_hole_max_energy = 30
@@ -53,12 +52,15 @@ def get_hole_kernel(radius=8):
 
 
 if __name__ == '__main__':
+    from press_gun.generate_distance.find_aim_point import search_for_aim_point
+
     for i in range(20):
         screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/vector/'+str(i)+'.png')
 
-        positions = search_for_bullet_hole(screen, (1500, 250, 1900, 719))
+        aim_point = search_for_aim_point(screen)
+        bullet_hole_centers = search_for_bullet_hole(screen, rect=(1500, 250, 1900, aim_point[1]-20))
 
-        for center in positions:
+        for center in bullet_hole_centers:
             x, y = center
             im = cv2.circle(screen, (int(x), int(y)), 5, (255, 0, 255), thickness=20)
 
