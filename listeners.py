@@ -68,8 +68,8 @@ class Key_Listener(PyKeyboardEvent):
     def tab_func(self):
         self.stop_listen()
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
-            cv2.imshow('screen', self.screen)
-            cv2.waitKey()
+            # cv2.imshow('screen', self.screen)
+            # cv2.waitKey()
             for n in [0, 1]:
                 name_crop = crop_screen(self.screen, sc_pos['weapon'][str(n)]['name'])
                 scope_crop = crop_screen(self.screen, sc_pos['weapon'][str(n)]['scope'])

@@ -18,10 +18,8 @@ class Press(threading.Thread):
         gun_n = all_states.weapon_n
         gun_name = all_states.weapon[gun_n].name
         gun_scope = int(all_states.weapon[gun_n].scope.replace('r', '').replace('h', ''))
-        print('gun_scope', gun_scope)
         dis_interval = dis_intervals[gun_name]
         dis_interval = [i * gun_scope for i in dis_interval]
-        print('dis_interval', dis_interval)
         time_interval = time_intervals[gun_name]
         divide_num = int(time_interval/0.02)  # 整数分割
 
