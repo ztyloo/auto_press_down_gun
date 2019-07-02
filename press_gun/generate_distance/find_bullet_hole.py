@@ -1,7 +1,10 @@
 import cv2
 import numpy as np
 
-def search_for_bullet_hole(im, rect=(1500, 250, 1900, 1050)):
+from press_gun.generate_distance.find_aim_point import search_for_aim_point
+
+
+def search_for_bullet_hole(im, rect=(1140, 140, 2350, 1350)):
     height_resolution = 20
     bullet_hole_max_energy = 30
     bullet_hole_min_confidence = 253
@@ -10,6 +13,7 @@ def search_for_bullet_hole(im, rect=(1500, 250, 1900, 1050)):
     if rect is not None:
         dx0, dy0, dx1, dy1 = rect
         im = im[dy0:dy1, dx0:dx1, :]
+
     im_grey = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
     im_black = np.where(im_grey < bullet_hole_max_energy, 255, 0).astype(np.uint8)
 

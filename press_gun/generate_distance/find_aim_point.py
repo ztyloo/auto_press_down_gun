@@ -39,8 +39,8 @@ if __name__ == '__main__':
     for i in range(20):
         screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/vector/'+str(i)+'.png')
 
-        x, y = search_for_aim_point(screen)
-        im = cv2.circle(screen, (int(x), int(y)), 5, (255, 0, 255), thickness=20)
+        x0, y0 = search_for_aim_point(screen)
+        im = cv2.circle(screen, (int(x0), int(y0)), 5, (255, 0, 255), thickness=20)
 
         cv2.imshow('screen', screen)
         cv2.waitKey()
