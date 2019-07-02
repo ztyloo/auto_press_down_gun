@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
-# import itchat
 
 from gun_modes import gun_next_mode
 from image_detect.detect import Detector
@@ -23,9 +22,9 @@ class Key_Listener(PyKeyboardEvent):
         PyKeyboardEvent.__init__(self)
 
         self.all_states = all_states
+        self.mistake_counter = 0
 
         self.fire_mode_detect = Detector('fire_mode')
-        # self.fire_mode_detect = Detector('small_fire_mode')
         self.in_tab_detect = Detector('in_tab')
         self.in_scope_detect = Detector('in_scope')
 
@@ -35,8 +34,6 @@ class Key_Listener(PyKeyboardEvent):
         # self.grip_detect = Detector('grip')
 
         self.press_listener = None
-        # itchat.auto_login(hotReload=True)
-        # itchat.send('Initial done!!!')
         print('Initial done!!!')
 
     def tap(self, keycode, character, press):
@@ -53,7 +50,7 @@ class Key_Listener(PyKeyboardEvent):
             self.stop_listen()
 
         if keycode == 66 and press:  # b
-            threading.Timer(0.02, self.b_func).start()
+            threading.Timer(0.2, self.b_func).start()
 
         if keycode == 49 and press:  # 1
             self.all_states.weapon_n = 0
@@ -91,8 +88,17 @@ class Key_Listener(PyKeyboardEvent):
 
         n = self.all_states.weapon_n
         fire_mode_crop = crop_screen(screen, sc_pos['fire_mode'])
-        # fire_mode_crop = crop_screen(screen, sc_pos['small_fire_mode'])
+        pre_fire_mode = self.all_states.weapon[n].fire_mode
         self.all_states.weapon[n].fire_mode = self.fire_mode_detect.canny_classify(fire_mode_crop)
+
+        # check if mistake
+        if pre_fire_mode != '':
+            next_fire_mode = gun_next_mode(self.all_states.weapon[n].name, pre_fire_mode)
+            if self.all_states.weapon[n].fire_mode != next_fire_mode:
+                root_path = 'D:/github_project/auto_press_down_gun/image_detect/temp_test_image/' + str(self.mistake_counter) + '.png'
+                cv2.imwrite(root_path, screen)
+                # cv2.imshow('fire_mode_crop', fire_mode_crop)
+                # cv2.waitKey()
 
         print_state(self.all_states)
         self.whether_start_listen()
@@ -104,11 +110,8 @@ class Key_Listener(PyKeyboardEvent):
     def whether_start_listen(self):
         n = self.all_states.weapon_n
         if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
-            print('before Press_Listener')
             self.press_listener = Press_Listener(self.all_states)
-            print('after Press_Listener')
             self.press_listener.start()
-            print('after press_listener.start')
 
 def print_state(all_states):
     print('now_weapon: ', str(all_states.weapon_n))

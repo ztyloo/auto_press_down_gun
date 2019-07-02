@@ -15,7 +15,6 @@ class Press_Listener(threading.Thread):
 
     def on_click(self, x, y , button, pressed):
         if button == Button.left and pressed:
-            print('press.start')
             self.press.start()
         if button == Button.left and not pressed:
             self.press.stop()

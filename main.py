@@ -11,7 +11,7 @@ class Back():
 
 class Weapon():
     def __init__(self):
-        self.fire_mode = 'single'
+        self.fire_mode = ''
         self.name = ''
         self.scope = '1'
         self.muzzle = ''
