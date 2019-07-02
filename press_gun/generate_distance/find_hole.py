@@ -1,127 +1,68 @@
-import os
 import time
 import cv2
 import numpy as np
-from PIL import ImageGrab
 
 
-class Find_hole:
-    def __init__(self, dx=100, dy=500):
-        self.margin = 12
-        self.y0 = 719
-        self.x0 = 1719
-        self.dx = dx
-        self.dy = dy
-        self.x1 = self.x0-dx
-        self.x2 = self.x0+dx
-        self.y1 = self.y0-dy
-        self.y2 = self.y0-40
-        self.y3 = self.y0+dy
+def search_for_bullet_hole(im, rect=(1500, 250, 1900, 1050)):
+    height_resolution = 20
+    bullet_hole_max_energy = 30
+    bullet_hole_min_confidence = 253
 
-    def find_upper(self, img=None):
-        if img is None:
-            screen = ImageGrab.grab()
-            screen = np.array(screen)
-            screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+    dx0, dy0, dx1, dy1 = 0, 0, 0, 0
+    if rect is not None:
+        dx0, dy0, dx1, dy1 = rect
+        im = im[dy0:dy1, dx0:dx1, :]
+    im_grey = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+    im_black = np.where(im_grey < bullet_hole_max_energy, 255, 0).astype(np.uint8)
+
+    hole_kernel = get_hole_kernel()
+    hole_confidence = cv2.filter2D(im_black, -1, hole_kernel)
+    hole_position = np.where(hole_confidence > bullet_hole_min_confidence, 255, 0).astype(np.uint8)
+    cv2.imshow('hole_position', hole_position)
+
+    _, labels, stats, centroids = cv2.connectedComponentsWithStats(hole_position)
+
+    res_center = list()
+    last_y1, last_area = 0, 0
+    for stat, center in zip(stats[1:], centroids[1:]):
+        x0, y0, width, height, area = stat
+        print(stat[-1])
+
+        if abs(last_y1-y0) < height_resolution:
+            if area > last_area:
+                res_center.pop()
+                res_center.append([center[0]+dx0, center[1]+dy0])
         else:
-            screen = img
-        for j in range(self.y2, self.y1, -1):
-            for i in range(self.x1, self.x2):
+            res_center.append([center[0]+dx0, center[1]+dy0])
 
-                # print('checking:', i, j)
-                # im = cv2.circle(screen, (i, j), 5, (0, 0, 255), thickness=20)
-                # cv2.imshow('', im)
-                # cv2.waitKey(1)
+        last_y1 = y0+height
+        last_area = area
 
-                if self.is_point(screen, j, i):
-                    return i, j
-        return 0, 0
-
-    def find_lower(self, img=None):
-        if img is None:
-            screen = ImageGrab.grab()
-            screen = np.array(screen)
-            screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-        else:
-            screen = img
-        for j in range(self.y2, self.y3):
-            for i in range(self.x1, self.x2):
-                # print('checking:', i, j)
-                if self.is_point(screen, j, i):
-                    return i, j
-        return 0, 0
-
-    def is_point(self,area, y, x):
-        g_ = 30
-        l_ = 8
-        for i in range(-l_, l_+1):
-            r, g, b = area[y, x+i]
-            if r>g_ or g>g_ or b>g_:
-                return False
-        for j in range(-l_, l_+1):
-            r, g, b = area[y+j, x]
-            if r>g_ or g>g_ or b>g_:
-                return False
-        return True
+    return res_center
 
 
-def find_upper(now_pos, screen):
-    x0, y0 = now_pos
-    for j in range(y0-5, y0-500, -1):
-        for i in range(x0-100, x0+100):
-            if is_point(screen, j, i):
-                if is_end(screen, j, i):
-                    return 0, 0
-                return i, j
-    return 0, 0
+def get_hole_kernel(radius=8):
+    hole_kernel = np.zeros((2*radius+1, 2*radius+1))
 
+    area = 0
+    for j in range(-2*radius, 2*radius+1):
+        for i in range(-2*radius, 2*radius+1):
+            if np.linalg.norm(np.array([i, j]) - np.array([radius, radius])) <= radius:
+                hole_kernel[i, j] = 1
+                area += 1
+    hole_kernel /= area
+    return hole_kernel
 
-def is_point(area, y, x):
-    g_ = 30
-    l_ = 8
-    for i in range(-l_, l_+1):
-        r, g, b = area[y, x+i]
-        if r>g_ or g>g_ or b>g_:
-            return False
-    for j in range(-l_, l_+1):
-        r, g, b = area[y+j, x]
-        if r>g_ or g>g_ or b>g_:
-            return False
-    return True
-
-
-def is_end(area, y, x):
-    g_ = 30
-    counter = 0
-    for i in range(-20, -10):
-        r, g, b = area[y, x+i]
-        if r<g_ and g<g_ and b<g_:
-            counter += 1
-            if counter > 10:
-                return True
-            continue
-    for i in range(10, 20):
-        r, g, b = area[y, x + i]
-        if r < g_ and g < g_ and b < g_:
-            counter += 1
-            if counter > 10:
-                return True
-            continue
-    for j in range(-20, -10):
-        r, g, b = area[y+j, x]
-        if r < g_ and g < g_ and b < g_:
-            counter += 1
-            if counter > 10:
-                return True
-            continue
-    return False
 
 if __name__ == '__main__':
-    f = Find_hole()
-    screen = cv2.imread('scar/test_point.png')
-    i, j = f.find_upper(screen)
-    screen = cv2.circle(screen, (i, j), 5, (0, 0, 255), thickness=20)
+    for i in range(20):
+        screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/vector/'+str(i)+'.png')
 
-    i, j = f.find_lower(screen)
-    screen = cv2.circle(screen, (i, j), 5, (0, 0, 255), thickness=20)
-    cv2.imwrite('scar/' + '_' + str(1) + '.png', screen)
+        positions = search_for_bullet_hole(screen)
+
+        for center in positions:
+            x, y = center
+            im = cv2.circle(screen, (int(x), int(y)), 5, (255, 0, 255), thickness=20)
+
+        cv2.imshow('screen', screen)
+        cv2.waitKey()

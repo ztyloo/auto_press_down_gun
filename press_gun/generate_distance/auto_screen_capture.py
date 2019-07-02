@@ -1,4 +1,3 @@
-import threading
 import cv2
 import numpy as np
 import win32api
@@ -7,7 +6,7 @@ from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
 
 from main import All_States
-from press_gun.generate_distance.find_hole import Find_hole
+from press_gun.generate_distance.find_hole import Find_Hole
 from image_detect.detect import Detector
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 
@@ -29,7 +28,7 @@ class Key_Listener(PyKeyboardEvent):
         self.name_detect = Detector('name')
         self.scope_detect = Detector('scope')
 
-        self.f_h = Find_hole()
+        self.f_h = Find_Hole()
 
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
