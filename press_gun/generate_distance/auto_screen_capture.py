@@ -24,7 +24,6 @@ class Capture_Listener(PyKeyboardEvent):
         PyKeyboardEvent.__init__(self)
 
         self.all_states = all_states
-        self.screen_center_xy = 719, 1719
         self.res_list = []
         self.hole_counter = 0
         self.save_root = 'D:/github_project/auto_press_down_gun/press_gun/generate_distance'
@@ -57,12 +56,13 @@ class Capture_Listener(PyKeyboardEvent):
         bullet_hole_centers = search_for_bullet_hole(screen, rect=(1500, 250, 1900, 719))
         if len(bullet_hole_centers) == 0:
             return
-        if len(bullet_hole_centers) == 1:
-            next_center_x = (bullet_hole_centers[-1][0] + 20)//2
-            next_center_y = (bullet_hole_centers[-1][0] + 20)//2
-            mv_x = next_center_x-self.screen_center_xy[0]
-            mv_y = next_center_y-self.screen_center_xy[1]
-            win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, mv_x, mv_y)
+        else:
+            next_center_x = bullet_hole_centers[-1][0]
+            print()
+            next_center_y = bullet_hole_centers[-1][1] - 0
+            mv_x = next_center_x-1719
+            mv_y = next_center_y-719
+            win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, int(mv_x//3), int(mv_y//3))
 
             save_path = os.path.join(self.save_root, self.all_states.weapon[0].name, str(self.hole_counter)+'.png')
             cv2.imwrite(save_path, screen)

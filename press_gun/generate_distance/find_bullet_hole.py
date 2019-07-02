@@ -1,4 +1,3 @@
-import time
 import cv2
 import numpy as np
 
@@ -26,17 +25,16 @@ def search_for_bullet_hole(im, rect=(1500, 250, 1900, 1050)):
     last_y1, last_area = 0, 10000
     for stat, center in zip(stats[1:], centroids[1:]):
         x0, y0, width, height, area = stat
-        print(stat[-1])
-
         if abs(last_y1-y0) < height_resolution:
             if area > last_area:
                 res_center.pop()
                 res_center.append([center[0]+dx0, center[1]+dy0])
+                last_y1 = y0+height
+                last_area = area
         else:
             res_center.append([center[0]+dx0, center[1]+dy0])
-
-        last_y1 = y0+height
-        last_area = area
+            last_y1 = y0+height
+            last_area = area
 
     return res_center
 
@@ -58,7 +56,7 @@ if __name__ == '__main__':
     for i in range(20):
         screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/vector/'+str(i)+'.png')
 
-        positions = search_for_bullet_hole(screen)
+        positions = search_for_bullet_hole(screen, (1500, 250, 1900, 719))
 
         for center in positions:
             x, y = center
