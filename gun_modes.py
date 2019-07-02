@@ -10,6 +10,8 @@ single_burst_guns = ['m16', ]
 single_full_guns = ['akm', 'aug', 'groza', 'm416', 'qbz', 'scar', 'mk14', 'tommy', 'uzi', 'vss']
 single_burst_full_guns = ['m762', 'ump45', 'vector']
 
+can_full_guns = ['akm', 'aug', 'groza', 'm416', 'qbz', 'scar', 'mk14', 'tommy', 'uzi', 'vss', 'm762', 'ump45', 'vector', 'dp28', 'm249', ]
+
 
 def gun_next_mode(gun_name, now_mode):
     if gun_name in single_burst_guns:

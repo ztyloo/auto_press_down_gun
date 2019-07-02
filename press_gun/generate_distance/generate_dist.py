@@ -1,32 +1,35 @@
 import cv2
 import os
 
-from press_gun.generate_distance.find_bullet_hole import Find_Hole
+from press_gun.generate_distance.find_bullet_hole import search_for_bullet_hole
+from press_gun.generate_distance.find_aim_point import search_for_aim_point
+from gun_modes import can_full_guns
 
 
-gun_name_list = ['98k', 'akm', 'aug', 'awm', 'dp28', 'groza', 'm16', 'm24', 'm249', 'm416', 'm762', 'mini14', 'mk14',
-                 'mk47', 'qbu', 'qbz', 's12k', 's1987', 's686', 'scar', 'sks', 'slr', 'tommy', 'ump9', 'uzi', 'vector',
-                 'vss', 'win94']
+gun_dist_dict = dict()
+for gun_name in can_full_guns:
+    one_gun_dist_list = list()
+    for i in range(len(os.listdir(gun_name))):
+        im_path = os.path.join(gun_name, str(i) + '.png')
+        screen = cv2.imread(im_path)
 
-f = Find_Hole()
-gun_dis_dict = dict()
+        x0, y0 = search_for_aim_point(screen)
 
-for gun_name in gun_name_list:
-    if gun_name not in gun_dis_dict and os.path.exists(gun_name):
-        res_list = []
-        for i in range(len(os.listdir(gun_name))):
-            im_path = os.path.join(gun_name, str(i) + '.png')
-            im = cv2.imread(im_path)
-            i1, j1 = f.find_upper(im)
-            i2, j2 = f.find_lower(im)
+        aim_point = search_for_aim_point(screen)
+        bullet_hole_centers_up = search_for_bullet_hole(screen, rect=(1500, 250, 1900, aim_point[1]-10))
+        bullet_hole_centers_down = search_for_bullet_hole(screen, rect=(1500, aim_point[1]+10, 1900, 1050))
 
-            im = cv2.circle(im, (i1, j1), 5, (0, 0, 255), thickness=20)
-            im = cv2.circle(im, (i2, j2), 5, (0, 0, 255), thickness=20)
-            # cv2.imshow('', im)
-            # cv2.waitKey(300)
+        i1, j1 = bullet_hole_centers_up[-1]
+        i2, j2 = bullet_hole_centers_down[0]
 
-            res_list.append((j2 - j1 + 4) / 12)
+        # screen = cv2.circle(screen, (x0, y0), 5, (0, 255, 255), thickness=20)
+        # screen = cv2.circle(screen, (i1, j1), 5, (255, 0, 255), thickness=20)
+        # screen = cv2.circle(screen, (i2, j2), 5, (255, 255, 0), thickness=20)
+        # cv2.imshow('', screen)
+        # cv2.waitKey()
 
-        gun_dis_dict[gun_name] = res_list
+        one_gun_dist_list.append(int((j2 - j1) / 12))
 
-    print(gun_dis_dict)
+    gun_dist_dict[gun_name] = one_gun_dist_list
+
+print(gun_dist_dict)

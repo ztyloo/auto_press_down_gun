@@ -27,11 +27,11 @@ def search_for_bullet_hole(im, rect=(1500, 250, 1900, 1050)):
         if abs(last_y1-y0) < height_resolution:
             if area > last_area:
                 res_center.pop()
-                res_center.append([center[0]+dx0, center[1]+dy0])
+                res_center.append([int(center[0]+dx0), int(center[1]+dy0)])
                 last_y1 = y0+height
                 last_area = area
         else:
-            res_center.append([center[0]+dx0, center[1]+dy0])
+            res_center.append([int(center[0]+dx0), int(center[1]+dy0)])
             last_y1 = y0+height
             last_area = area
 
