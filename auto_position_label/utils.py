@@ -20,7 +20,7 @@ class Deep_vs_Wide_Dict:
 
     def encode_dict(self, dic, path_str=""):
         if self.is_leaf(dic):
-            self.w_dict[path_str[1:]] = dic
+            self.w_dict[path_str[len(self.escape_c):]] = dic
             return
         for k in dic:
             self.encode_dict(dic[k], path_str + self.escape_c + k)
@@ -90,9 +90,10 @@ class Cluster:
 if __name__ == '__main__':
     from auto_position_label.crop_position import screen_position
 
-    dvw_dict = Deep_vs_Wide_Dict()
+    dvw_dict = Deep_vs_Wide_Dict(escape_c='')
     dvw_dict.d_dict = screen_position
     dvw_dict.d_to_w()
+    print(dvw_dict.w_dict)
 
-    cluster = Cluster(dvw_dict.w_dict)
-    print(cluster.w_dict)
+    # cluster = Cluster(dvw_dict.w_dict)
+    # print(cluster.w_dict)

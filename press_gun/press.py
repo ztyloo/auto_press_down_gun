@@ -19,7 +19,7 @@ class Press(threading.Thread):
         if scope == 1:
             factor = 1.4
         if scope == 2:
-            factor = 1.3
+            factor = 1.2
         if scope == 3:
             factor = 1.2
         if scope == 4:

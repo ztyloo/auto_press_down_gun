@@ -40,7 +40,6 @@ class Key_Listener(PyKeyboardEvent):
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
             self.screen = get_screen()
-            self.stop_listen()
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 123 and press:  # F12
@@ -68,6 +67,7 @@ class Key_Listener(PyKeyboardEvent):
         return False
 
     def tab_func(self):
+        self.stop_listen()
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
@@ -76,8 +76,10 @@ class Key_Listener(PyKeyboardEvent):
                 scope_crop = crop_screen(self.screen, sc_pos['weapon'][str(n)]['scope'])
                 # muzzle_crop = crop_screen(screen, sc_pos['name'][str(n)]['muzzle'])
                 # grip_crop = crop_screen(screen, sc_pos['name'][str(n)]['grip'])
-                check = True if n == 0 else False
                 self.all_states.weapon[n].set_name(self.name_detect.diff_sum_classify(name_crop))
+                if n==1:
+                    cv2.imwrite('D:/github_project/auto_press_down_gun/temp_test_image/444.png', scope_crop)
+
                 self.all_states.weapon[n].set_scope(self.scope_detect.diff_sum_classify(scope_crop, absent_return="1"))
                 # self.all_states.name[n].set_muzzle(self.muzzle_detect.diff_sum_classify(muzzle_crop))
                 # self.all_states.name[n].set_grip(self.grip_detect.diff_sum_classify(grip_crop))
@@ -104,8 +106,6 @@ class Key_Listener(PyKeyboardEvent):
         self.whether_start_listen()
 
     def stop_listen(self):
-        self.all_states.weapon[0].fire_mode = 'single'
-        self.all_states.weapon[1].fire_mode = 'single'
         if self.press_listener.is_alive():
             self.press_listener.stop()
 
