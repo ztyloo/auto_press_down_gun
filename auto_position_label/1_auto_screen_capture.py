@@ -7,7 +7,7 @@ from PIL import ImageGrab
 
 from auto_position_label.crop_position import screen_position_states
 from show_watermark import Show_Watermark
-from all_states import All_States
+from utils.utils import Deep_vs_Wide_Dict
 
 
 def get_screen():
@@ -21,26 +21,24 @@ class Key_Listener(PyKeyboardEvent):
     def __init__(self, all_states):
         PyKeyboardEvent.__init__(self)
         root_path = 'D:/github_project/auto_press_down_gun/auto_position_label/screen_captures'
-
-        self.all_states = all_states
-        self.show = Show_Watermark()
-
         os.makedirs(root_path, exist_ok=True)
         for k, v in screen_position_states.items():
             if len(v) > 0:
                 for state in v:
-                    show
                     state_fold = os.path.join(root_path, state)
                     os.makedirs(state_fold, exist_ok=True)
 
+        self.all_states = all_states
+        self.show = Show_Watermark()
+
+        self.dvw_dict = Deep_vs_Wide_Dict()
+        self.dvw_dict.d_dict = screen_position_states
+        self.dvw_dict.d_to_w()
+        self.pos_states = self.dvw_dict.w_dict
 
     def tap(self, keycode, character, press):
         if keycode == 162 and press:  # ctrl
-            screen = ImageGrab.grab()
-            screen = np.array(screen)
-            screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-            cv2.imwrite('ctrl_cap/' + str(self.i) + '.png', screen)
-            self.i += 1
+            self.alt_func()
 
         if keycode == 164 and press:  # alt
             self.alt_func()
@@ -59,7 +57,6 @@ class Key_Listener(PyKeyboardEvent):
 
 
 if __name__ == '__main__':
-    all_from_dir = 'D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/'
-    all_to_dir = 'D:/github_project/auto_press_down_gun/image_detect/states_4c_im/'
+    from all_states import All_States
 
-    # screen_cap()
+    screen_cap_listener = Key_Listener(All_States())
