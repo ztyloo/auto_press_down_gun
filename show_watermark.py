@@ -39,7 +39,9 @@ class Show_Watermark(threading.Thread):
 if __name__ == '__main__':
     show = Show_Watermark()
     # show.set_text('tttt', (50, 1300), transparent=True)
+    show.set_text('22222222222', (50, 1300))
+    show.start()
     show.set_text('tttt', (50, 1300))
-    show.run()
+    show.tk.mainloop()
 
 

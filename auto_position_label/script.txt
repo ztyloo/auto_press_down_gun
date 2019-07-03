@@ -1,6 +1,0 @@
-
-c:
-
-cd "C:\ProgramData\Anaconda3\Scripts"
-
-pyuic5 -x "D:\github_project\auto_press_down_gun\auto_position_label\start_label__.ui" -o "D:\github_project\auto_press_down_gun\auto_position_label\start_label__.py"

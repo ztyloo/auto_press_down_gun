@@ -32,14 +32,14 @@ class Key_Listener(PyKeyboardEvent):
 
                     self.path_strs.append(k + self.escape_c + state)
 
-        self.state_num = len(self.path_strs)
+        self.state_n_max = len(self.path_strs) - 1
+        self.state_n = 0
         self.all_states = all_states
         self.show = Show_Watermark()
 
-
     def tap(self, keycode, character, press):
         if keycode == 162 and press:  # ctrl
-            self.alt_func()
+            self.ctrl_func()
 
         if keycode == 37 and press:  # <-
             self.left_func()
@@ -58,10 +58,12 @@ class Key_Listener(PyKeyboardEvent):
         pass
 
     def left_func(self):
-        pass
+        if self.state_n > 0:
+            self.state_n -= 1
 
     def right_func(self):
-        pass
+        if self.state_n < self.state_n_max:
+            self.state_n += 1
 
     def alt_func(self):
         pass
