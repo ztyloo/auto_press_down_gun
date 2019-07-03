@@ -37,18 +37,18 @@ class Deep_vs_Wide_Dict:
 
 
 class Cluster:
-    def __init__(self, w_dict):
+    def __init__(self, c_dict):
         self.similar_thr = 3
 
         self.wh_list = list()
-        self.w_dict = w_dict
-        for k, v in self.w_dict.items():
+        self.c_dict = c_dict
+        for k, v in self.c_dict.items():
             self.wh_list.append([v['x1'] - v['x0'], v['y1'] - v['y0']])
         self.cluster_center_list = list()
         self.cluster_list = list()
 
         self.calculate_cluster()
-        self.change_w_dict()
+        self.change_c_dict()
 
     def is_similar(self, wh_a, wh_b):
         aw, ah = wh_a
@@ -77,13 +77,13 @@ class Cluster:
                 self.cluster_list.append([wh])
         print('rect w,h cluster num: ', len(self.cluster_center_list))
 
-    def change_w_dict(self):
-        for k, v in self.w_dict.items():
+    def change_c_dict(self):
+        for k, v in self.c_dict.items():
             w, h = v['x1'] - v['x0'], v['y1'] - v['y0']
             for wh in self.cluster_center_list:
                 if self.is_similar([w, h], wh):
-                    self.w_dict[k]['x1'] = self.w_dict[k]['x0'] + wh[0]
-                    self.w_dict[k]['y1'] = self.w_dict[k]['y0'] + wh[1]
+                    self.c_dict[k]['x1'] = int(self.c_dict[k]['x0'] + wh[0])
+                    self.c_dict[k]['y1'] = int(self.c_dict[k]['y0'] + wh[1])
                     break
 
 

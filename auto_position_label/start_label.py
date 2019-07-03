@@ -7,9 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from auto_position_label.q_control import Image_QLabel
+from auto_position_label.image_qlabel import Image_QLabel
 from auto_position_label.crop_position import screen_position
-from auto_position_label.utils import Deep_vs_Wide_Dict, Cluster
 
 
 class Ui_Dialog(object):
@@ -33,12 +32,8 @@ class Ui_Dialog(object):
         self.label.setImage()
         self.label.res_rect_n_signal[int].connect(self.change_radio_button)
 
-        self.label.dvw_dict = Deep_vs_Wide_Dict('x0')
-        self.label.dvw_dict.d_dict = screen_position
-        self.label.dvw_dict.d_to_w()
-
         self.radioButtons = list()
-        for i, k in enumerate(self.label.dvw_dict.w_dict):
+        for i, k in enumerate(screen_position):
             self.radioButtons.append(QtWidgets.QRadioButton(Dialog))
             self.radioButtons[i].setGeometry(QtCore.QRect(5, 80+20*i, 150, 16))
             self.radioButtons[i].setObjectName(k)
@@ -49,7 +44,7 @@ class Ui_Dialog(object):
 
         self.startButton.clicked.connect(self.label.openImage)
 
-        for i, k in enumerate(self.label.dvw_dict.w_dict):
+        for i, k in enumerate(screen_position):
             self.radioButtons[i].toggled.connect(self.change_res_rect_n)
 
         self.stopButton.clicked.connect(self.label.print_res)
@@ -58,15 +53,15 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Locate_rectangle"))
         self.startButton.setText(_translate("Dialog", "Choose image"))
-        self.stopButton.setText(_translate("Dialog", "Done"))
-        for i, k in enumerate(self.label.dvw_dict.w_dict):
+        self.stopButton.setText(_translate("Dialog", "Print"))
+        for i, k in enumerate(screen_position):
             self.radioButtons[i].setText(_translate("Dialog", k))
 
     def change_radio_button(self, n):
         self.radioButtons[n].setChecked(True)
 
     def change_res_rect_n(self):
-        for i, k in enumerate(self.label.dvw_dict.w_dict):
+        for i, k in enumerate(screen_position):
             if self.radioButtons[i].isChecked():
                 self.label.res_rect_n = i
 
