@@ -129,3 +129,10 @@ def print_state(all_states):
     #     w = all_states.weapon[n]
     #     itchat.send(str(w.name) + ' ' + str(w.scope) + ' ' + str(w.fire_mode))
 
+
+if __name__ == '__main__':
+    from all_states import All_States
+
+    states = All_States()
+    k = Key_Listener(states)
+    k.run()

@@ -6,7 +6,7 @@ import win32con
 from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
 
-from main import All_States
+from all_states import All_States
 from press_gun.generate_distance.find_bullet_hole import search_for_bullet_hole
 from press_gun.generate_distance.find_aim_point import search_for_aim_point
 from image_detect.detect import Detector
