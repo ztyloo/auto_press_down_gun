@@ -42,7 +42,7 @@ def screen_to_crop(from_dir, to_im, crop_position, mid=255, radius=0):
         for name in os.listdir(from_dir):
             abs_screen_name = os.path.join(from_dir, name)
             screen = cv2.imread(abs_screen_name)
-            x0, x1, y0, y1 = crop_position['x0'], crop_position['x1'], crop_position['y0'], crop_position['y1']
+            x0, x1, y0, y1 = crop_position
             crop_im = screen[y0: y1, x0: x1, :]
             crop_im_list.append(crop_im)
 
@@ -52,7 +52,7 @@ def screen_to_crop(from_dir, to_im, crop_position, mid=255, radius=0):
         name = os.listdir(from_dir)[0]
         abs_screen_name = os.path.join(from_dir, name)
         screen = cv2.imread(abs_screen_name)
-        x0, x1, y0, y1 = crop_position['x0'], crop_position['x1'], crop_position['y0'], crop_position['y1']
+        x0, x1, y0, y1 = crop_position
         crop_im = screen[y0: y1, x0: x1, :]
         # cv2.imshow('', crop_im)
         # cv2.waitKey()

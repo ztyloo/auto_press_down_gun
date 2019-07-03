@@ -88,10 +88,10 @@ class Cluster:
 
 
 if __name__ == '__main__':
-    from auto_position_label.crop_position import screen_position
+    from auto_position_label.crop_position import screen_position_dir_dict
 
     dvw_dict = Deep_vs_Wide_Dict(escape_c='')
-    dvw_dict.d_dict = screen_position
+    dvw_dict.d_dict = screen_position_dir_dict
     dvw_dict.d_to_w()
     print(dvw_dict.w_dict)
 

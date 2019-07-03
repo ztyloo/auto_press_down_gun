@@ -179,10 +179,8 @@ class Image_QLabel(QtWidgets.QLabel):
 
     def print_res(self):
         for i, k in enumerate(screen_position):
-            screen_position[k]['x0'] = self.res_rects[i][0]
-            screen_position[k]['y0'] = self.res_rects[i][1]
-            screen_position[k]['x1'] = self.res_rects[i][2]
-            screen_position[k]['y1'] = self.res_rects[i][3]
+            screen_position[k] = self.res_rects[i]
+
         cluster = Cluster(screen_position)
         print(cluster.c_dict)
         print('\n')
