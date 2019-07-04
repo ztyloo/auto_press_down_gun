@@ -20,8 +20,8 @@ def window_capture(rect, filename):
     saveBitMap.CreateCompatibleBitmap(mfcDC, w, h)
     # 高度saveDC，将截图保存到saveBitmap中
     saveDC.SelectObject(saveBitMap)
-    # 截取从左上角（0，0）长宽为（w，h）的图片
-    saveDC.BitBlt((-x0, -y0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
+    # 截取从左上角(x0, y0)长宽为(w, h)的图片
+    saveDC.BitBlt((0, 0), (w, h), mfcDC, (x0, y0), win32con.SRCCOPY)
     saveBitMap.SaveBitmapFile(saveDC, filename)
 
 
@@ -33,24 +33,20 @@ class Key_listener(PyKeyboardEvent):
     def tap(self, keycode, character, press):
 
         if keycode == 162 and press:
-            window_capture((-100, -100, 500, 500), str(self.i)+".png")
+            window_capture((100, 100, 500, 500), str(self.i)+".png")
             self.i += 1
 
     def escape(self, event):
         return False
 
 
-t = Key_listener()
-t.run()
-
-
 if __name__ == '__main__':
-    # beg = time.time()
-    # for i in range(10):
-    #     window_capture((100, 100, 150, 150), str(i) + ".png")
-    # end = time.time()
-    # print(end - beg)
+    beg = time.time()
+    for i in range(10):
+        window_capture((100, 100, 500, 500), str(i) + ".png")
+    end = time.time()
+    print(end - beg)
 
-    kl = Key_listener()
-    kl.run()
+    # kl = Key_listener()
+    # kl.run()
 
