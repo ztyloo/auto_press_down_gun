@@ -40,7 +40,7 @@ def screen_to_crop(from_dir, to_im, crop_position, mid=255, radius=0):
         for name in os.listdir(from_dir):
             abs_screen_name = os.path.join(from_dir, name)
             screen = cv2.imread(abs_screen_name)
-            x0, x1, y0, y1 = crop_position
+            x0, y0, x1, y1 = crop_position
             crop_im = screen[y0: y1, x0: x1, :]
             crop_im_list.append(crop_im)
 
@@ -50,7 +50,7 @@ def screen_to_crop(from_dir, to_im, crop_position, mid=255, radius=0):
         name = os.listdir(from_dir)[0]
         abs_screen_name = os.path.join(from_dir, name)
         screen = cv2.imread(abs_screen_name)
-        x0, x1, y0, y1 = crop_position
+        x0, y0, x1, y1 = crop_position
         crop_im = screen[y0: y1, x0: x1, :]
         # cv2.imshow('', crop_im)
         # cv2.waitKey()
@@ -67,7 +67,9 @@ if __name__ == '__main__':
 
     for state in os.listdir(all_from_dir):
         from_dir = os.path.join(all_from_dir, state)
-        pos, to_im = state.split('-')[0], state.split('-')[0]+'.png'
+        pos, to_im = state.split('-')[0], state.split('-')[1]+'.png'
+        to_fold = os.path.join(all_to_dir, pos)
+        os.makedirs(to_fold, exist_ok=True)
         to_im_path = os.path.join(all_to_dir, pos, to_im)
         if 'fire_mode' in state:
             screen_to_crop(from_dir, to_im_path, screen_position[pos], mid=215, radius=15)
