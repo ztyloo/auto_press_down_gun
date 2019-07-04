@@ -3,9 +3,7 @@ import os
 
 from press_gun.generate_distance.find_bullet_hole import search_for_bullet_hole
 from press_gun.generate_distance.find_aim_point import search_for_aim_point
-
-
-can_full_guns = ['akm', 'aug', 'groza', 'm416', 'qbz', 'scar', 'mk14', 'tommy', 'uzi', 'vss', 'm762', 'ump45', 'vector', 'dp28', 'm249', 'pp19', 'g36c']
+from all_states import can_full_guns
 
 
 gun_dist_dict = dict()

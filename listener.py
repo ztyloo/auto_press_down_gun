@@ -5,11 +5,10 @@ from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from gun_modes import gun_next_mode
 from image_detect.detect import Detector
 from press_gun.press_listener import Press_Listener
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
-from all_states import All_States
+from all_states import All_States, gun_next_mode
 
 
 def get_screen():
@@ -137,8 +136,11 @@ class All_Listener(PyKeyboardEvent):
             w = self.all_states.weapon[i]
             print(str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode))
 
-        w = self.all_states.weapon[n]
-        emit_str = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
+        w = self.all_states.weapon[0]
+        gun1_state = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
+        w = self.all_states.weapon[1]
+        gun2_state = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
+        emit_str = str(n)+ '  ' + gun1_state + '\n' + gun2_state
         self.temp_qobject.state_str_signal.emit(emit_str)
 
 
