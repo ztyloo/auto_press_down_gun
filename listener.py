@@ -11,13 +11,6 @@ from auto_position_label.crop_position import crop_screen, screen_position as sc
 from all_states import All_States, gun_next_mode
 
 
-def get_screen():
-    screen = ImageGrab.grab()
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-    return screen
-
-
 class Temp_QObject(QObject):
     state_str_signal = pyqtSignal(str)
 
@@ -47,7 +40,7 @@ class All_Listener(PyKeyboardEvent):
 
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
-            self.screen = get_screen()
+            self.get_screen()
             threading.Timer(0.001, self.tab_func).start()
             self.print_state()
 
@@ -83,12 +76,14 @@ class All_Listener(PyKeyboardEvent):
 
     def tab_func(self):
         self.stop_listen()
+        # cc = crop_screen(self.screen, sc_pos['in_tab'])
+        # cv2.imwrite('cc.png', cc)
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
 
             weapon1name_crop = crop_screen(self.screen, sc_pos['weapon1name'])
-            self.all_states.weapon[1].set_name(self.weapon1name_detect.diff_sum_classify(weapon1name_crop))
+            self.all_states.weapon[1].set_name(self.weapon1name_detect.diff_sum_classify(weapon1name_crop, check=True))
             weapon1scope_crop = crop_screen(self.screen, sc_pos['weapon1scope'])
             self.all_states.weapon[1].set_scope(self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1"))
 
@@ -100,7 +95,7 @@ class All_Listener(PyKeyboardEvent):
         self.whether_start_listen()
 
     def b_func(self):
-        self.screen = get_screen()
+        self.get_screen()
 
         n = self.all_states.weapon_n
         fire_mode_crop = crop_screen(self.screen, sc_pos['fire_mode'])
@@ -142,6 +137,12 @@ class All_Listener(PyKeyboardEvent):
         gun2_state = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
         emit_str = str(n)+ '  ' + gun1_state + '\n' + gun2_state
         self.temp_qobject.state_str_signal.emit(emit_str)
+
+    def get_screen(self):
+        screen = ImageGrab.grab()
+        screen = np.array(screen)
+        screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+        self.screen = screen
 
 
 if __name__ == '__main__':

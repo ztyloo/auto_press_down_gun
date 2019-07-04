@@ -72,14 +72,6 @@ def detect_3d_sum(detect_im_3c: np.ndarray, target_im_4c: np.ndarray, blur=0):
     # cv2.imshow('target_im', target_im)
     # cv2.waitKey()
 
-    test_im = detect_im_3c.copy()
-    for dy in range(-20, 20):
-        M = np.float32([[1, 0, 0], [0, 1, 0]])
-        target_im = cv2.warpAffine(target_im, M, (test_im.shape[1], test_im.shape[0]))
-
-        cv2.imshow('test_im - target_im', test_im - target_im)
-        cv2.waitKey()
-
     min_test_res = 1000000000000
     for dx in range(-blur, blur+1):
         for dy in range(-blur, blur+1):
@@ -126,14 +118,20 @@ if __name__ == '__main__':
     # a = fire_mode_detect.canny_classify(crop_screen(screen, sc_pos['small_fire_mode']))
     # print(a)
 
-    path = 'D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/scope/15/18.png'
-    screen = cv2.imread(path)
-    scope_detect = Detector('scope')
-    a = scope_detect.diff_sum_classify(crop_screen(screen, sc_pos['weapon']['0']['scope']))
-    print(a)
+    # path = 'D:/github_project/auto_press_down_gun/auto_position_label/screen_captures/scope/15/18.png'
+    # screen = cv2.imread(path)
+    # scope_detect = Detector('scope')
+    # a = scope_detect.diff_sum_classify(crop_screen(screen, sc_pos['weapon']['0']['scope']))
+    # print(a)
 
     # path = 'D:/github_project/auto_press_down_gun/temp_test_image/444.png'
     # crop_im = cv2.imread(path)
     # scope_detect = Detector('scope')
     # a = scope_detect.diff_sum_classify(crop_im)
     # print(a)
+
+    path = 'D:/github_project/auto_press_down_gun/cc.png'
+    crop_im = cv2.imread(path)
+    scope_detect = Detector('in_tab')
+    a = scope_detect.diff_sum_classify(crop_im)
+    print(a)
