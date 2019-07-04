@@ -2,13 +2,13 @@ import threading
 import cv2
 import numpy as np
 from pykeyboard import PyKeyboardEvent
-from PIL import ImageGrab
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from image_detect.detect import Detector
-from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
+from auto_position_label.crop_position import screen_position
 from all_states import All_States, gun_next_mode
 from press_gun.press import Press
+from screen_capture import win32_cap
 
 
 class Temp_QObject(QObject):
@@ -37,7 +37,6 @@ class Key_Listener(PyKeyboardEvent):
 
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
-            self.get_screen()
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 66 and press:  # b
@@ -73,24 +72,24 @@ class Key_Listener(PyKeyboardEvent):
 
     def tab_func(self):
         self.all_states.dont_press = True
-        if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
+        if 'in' == self.in_tab_detect.diff_sum_classify(get_screen('in_tab')):
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
             self.all_states.dont_press = False
 
-            weapon1scope_crop = crop_screen(self.screen, sc_pos['weapon1scope'])
+            weapon1scope_crop = get_screen('weapon1scope')
             weapon1scope = self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1")
             w1s_change = self.all_states.weapon[0].set_scope(weapon1scope)
 
-            weapon1name_crop = crop_screen(self.screen, sc_pos['weapon1name'])
+            weapon1name_crop = get_screen('weapon1name')
             weapon1name = self.weapon1name_detect.diff_sum_classify(weapon1name_crop, check=True)
             w1n_change = self.all_states.weapon[0].set_name(weapon1name)
 
-            weapon2scope_crop = crop_screen(self.screen, sc_pos['weapon2scope'])
+            weapon2scope_crop = get_screen('weapon2scope')
             weapon2scope = self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1")
             w2s_change = self.all_states.weapon[1].set_scope(weapon2scope)
 
-            weapon2name_crop = crop_screen(self.screen, sc_pos['weapon2name'])
+            weapon2name_crop = get_screen('weapon2name')
             weapon2name = self.weapon2name_detect.diff_sum_classify(weapon2name_crop)
             w2n_change = self.all_states.weapon[1].set_name(weapon2name)
 
@@ -98,20 +97,12 @@ class Key_Listener(PyKeyboardEvent):
                 self.print_state()
 
     def b_func(self):
-        self.get_screen()
-
-        n = self.all_states.weapon_n
-        fire_mode_crop = crop_screen(self.screen, sc_pos['fire_mode'])
+        fire_mode_crop = get_screen('fire_mode')
         fire_mode = self.fire_mode_detect.canny_classify(fire_mode_crop)
+        n = self.all_states.weapon_n
         fm_change =  self.all_states.weapon[n].set_fire_mode(fire_mode)
         if fm_change:
             self.print_state()
-
-    def get_screen(self):
-        screen = ImageGrab.grab()
-        screen = np.array(screen)
-        screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-        self.screen = screen
 
     def print_state(self):
         n = self.all_states.weapon_n
@@ -127,6 +118,13 @@ class Key_Listener(PyKeyboardEvent):
         print('----------------')
         print(emit_str)
         self.temp_qobject.state_str_signal.emit(emit_str)
+
+
+def get_screen(name):
+    pos = screen_position[name]
+    temp_fold = 'D:/github_project/auto_press_down_gun/press_gun/temp_image/'
+    im = win32_cap(pos, temp_fold + name + '.png')
+    return im
 
 
 if __name__ == '__main__':
