@@ -16,12 +16,14 @@ class Press_Listener(threading.Thread):
         else:
             self._loop = False
 
-
-    def on_click(self, x, y , button, pressed):
+    def on_click(self, x, y, button, pressed):
         if button == Button.left and pressed:
+            if not self.press.is_alive():
+                self.press = Press(self.all_states)
             self.press.start()
         if button == Button.left and not pressed:
-            self.press.stop()
+            if self.press.is_alive():
+                self.press.stop()
             self.press = Press(self.all_states)
         if not pressed:
             return False
@@ -36,11 +38,15 @@ class Press_Listener(threading.Thread):
 
 
 if __name__ == '__main__':
+    import time
     from all_states import All_States
 
     all_states = All_States()
+    all_states.weapon[0].fire_mode = 'full'
     all_states.weapon[0].name = 'scar'
     all_states.weapon[0].scope = '1'
 
     pl = Press_Listener(all_states)
-    pl.run()
+    pl.start()
+    time.sleep(60)
+    pl.stop()

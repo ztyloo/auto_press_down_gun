@@ -42,7 +42,6 @@ class All_Listener(PyKeyboardEvent):
         if keycode == 9 and press:  # tab
             self.get_screen()
             threading.Timer(0.001, self.tab_func).start()
-            self.print_state()
 
         if keycode == 123 and press:  # F12
             self.stop_listen()
@@ -59,7 +58,6 @@ class All_Listener(PyKeyboardEvent):
         if keycode == 66 and press:  # b
             self.stop_listen()
             threading.Timer(0.2, self.b_func).start()
-            self.print_state()
 
         if keycode == 49 and press:  # 1
             self.all_states.weapon_n = 0
@@ -92,6 +90,7 @@ class All_Listener(PyKeyboardEvent):
             weapon2scope_crop = crop_screen(self.screen, sc_pos['weapon2scope'])
             self.all_states.weapon[1].set_scope(self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1"))
 
+            self.print_state()
         self.whether_start_listen()
 
     def b_func(self):
@@ -101,6 +100,7 @@ class All_Listener(PyKeyboardEvent):
         fire_mode_crop = crop_screen(self.screen, sc_pos['fire_mode'])
         pre_fire_mode = self.all_states.weapon[n].fire_mode
         self.all_states.weapon[n].set_fire_mode(self.fire_mode_detect.canny_classify(fire_mode_crop))
+        self.print_state()
 
         # # check if mistake
         # if pre_fire_mode != '':
@@ -119,30 +119,29 @@ class All_Listener(PyKeyboardEvent):
         if self.press_listener.is_alive():
             self.press_listener.stop()
 
-        n = self.all_states.weapon_n
-        if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
-            self.press_listener = Press_Listener(self.all_states)
-            self.press_listener.start()
-
-    def print_state(self):
-        n = self.all_states.weapon_n
-        print('now_weapon: ', str(n))
-        for i in [0, 1]:
-            w = self.all_states.weapon[i]
-            print(str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode))
-
-        w = self.all_states.weapon[0]
-        gun1_state = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
-        w = self.all_states.weapon[1]
-        gun2_state = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
-        emit_str = str(n)+ '  ' + gun1_state + '\n' + gun2_state
-        self.temp_qobject.state_str_signal.emit(emit_str)
+        self.press_listener = Press_Listener(self.all_states)
+        self.press_listener.start()
 
     def get_screen(self):
         screen = ImageGrab.grab()
         screen = np.array(screen)
         screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
         self.screen = screen
+
+    def print_state(self):
+        n = self.all_states.weapon_n
+        w = self.all_states.weapon[0]
+        gun1_state = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
+        w = self.all_states.weapon[1]
+        gun2_state = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
+        if n == 0:
+            emit_str = ' * ' + gun1_state + '\n' + gun2_state
+        else:
+            emit_str = gun1_state + '\n' + ' * ' + gun2_state
+
+        print('----------------')
+        print(emit_str)
+        self.temp_qobject.state_str_signal.emit(emit_str)
 
 
 if __name__ == '__main__':
