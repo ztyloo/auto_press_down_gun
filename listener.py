@@ -83,14 +83,14 @@ class All_Listener(PyKeyboardEvent):
             # cv2.waitKey()
 
             weapon1name_crop = crop_screen(self.screen, sc_pos['weapon1name'])
-            self.all_states.weapon[1].set_name(self.weapon1name_detect.diff_sum_classify(weapon1name_crop, check=True))
+            self.all_states.weapon[0].set_name(self.weapon1name_detect.diff_sum_classify(weapon1name_crop, check=True))
             weapon1scope_crop = crop_screen(self.screen, sc_pos['weapon1scope'])
-            self.all_states.weapon[1].set_scope(self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1"))
+            self.all_states.weapon[0].set_scope(self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1"))
 
             weapon2name_crop = crop_screen(self.screen, sc_pos['weapon2name'])
-            self.all_states.weapon[2].set_name(self.weapon2name_detect.diff_sum_classify(weapon2name_crop))
+            self.all_states.weapon[1].set_name(self.weapon2name_detect.diff_sum_classify(weapon2name_crop))
             weapon2scope_crop = crop_screen(self.screen, sc_pos['weapon2scope'])
-            self.all_states.weapon[2].set_scope(self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1"))
+            self.all_states.weapon[1].set_scope(self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1"))
 
         self.whether_start_listen()
 
