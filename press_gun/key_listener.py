@@ -8,20 +8,18 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from image_detect.detect import Detector
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 from all_states import All_States, gun_next_mode
-
-from press_gun.mouse_down_listener import Mouse_Press_Listener
-# from press_gun.mouse_down_listener_pymouse_version import Mouse_Press_Listener
+from press_gun.press import calculate_press_seq
 
 
 class Temp_QObject(QObject):
     state_str_signal = pyqtSignal(str)
 
 
-class All_Listener(PyKeyboardEvent):
-    def __init__(self):
+class Key_Listener(PyKeyboardEvent):
+    def __init__(self, all_states):
         PyKeyboardEvent.__init__(self)
 
-        self.all_states = All_States()
+        self.all_states = all_states
         self.mistake_counter = 0
         self.screen = None
 
@@ -35,37 +33,23 @@ class All_Listener(PyKeyboardEvent):
         self.weapon2name_detect = Detector('weapon2name')
         self.weapon2scope_detect = Detector('weapon2scope')
 
-        self.press_listener = None
-
         self.temp_qobject = Temp_QObject()
-        print('Initial done!!!')
 
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
             self.get_screen()
-            self.stop_listen()
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 66 and press:  # b
-            self.stop_listen()
             threading.Timer(0.2, self.b_func).start()
 
         if keycode == 49 and press:  # 1
-            self.stop_listen()
             self.all_states.weapon_n = 0
             self.print_state()
 
         if keycode == 50 and press:  # 2
-            self.stop_listen()
             self.all_states.weapon_n = 1
             self.print_state()
-
-        if keycode == 123 and press:  # F12
-            self.stop_listen()
-        if keycode == 71 and press:  # g
-            self.stop_listen()
-        if keycode == 53 and press:  # 5
-            self.stop_listen()
 
     def escape(self, event):
         return False
@@ -85,8 +69,9 @@ class All_Listener(PyKeyboardEvent):
             weapon2scope_crop = crop_screen(self.screen, sc_pos['weapon2scope'])
             self.all_states.weapon[1].set_scope(self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1"))
 
+            if state_change: # TODO
+
             self.print_state()
-            self.whether_start_listen()
 
     def b_func(self):
         self.get_screen()
@@ -103,18 +88,6 @@ class All_Listener(PyKeyboardEvent):
         #     if next_fire_mode != self.all_states.weapon[n].fire_mode:
         #         root_path = 'D:/github_project/auto_press_down_gun/image_detect/temp_test_image/' + str(self.mistake_counter) + '.png'
         #         cv2.imwrite(root_path, self.screen)
-
-        self.whether_start_listen()
-
-    def stop_listen(self):
-        if self.press_listener is not None and self.press_listener.is_alive():
-            self.press_listener.stop()
-
-    def whether_start_listen(self):
-        n = self.all_states.weapon_n
-        if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
-            self.press_listener = Mouse_Press_Listener(self.all_states).get()
-            self.press_listener.start()
 
     def get_screen(self):
         screen = ImageGrab.grab()
@@ -139,5 +112,6 @@ class All_Listener(PyKeyboardEvent):
 
 
 if __name__ == '__main__':
-    k = All_Listener()
+    all_states = All_States()
+    k = Key_Listener(all_states)
     k.run()
