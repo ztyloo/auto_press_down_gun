@@ -8,6 +8,7 @@ from gun_modes import gun_next_mode
 from image_detect.detect import Detector
 from press_gun.press_listener import Press_Listener
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
+from all_states import All_States
 
 
 def get_screen():
@@ -18,10 +19,10 @@ def get_screen():
 
 
 class Key_Listener(PyKeyboardEvent):
-    def __init__(self, all_states):
+    def __init__(self):
         PyKeyboardEvent.__init__(self)
 
-        self.all_states = all_states
+        self.all_states = All_States()
         self.mistake_counter = 0
         self.screen = None
 
@@ -118,6 +119,7 @@ class Key_Listener(PyKeyboardEvent):
             self.press_listener = Press_Listener(self.all_states)
             self.press_listener.start()
 
+
 def print_state(all_states):
     print('now_weapon: ', str(all_states.weapon_n))
     for n in [0, 1]:
@@ -131,8 +133,5 @@ def print_state(all_states):
 
 
 if __name__ == '__main__':
-    from all_states import All_States
-
-    states = All_States()
-    k = Key_Listener(states)
+    k = Key_Listener()
     k.run()

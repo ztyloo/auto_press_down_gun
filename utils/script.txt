@@ -5,4 +5,6 @@ cd "C:\ProgramData\Anaconda3\Scripts"
 
 pyuic5 -x "D:\github_project\auto_press_down_gun\utils\start_label__.ui" -o "D:\github_project\auto_press_down_gun\auto_position_label\start_label__.py"
 
-pyuic5 -x "D:\github_project\auto_press_down_gun\utils\untitled.ui" -o "D:\github_project\auto_press_down_gun\show_watermark__.py"
+pyuic5 -x "D:\github_project\auto_press_down_gun\utils\water_mark__.ui" -o "D:\github_project\auto_press_down_gun\show_watermark__.py"
+
+pyuic5 -x "D:\github_project\auto_press_down_gun\utils\main_window__.ui" -o "D:\github_project\auto_press_down_gun\main_window.py"
