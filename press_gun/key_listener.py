@@ -123,7 +123,7 @@ class Key_Listener(PyKeyboardEvent):
 def get_screen(name):
     pos = screen_position[name]
     temp_fold = 'D:/github_project/auto_press_down_gun/press_gun/temp_image/'
-    im = win32_cap(pos, temp_fold + name + '.png')
+    im = win32_cap(temp_fold + name + '.png', pos)
     return im
 
 

@@ -4,9 +4,14 @@ import win32gui, win32ui, win32con, win32api
 from pykeyboard import PyKeyboardEvent
 
 
-def win32_cap(rect, filename):
-    x0, y0, x1, y1 = rect
-    w, h = x1-x0, y1-y0
+def win32_cap(filename, rect=None):
+    MoniterDev = win32api.EnumDisplayMonitors(None, None)
+    w = MoniterDev[0][2][2]
+    h = MoniterDev[0][2][3]
+    x0, y0 = 0, 0
+    if rect is not None:
+        x0, y0, x1, y1 = rect
+        w, h = x1-x0, y1-y0
 
     hwnd = 0  # 窗口的编号，0号表示当前活跃窗口
     # 根据窗口句柄获取窗口的设备上下文DC（Divice Context）
@@ -36,7 +41,7 @@ class Key_listener(PyKeyboardEvent):
     def tap(self, keycode, character, press):
 
         if keycode == 162 and press:
-            window_capture((100, 100, 500, 500), str(self.i)+".png")
+            win32_cap('ctrl_cap/' + str(self.i)+".png")
             self.i += 1
 
     def escape(self, event):
@@ -44,12 +49,12 @@ class Key_listener(PyKeyboardEvent):
 
 
 if __name__ == '__main__':
-    beg = time.time()
-    for i in range(10):
-        window_capture((100, 100, 500, 500), str(i) + ".png")
-    end = time.time()
-    print(end - beg)
+    # beg = time.time()
+    # for i in range(10):
+    #     win32_cap((100, 100, 500, 500), str(i) + ".png")
+    # end = time.time()
+    # print(end - beg)
 
-    # kl = Key_listener()
-    # kl.run()
+    kl = Key_listener()
+    kl.run()
 
