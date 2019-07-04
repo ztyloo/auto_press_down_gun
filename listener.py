@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from pykeyboard import PyKeyboardEvent
 from PIL import ImageGrab
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QObject
 
 from gun_modes import gun_next_mode
 from image_detect.detect import Detector
@@ -17,6 +17,10 @@ def get_screen():
     screen = np.array(screen)
     screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
     return screen
+
+
+class Temp_QObject(QObject):
+    state_str_signal = pyqtSignal(str)
 
 
 class All_Listener(PyKeyboardEvent):
@@ -38,36 +42,41 @@ class All_Listener(PyKeyboardEvent):
 
         self.press_listener = Press_Listener(self.all_states)
 
-        self.state_str_signal = pyqtSignal(str)
+        self.temp_qobject = Temp_QObject()
         print('Initial done!!!')
 
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
             self.screen = get_screen()
             threading.Timer(0.001, self.tab_func).start()
+            self.print_state()
 
         if keycode == 123 and press:  # F12
             self.stop_listen()
+            self.print_state()
 
         if keycode == 71 and press:  # g
             self.stop_listen()
+            self.print_state()
 
         if keycode == 53 and press:  # 5
             self.stop_listen()
+            self.print_state()
 
         if keycode == 66 and press:  # b
             self.stop_listen()
             threading.Timer(0.2, self.b_func).start()
+            self.print_state()
 
         if keycode == 49 and press:  # 1
             self.all_states.weapon_n = 0
             self.whether_start_listen()
+            self.print_state()
 
         if keycode == 50 and press:  # 2
             self.all_states.weapon_n = 1
             self.whether_start_listen()
-
-        self.print_state()
+            self.print_state()
 
     def escape(self, event):
         return False
@@ -118,7 +127,6 @@ class All_Listener(PyKeyboardEvent):
             self.press_listener = Press_Listener(self.all_states)
             self.press_listener.start()
 
-
     def print_state(self):
         n = self.all_states.weapon_n
         print('now_weapon: ', str(n))
@@ -127,9 +135,8 @@ class All_Listener(PyKeyboardEvent):
             print(str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode))
 
         w = self.all_states.weapon[n]
-        state_str = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
-        self.state_str_signal.emit(state_str)
-
+        emit_str = str(w.name) + '-' + str(w.scope) + '-' + str(w.fire_mode)
+        self.temp_qobject.state_str_signal.emit(emit_str)
 
 
 if __name__ == '__main__':
