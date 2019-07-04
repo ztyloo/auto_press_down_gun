@@ -38,6 +38,9 @@ class Key_Listener(PyKeyboardEvent):
 
         self.temp_qobject = Temp_QObject()
 
+    def init_show(self):
+        self.print_state()
+
     def tap(self, keycode, character, press):
         if keycode == 162 and press:  # ctrl
             self.ctrl_func()
@@ -65,19 +68,15 @@ class Key_Listener(PyKeyboardEvent):
         save_path = os.path.join(save_fold, str(self.im_n)+'.png')
         cv2.imwrite(save_path, screen)
 
-        self.print_state()
-
     def left_func(self):
         self.im_n = 0
         if self.state_n > 0:
             self.state_n -= 1
-        self.print_state()
 
     def right_func(self):
         self.im_n = 0
         if self.state_n < self.state_n_max:
             self.state_n += 1
-        self.print_state()
 
     def alt_func(self):
         pass

@@ -46,26 +46,27 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
-        self.listener = Key_Listener()
-        self.listener.temp_qobject.state_str_signal[str].connect(self.retranslateUi)
-        self.listener.start()
 
         Dialog.setObjectName("Dialog")
         Dialog.resize(200, 50)
         Dialog.move(50, 1300)
         Dialog.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
         Dialog.setWindowFlag(QtCore.Qt.FramelessWindowHint)
-
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
         Dialog.setFont(font)
+
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(0, 0, 200, 50))
         self.label.setObjectName("label")
 
-        self.retranslateUi(" init")
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+        self.listener = Key_Listener()
+        self.listener.temp_qobject.state_str_signal[str].connect(self.retranslateUi)
+        self.listener.init_show()
+        self.listener.start()
 
     def retranslateUi(self, text):
         _translate = QtCore.QCoreApplication.translate
