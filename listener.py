@@ -6,9 +6,11 @@ from PIL import ImageGrab
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from image_detect.detect import Detector
-from press_gun.mouse_down_listener import Mouse_Press_Listener
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 from all_states import All_States, gun_next_mode
+
+from press_gun.mouse_down_listener import Mouse_Press_Listener
+# from press_gun.mouse_down_listener_pymouse_version import Mouse_Press_Listener
 
 
 class Temp_QObject(QObject):
@@ -111,7 +113,6 @@ class All_Listener(PyKeyboardEvent):
     def whether_start_listen(self):
         n = self.all_states.weapon_n
         if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
-            print('00000000000000000000000000')
             self.press_listener = Mouse_Press_Listener(self.all_states).get()
             self.press_listener.start()
 

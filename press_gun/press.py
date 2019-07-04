@@ -32,12 +32,11 @@ class Press(threading.Thread):
             mouse_down(dd)
             time.sleep(dt)
             i += 1
-        # mouse_down(-self.dist_sequence[i])
+        if i > 0:
+            mouse_down(-self.dist_sequence[i-1])
 
     def stop(self):
-        print('in stop')
         self._loop = False
-        print('go out stop')
 
 
 def mouse_down(y):
