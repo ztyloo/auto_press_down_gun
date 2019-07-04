@@ -8,6 +8,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from image_detect.detect import Detector
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 from all_states import All_States, gun_next_mode
+from press_gun.press import Press
 
 
 class Temp_QObject(QObject):
@@ -52,6 +53,14 @@ class Key_Listener(PyKeyboardEvent):
             if n_change:
                 self.print_state()
 
+        if keycode == 122 and press:  # F11
+            n = self.all_states.weapon_n
+            self.press = Press(self.all_states.weapon[n].dist_seq, self.all_states.weapon[n].time_seq)
+            self.press.start()
+
+        if keycode == 123 and not press:  # F12
+            self.press.stop()
+
     def escape(self, event):
         return False
 
@@ -60,21 +69,22 @@ class Key_Listener(PyKeyboardEvent):
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
 
+            weapon1scope_crop = crop_screen(self.screen, sc_pos['weapon1scope'])
+            weapon1scope = self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1")
+            w1s_change = self.all_states.weapon[0].set_scope(weapon1scope)
+
             weapon1name_crop = crop_screen(self.screen, sc_pos['weapon1name'])
             weapon1name = self.weapon1name_detect.diff_sum_classify(weapon1name_crop, check=True)
             w1n_change = self.all_states.weapon[0].set_name(weapon1name)
 
-            weapon1scope_crop = crop_screen(self.screen, sc_pos['weapon1scope'])
-            weapon1scope = self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1")
-            w1s_change = self.all_states.weapon[0].set_scope(weapon1scope)
+            weapon2scope_crop = crop_screen(self.screen, sc_pos['weapon2scope'])
+            weapon2scope = self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1")
+            w2s_change = self.all_states.weapon[1].set_scope(weapon2scope)
 
             weapon2name_crop = crop_screen(self.screen, sc_pos['weapon2name'])
             weapon2name = self.weapon2name_detect.diff_sum_classify(weapon2name_crop)
             w2n_change = self.all_states.weapon[1].set_name(weapon2name)
 
-            weapon2scope_crop = crop_screen(self.screen, sc_pos['weapon2scope'])
-            weapon2scope = self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1")
-            w2s_change = self.all_states.weapon[1].set_scope(weapon2scope)
 
             if w1n_change or w1s_change or w2n_change or w2s_change:
                 self.print_state()

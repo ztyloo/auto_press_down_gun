@@ -1,5 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from press_gun.actor import Actor
+from press_gun.key_listener import Key_Listener
+
+from all_states import All_States
 
 
 class Ui_Dialog(object):
@@ -21,8 +23,9 @@ class Ui_Dialog(object):
 
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        self.actor = Actor()
-        self.actor.key_listener.temp_qobject.state_str_signal[str].connect(self.retranslateUi)
+        self.key_listener = Key_Listener(All_States())
+        self.key_listener.temp_qobject.state_str_signal[str].connect(self.retranslateUi)
+        self.key_listener.start()
 
     def retranslateUi(self, text):
         _translate = QtCore.QCoreApplication.translate

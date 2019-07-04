@@ -1,5 +1,5 @@
 
-time_intervals = {
+time_periods = {
 'akm': 0.1,
 'aug': 0.0857,
 'pp19': 0.0857,

@@ -1,6 +1,6 @@
 
-from press_gun.time_interval_constant import time_intervals
-from press_gun.generate_distance.gun_distance_constant import dis_intervals
+from press_gun.time_periods_constant import time_periods
+from press_gun.generate_distance.gun_distance_constant import dist_lists
 
 
 all_guns = ['98k', 'akm', 'aug', 'awm', 'dp28', 'groza', 'm16', 'm24', 'm249', 'm416', 'm762', 'mini14', 'mk14',
@@ -33,14 +33,14 @@ def factor_scope(scope):
 def calculate_press_seq(name, scope):
     scope = int(scope.replace('r', '').replace('h', ''))
     scope = factor_scope(scope)
-    dis_interval = dis_intervals.get(name, [])
-    dis_interval = [i * scope for i in dis_interval]
-    time_interval = time_intervals.get(name, 1)
+    dist_interval = dist_lists.get(name, [])
+    dist_interval = [i * scope for i in dist_interval]
+    time_interval = time_periods.get(name, 1)
     divide_num = int(time_interval/0.02)  # 整数分割
 
     time_sequence = list()
     dist_sequence = list()
-    for dist in dis_interval:
+    for dist in dist_interval:
         for i in range(divide_num):
             time_sequence.append(time_interval/divide_num)
             dist_sequence.append(dist/divide_num)
@@ -101,6 +101,8 @@ class Weapon():
         if name != '':
             self.name = name
         is_changed = original_name != name
+        if name == 'vss':
+            self.scope = '4'
         if is_changed:
             self.dist_seq, self.time_seq = calculate_press_seq(self.name, self.scope)
         return is_changed
