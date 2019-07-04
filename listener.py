@@ -33,12 +33,13 @@ class All_Listener(PyKeyboardEvent):
 
         self.fire_mode_detect = Detector('fire_mode')
         self.in_tab_detect = Detector('in_tab')
-        self.in_scope_detect = Detector('in_scope')
+        # self.in_scope_detect = Detector('in_scope')
 
-        self.name_detect = Detector('name')
-        self.scope_detect = Detector('scope')
-        # self.muzzle_detect = Detector('muzzle')
-        # self.grip_detect = Detector('grip')
+        self.weapon1name_detect = Detector('weapon1name')
+        self.weapon1scope_detect = Detector('weapon1scope')
+
+        self.weapon2name_detect = Detector('weapon2name')
+        self.weapon2scope_detect = Detector('weapon2scope')
 
         self.press_listener = Press_Listener(self.all_states)
 
@@ -86,15 +87,17 @@ class All_Listener(PyKeyboardEvent):
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
-            for n in [0, 1]:
-                name_crop = crop_screen(self.screen, sc_pos['weapon'][str(n)]['name'])
-                scope_crop = crop_screen(self.screen, sc_pos['weapon'][str(n)]['scope'])
-                # muzzle_crop = crop_screen(screen, sc_pos['name'][str(n)]['muzzle'])
-                # grip_crop = crop_screen(screen, sc_pos['name'][str(n)]['grip'])
-                self.all_states.weapon[n].set_name(self.name_detect.diff_sum_classify(name_crop))
-                self.all_states.weapon[n].set_scope(self.scope_detect.diff_sum_classify(scope_crop, absent_return="1"))
-                # self.all_states.name[n].set_muzzle(self.muzzle_detect.diff_sum_classify(muzzle_crop))
-                # self.all_states.name[n].set_grip(self.grip_detect.diff_sum_classify(grip_crop))
+
+            weapon1name_crop = crop_screen(self.screen, sc_pos['weapon1name'])
+            self.all_states.weapon[1].set_name(self.weapon1name_detect.diff_sum_classify(weapon1name_crop))
+            weapon1scope_crop = crop_screen(self.screen, sc_pos['weapon1scope'])
+            self.all_states.weapon[1].set_scope(self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1"))
+
+            weapon2name_crop = crop_screen(self.screen, sc_pos['weapon2name'])
+            self.all_states.weapon[2].set_name(self.weapon2name_detect.diff_sum_classify(weapon2name_crop))
+            weapon2scope_crop = crop_screen(self.screen, sc_pos['weapon2scope'])
+            self.all_states.weapon[2].set_scope(self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1"))
+
         self.whether_start_listen()
 
     def b_func(self):
