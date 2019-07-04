@@ -8,7 +8,6 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from image_detect.detect import Detector
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 from all_states import All_States, gun_next_mode
-from press_gun.press import calculate_press_seq
 
 
 class Temp_QObject(QObject):
@@ -44,12 +43,14 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.2, self.b_func).start()
 
         if keycode == 49 and press:  # 1
-            self.all_states.weapon_n = 0
-            self.print_state()
+            n_change = self.all_states.set_weapon_n(0)
+            if n_change:
+                self.print_state()
 
         if keycode == 50 and press:  # 2
-            self.all_states.weapon_n = 1
-            self.print_state()
+            n_change = self.all_states.set_weapon_n(1)
+            if n_change:
+                self.print_state()
 
     def escape(self, event):
         return False
@@ -60,34 +61,33 @@ class Key_Listener(PyKeyboardEvent):
             # cv2.waitKey()
 
             weapon1name_crop = crop_screen(self.screen, sc_pos['weapon1name'])
-            self.all_states.weapon[0].set_name(self.weapon1name_detect.diff_sum_classify(weapon1name_crop, check=True))
+            weapon1name = self.weapon1name_detect.diff_sum_classify(weapon1name_crop, check=True)
+            w1n_change = self.all_states.weapon[0].set_name(weapon1name)
+
             weapon1scope_crop = crop_screen(self.screen, sc_pos['weapon1scope'])
-            self.all_states.weapon[0].set_scope(self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1"))
+            weapon1scope = self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1")
+            w1s_change = self.all_states.weapon[0].set_scope(weapon1scope)
 
             weapon2name_crop = crop_screen(self.screen, sc_pos['weapon2name'])
-            self.all_states.weapon[1].set_name(self.weapon2name_detect.diff_sum_classify(weapon2name_crop))
+            weapon2name = self.weapon2name_detect.diff_sum_classify(weapon2name_crop)
+            w2n_change = self.all_states.weapon[1].set_name(weapon2name)
+
             weapon2scope_crop = crop_screen(self.screen, sc_pos['weapon2scope'])
-            self.all_states.weapon[1].set_scope(self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1"))
+            weapon2scope = self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1")
+            w2s_change = self.all_states.weapon[1].set_scope(weapon2scope)
 
-            if state_change: # TODO
-
-            self.print_state()
+            if w1n_change or w1s_change or w2n_change or w2s_change:
+                self.print_state()
 
     def b_func(self):
         self.get_screen()
 
         n = self.all_states.weapon_n
         fire_mode_crop = crop_screen(self.screen, sc_pos['fire_mode'])
-        pre_fire_mode = self.all_states.weapon[n].fire_mode
-        self.all_states.weapon[n].set_fire_mode(self.fire_mode_detect.canny_classify(fire_mode_crop))
-        self.print_state()
-
-        # # check if mistake
-        # if pre_fire_mode != '':
-        #     next_fire_mode = gun_next_mode(self.all_states.weapon[n].name, pre_fire_mode)
-        #     if next_fire_mode != self.all_states.weapon[n].fire_mode:
-        #         root_path = 'D:/github_project/auto_press_down_gun/image_detect/temp_test_image/' + str(self.mistake_counter) + '.png'
-        #         cv2.imwrite(root_path, self.screen)
+        fire_mode = self.fire_mode_detect.canny_classify(fire_mode_crop)
+        fm_change =  self.all_states.weapon[n].set_fire_mode(fire_mode)
+        if fm_change:
+            self.print_state()
 
     def get_screen(self):
         screen = ImageGrab.grab()

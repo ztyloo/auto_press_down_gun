@@ -24,10 +24,10 @@ class Actor(threading.Thread):
         if not pressed:
             return False
 
-    def run(self) -> None:  # TODO
+    def run(self) -> None:
         while self._loop:
             if self.mouse_left_pressing:
-                self.
+                self.press = Press(self.key_listener.)
 
 
 if __name__ == '__main__':
