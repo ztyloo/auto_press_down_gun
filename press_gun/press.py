@@ -3,48 +3,26 @@ import win32api
 import win32con
 import time
 
-from press_gun.time_interval_constant import time_intervals
-from press_gun.generate_distance.gun_distance_constant import dis_intervals
+
+# import pyautogui as pag
+#     i = 0
+#     x, y = pag.position()
+#     print(str(i) + ':', x, y)
+#     while True:
+#         i += 1
+#         time.sleep(1)
+#         mouse_down(20)
+#         x, y = pag.position()
+#         print(str(i) + ':', x, y)
 
 
 class Press(threading.Thread):
-    def __init__(self, all_states):
+    def __init__(self, dist_sequence, time_sequence):
         threading.Thread.__init__(self)
         self._loop = True
-
-        self.set_states(all_states)
-
-    def factor_scope(self, scope):
-        factor = 1
-        if scope == 1:
-            factor = 1.1
-        if scope == 2:
-            factor = 1.
-        if scope == 3:
-            factor = 1.
-        if scope == 4:
-            factor = 1.1
-        if scope == 6:
-            factor = 0.8
-        return scope*factor
-
-    def set_states(self, all_states):
-        gun_n = all_states.weapon_n
-        gun_name = all_states.weapon[gun_n].name
-        gun_scope = int(all_states.weapon[gun_n].scope.replace('r', '').replace('h', ''))
-        gun_scope = self.factor_scope(gun_scope)
-        dis_interval = dis_intervals.get(gun_name, [])
-        dis_interval = [i * gun_scope for i in dis_interval]
-        time_interval = time_intervals[gun_name]
-        divide_num = int(time_interval/0.02)  # 整数分割
-
-        self.time_sequence = list()
-        self.dist_sequence = list()
-        for dist in dis_interval:
-            for i in range(divide_num):
-                self.time_sequence.append(time_interval/divide_num)
-                self.dist_sequence.append(dist/divide_num)
-        self.seq_len = len(self.time_sequence)
+        self.dist_sequence = dist_sequence
+        self.time_sequence = time_sequence
+        self.seq_len = len(dist_sequence)
 
     def run(self):
         i = 0
@@ -54,49 +32,18 @@ class Press(threading.Thread):
             mouse_down(dd)
             time.sleep(dt)
             i += 1
-        mouse_down(-self.dist_sequence[i])
+        # mouse_down(-self.dist_sequence[i])
 
     def stop(self):
+        print('in stop')
         self._loop = False
+        print('go out stop')
 
 
 def mouse_down(y):
-    try:
-        x = 0
-        y = int(y)
-        win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, x, y)
-    except:
-        print('Move Error')
-
-
-class Down_distence:
-    def __init__(self, dis_list, tms):
-        self.tms = tms
-        self.x = 0
-        self.dis_list = dis_list
-        self.lenth = len(self.dis_list)
-
-    def pop(self):
-        if self.x < self.lenth:
-            y = self.dis_list[self.x]
-            self.x += 1
-        else:
-            y = 0
-        return y*self.tms
-
-    def reset(self):
-        self.x = 0
+    win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, 0, int(y))
 
 
 if __name__ == '__main__':
-    import pyautogui as pag
-    i = 0
-    x, y = pag.position()
-    print(str(i) + ':', x, y)
-    while True:
-        i += 1
-        time.sleep(1)
-        mouse_down(20)
-        x, y = pag.position()
-        print(str(i) + ':', x, y)
+    pass
 

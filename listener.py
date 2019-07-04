@@ -6,7 +6,7 @@ from PIL import ImageGrab
 from PyQt5.QtCore import pyqtSignal, QObject
 
 from image_detect.detect import Detector
-from press_gun.press_listener import Press_Listener
+from press_gun.mouse_down_listener import Mouse_Press_Listener
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 from all_states import All_States, gun_next_mode
 
@@ -33,7 +33,7 @@ class All_Listener(PyKeyboardEvent):
         self.weapon2name_detect = Detector('weapon2name')
         self.weapon2scope_detect = Detector('weapon2scope')
 
-        self.press_listener = Press_Listener(self.all_states)
+        self.press_listener = None
 
         self.temp_qobject = Temp_QObject()
         print('Initial done!!!')
@@ -41,41 +41,34 @@ class All_Listener(PyKeyboardEvent):
     def tap(self, keycode, character, press):
         if keycode == 9 and press:  # tab
             self.get_screen()
+            self.stop_listen()
             threading.Timer(0.001, self.tab_func).start()
-
-        if keycode == 123 and press:  # F12
-            self.stop_listen()
-            self.print_state()
-
-        if keycode == 71 and press:  # g
-            self.stop_listen()
-            self.print_state()
-
-        if keycode == 53 and press:  # 5
-            self.stop_listen()
-            self.print_state()
 
         if keycode == 66 and press:  # b
             self.stop_listen()
             threading.Timer(0.2, self.b_func).start()
 
         if keycode == 49 and press:  # 1
+            self.stop_listen()
             self.all_states.weapon_n = 0
-            self.whether_start_listen()
             self.print_state()
 
         if keycode == 50 and press:  # 2
+            self.stop_listen()
             self.all_states.weapon_n = 1
-            self.whether_start_listen()
             self.print_state()
+
+        if keycode == 123 and press:  # F12
+            self.stop_listen()
+        if keycode == 71 and press:  # g
+            self.stop_listen()
+        if keycode == 53 and press:  # 5
+            self.stop_listen()
 
     def escape(self, event):
         return False
 
     def tab_func(self):
-        self.stop_listen()
-        # cc = crop_screen(self.screen, sc_pos['in_tab'])
-        # cv2.imwrite('cc.png', cc)
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
@@ -91,7 +84,7 @@ class All_Listener(PyKeyboardEvent):
             self.all_states.weapon[1].set_scope(self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1"))
 
             self.print_state()
-        self.whether_start_listen()
+            self.whether_start_listen()
 
     def b_func(self):
         self.get_screen()
@@ -112,15 +105,15 @@ class All_Listener(PyKeyboardEvent):
         self.whether_start_listen()
 
     def stop_listen(self):
-        if self.press_listener.is_alive():
+        if self.press_listener is not None and self.press_listener.is_alive():
             self.press_listener.stop()
 
     def whether_start_listen(self):
-        if self.press_listener.is_alive():
-            self.press_listener.stop()
-
-        self.press_listener = Press_Listener(self.all_states)
-        self.press_listener.start()
+        n = self.all_states.weapon_n
+        if self.all_states.weapon[n].name != '' and self.all_states.weapon[n].fire_mode == 'full':
+            print('00000000000000000000000000')
+            self.press_listener = Mouse_Press_Listener(self.all_states).get()
+            self.press_listener.start()
 
     def get_screen(self):
         screen = ImageGrab.grab()

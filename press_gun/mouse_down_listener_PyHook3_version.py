@@ -4,7 +4,7 @@ import PyHook3 as pyHook
 from press_gun.press import Press
 
 
-class Press_Listener(threading.Thread):
+class Mouse_Press_Listener(threading.Thread):
     def __init__(self, all_states):
         threading.Thread.__init__(self)
         self.all_states = all_states
@@ -51,5 +51,5 @@ if __name__ == '__main__':
     all_states.weapon[0].name = 'scar'
     all_states.weapon[0].scope = '1'
 
-    pl = Press_Listener(all_states)
+    pl = Mouse_Press_Listener(all_states)
     pl.run()
