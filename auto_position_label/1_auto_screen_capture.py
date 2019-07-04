@@ -1,77 +1,82 @@
-import threading
-import os
-import cv2
-import numpy as np
-from pykeyboard import PyKeyboardEvent
-from PIL import ImageGrab
-
-from auto_position_label.crop_position import screen_position_states
-from show_watermark import Show_Watermark
+import sys
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel
+from PyQt5 import QtCore, QtGui, QtWidgets
+from auto_position_label.screen_capture_listener import Key_Listener
 
 
-def get_screen():
-    screen = ImageGrab.grab()
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
-    return screen
+# class Example(QMainWindow):
+#
+#     def __init__(self):
+#         super().__init__()
+#
+#         self.listener = Key_Listener()
+#         self.listener.temp_qobject.state_str_signal[str].connect(self.change_text)
+#         self.initUI()
+#
+#     def initUI(self):
+#         font = QtGui.QFont()
+#         font.setFamily("Arial")
+#         font.setPointSize(14)
+#         self.setFont(font)
+#         self.setGeometry(50, 1300, 200, 50)
+#         # self.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
+#         # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+#
+#         self.label = QtWidgets.QLabel()
+#         self.label.setGeometry(QtCore.QRect(0, 0, 200, 50))
+#         self.label.setObjectName("label")
+#
+#         self.retranslateUi()
+#         self.show()
+#
+#     def change_text(self, text):
+#         self.label.setText("TextLabel")
+#
+#     def retranslateUi(self):
+#         _translate = QtCore.QCoreApplication.translate
+#         self.label.setText(_translate("Dialog", "TextLabel"))
+#
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     ex = Example()
+#     sys.exit(app.exec_())
 
 
-class Key_Listener(PyKeyboardEvent):
-    def __init__(self, all_states):
-        PyKeyboardEvent.__init__(self)
-        root_path = 'D:/github_project/auto_press_down_gun/auto_position_label/screen_captures'
-        os.makedirs(root_path, exist_ok=True)
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-        self.path_strs = list()
-        self.escape_c = '/'
-        for k, v in screen_position_states.items():
-            if len(v) > 0:
-                for state in v:
-                    state_fold = os.path.join(root_path, state)
-                    os.makedirs(state_fold, exist_ok=True)
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        self.listener = Key_Listener()
+        self.listener.temp_qobject.state_str_signal[str].connect(self.retranslateUi)
+        self.listener.start()
 
-                    self.path_strs.append(k + self.escape_c + state)
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(200, 50)
+        Dialog.move(50, 1300)
+        Dialog.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
+        Dialog.setWindowFlag(QtCore.Qt.FramelessWindowHint)
 
-        self.state_n_max = len(self.path_strs) - 1
-        self.state_n = 0
-        self.all_states = all_states
-        self.show = Show_Watermark()
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        Dialog.setFont(font)
+        self.label = QtWidgets.QLabel(Dialog)
+        self.label.setGeometry(QtCore.QRect(0, 0, 200, 50))
+        self.label.setObjectName("label")
 
-    def tap(self, keycode, character, press):
-        if keycode == 162 and press:  # ctrl
-            self.ctrl_func()
+        self.retranslateUi(" init")
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        if keycode == 37 and press:  # <-
-            self.left_func()
-
-        if keycode == 39 and press:  # ->
-            self.right_func()
-
-        if keycode == 164 and press:  # alt
-            self.alt_func()
+    def retranslateUi(self, text):
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("Dialog", text))
 
 
-    def escape(self, event):
-        return False
-
-    def ctrl_func(self):
-        pass
-
-    def left_func(self):
-        if self.state_n > 0:
-            self.state_n -= 1
-
-    def right_func(self):
-        if self.state_n < self.state_n_max:
-            self.state_n += 1
-
-    def alt_func(self):
-        pass
-
-
-
-
-if __name__ == '__main__':
-    from all_states import All_States
-
-    screen_cap_listener = Key_Listener(All_States())
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
