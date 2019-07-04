@@ -51,7 +51,7 @@ class Detector:
         return min_item
 
 
-def detect_1d_sum(detect_im, target_im, blur=1):
+def detect_1d_sum(detect_im, target_im, blur=0):
     min_test_res = 1000000000000
     for dx in range(-blur, blur+1):
         for dy in range(-blur, blur+1):

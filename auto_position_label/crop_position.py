@@ -74,5 +74,5 @@ screen_position_states = \
 
 
 def crop_screen(screen, pos):
-    x0, x1, y0, y1 = pos
+    x0, y0, x1, y1 = pos
     return screen[y0:y1, x0:x1, :]
