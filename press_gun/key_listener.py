@@ -41,6 +41,7 @@ class Key_Listener(PyKeyboardEvent):
             threading.Timer(0.001, self.tab_func).start()
 
         if keycode == 66 and press:  # b
+            self.all_states.dont_press = False
             threading.Timer(0.2, self.b_func).start()
 
         if keycode == 49 and press:  # 1
@@ -53,21 +54,29 @@ class Key_Listener(PyKeyboardEvent):
             if n_change:
                 self.print_state()
 
+        if keycode == 71 and press:  # g
+            self.all_states.dont_press = True
+
         if keycode == 122 and press:  # F11
-            n = self.all_states.weapon_n
-            self.press = Press(self.all_states.weapon[n].dist_seq, self.all_states.weapon[n].time_seq)
-            self.press.start()
+            if not self.all_states.dont_press:
+                n = self.all_states.weapon_n
+                self.press = Press(self.all_states.weapon[n].dist_seq, self.all_states.weapon[n].time_seq)
+                self.press.start()
 
         if keycode == 123 and not press:  # F12
-            self.press.stop()
+            if not self.all_states.dont_press:
+                if self.press.is_alive():
+                    self.press.stop()
 
     def escape(self, event):
         return False
 
     def tab_func(self):
+        self.all_states.dont_press = True
         if 'in' == self.in_tab_detect.diff_sum_classify(crop_screen(self.screen, sc_pos['in_tab'])):
             # cv2.imshow('screen', self.screen)
             # cv2.waitKey()
+            self.all_states.dont_press = False
 
             weapon1scope_crop = crop_screen(self.screen, sc_pos['weapon1scope'])
             weapon1scope = self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1")
@@ -84,7 +93,6 @@ class Key_Listener(PyKeyboardEvent):
             weapon2name_crop = crop_screen(self.screen, sc_pos['weapon2name'])
             weapon2name = self.weapon2name_detect.diff_sum_classify(weapon2name_crop)
             w2n_change = self.all_states.weapon[1].set_name(weapon2name)
-
 
             if w1n_change or w1s_change or w2n_change or w2s_change:
                 self.print_state()

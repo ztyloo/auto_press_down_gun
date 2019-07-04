@@ -103,6 +103,8 @@ class Weapon():
         is_changed = original_name != name
         if name == 'vss':
             self.scope = '4'
+        if name in full_guns:
+            self.fire_mode = 'full'
         if is_changed:
             self.dist_seq, self.time_seq = calculate_press_seq(self.name, self.scope)
         return is_changed
@@ -131,7 +133,7 @@ class Weapon():
 
 class All_States():
     def __init__(self):
-        self.in_tab = False
+        self.dont_press = False
         self.in_scope = False
 
         self.weapon_n = 0
