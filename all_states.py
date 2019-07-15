@@ -18,7 +18,7 @@ can_full_guns = ['akm', 'aug', 'groza', 'm416', 'qbz', 'scar', 'mk14', 'tommy', 
 def factor_scope(scope):
     factor = 1
     if scope == 1:
-        factor = 1.1
+        factor = 1.5
     if scope == 2:
         factor = 1.
     if scope == 3:

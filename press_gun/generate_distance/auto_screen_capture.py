@@ -67,15 +67,14 @@ class Capture_Listener(PyKeyboardEvent):
         r_x0, r_y0, r_x1, r_y1 = 1520, 250, 1920, 1150
         self.hole_counter = 0
         while True:
-            screen = win32_cap(rect=(r_x0, r_y0, r_x1, r_y1))
-            hole_centers = find_bullet_hole(screen)
+            im = win32_cap(self.all_states.weapon[0].name + '/' + str(self.hole_counter) + '.png', (r_x0, r_y0, r_x1, r_y1))
+            time.sleep(0.1)
+
+            hole_centers = find_bullet_hole(im)
             if len(hole_centers) < 2:
                 break
             x1 = hole_centers[-2][0] + r_x0
             y1 = hole_centers[-2][1] + r_y0
-
-            win32_cap(self.all_states.weapon[0].name + '/' + str(self.hole_counter) + '.png', (r_x0, r_y0, r_x1, r_y1))
-            time.sleep(0.1)
             move_screen_center_to(x1, y1-(r_y1-r_y0)//2+30)
             time.sleep(0.1)
 

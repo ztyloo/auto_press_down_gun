@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def is_there_bullet_hole(im, rect=None):
@@ -23,7 +24,7 @@ def is_there_bullet_hole(im, rect=None):
 
 def find_bullet_hole(im, rect=None):
     height_resolution = 10
-    bullet_hole_max_energy = 30
+    bullet_hole_max_energy = 15
     bullet_hole_min_confidence = 253
 
     dx0, dy0 = 0, 0
