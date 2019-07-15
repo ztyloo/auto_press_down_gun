@@ -29,9 +29,15 @@ class Key_Listener(PyKeyboardEvent):
 
         self.weapon1name_detect = Detector('weapon1name')
         self.weapon1scope_detect = Detector('weapon1scope')
+        self.weapon1muzzle_detect = Detector('weapon1muzzle')
+        self.weapon1grip_detect = Detector('weapon1grip')
+        self.weapon1butt_detect = Detector('weapon1butt')
 
         self.weapon2name_detect = Detector('weapon2name')
         self.weapon2scope_detect = Detector('weapon2scope')
+        self.weapon2muzzle_detect = Detector('weapon2muzzle')
+        self.weapon2grip_detect = Detector('weapon2grip')
+        self.weapon2butt_detect = Detector('weapon2butt')
 
         self.temp_qobject = Temp_QObject()
 
@@ -56,6 +62,9 @@ class Key_Listener(PyKeyboardEvent):
         if keycode == 71 and press:  # g
             self.all_states.dont_press = True
 
+        if keycode == 119 and press:  # F8
+            self.all_states.dont_press = True
+
         if keycode == 122 and press:  # F11
             if not self.all_states.dont_press:
                 n = self.all_states.weapon_n
@@ -73,25 +82,53 @@ class Key_Listener(PyKeyboardEvent):
     def tab_func(self):
         self.all_states.dont_press = True
         if 'in' == self.in_tab_detect.diff_sum_classify(get_screen('in_tab')):
-            # cv2.imshow('screen', self.screen)
-            # cv2.waitKey()
             self.all_states.dont_press = False
 
-            weapon1scope_crop = get_screen('weapon1scope')
-            weapon1scope = self.weapon1scope_detect.diff_sum_classify(weapon1scope_crop, absent_return="1")
-            w1s_change = self.all_states.weapon[0].set_scope(weapon1scope)
+            crop = get_screen('weapon1name')
+            res = self.weapon1name_detect.diff_sum_classify(crop)
+            w1n_change = self.all_states.weapon[0].set_name(res)
 
-            weapon1name_crop = get_screen('weapon1name')
-            weapon1name = self.weapon1name_detect.diff_sum_classify(weapon1name_crop, check=True)
-            w1n_change = self.all_states.weapon[0].set_name(weapon1name)
+            crop = get_screen('weapon1scope')
+            res = self.weapon1scope_detect.diff_sum_classify(crop, absent_return="1")
+            w1s_change = self.all_states.weapon[0].set_scope(res)
 
-            weapon2scope_crop = get_screen('weapon2scope')
-            weapon2scope = self.weapon2scope_detect.diff_sum_classify(weapon2scope_crop, absent_return="1")
-            w2s_change = self.all_states.weapon[1].set_scope(weapon2scope)
+            crop = get_screen('weapon1muzzle')
+            res = self.weapon1muzzle_detect.diff_sum_classify(crop)
+            w1m_change = self.all_states.weapon[0].set_scope(res)
 
-            weapon2name_crop = get_screen('weapon2name')
-            weapon2name = self.weapon2name_detect.diff_sum_classify(weapon2name_crop)
-            w2n_change = self.all_states.weapon[1].set_name(weapon2name)
+            crop = get_screen('weapon1grip')
+            res = self.weapon1grip_detect.diff_sum_classify(crop)
+            w1g_change = self.all_states.weapon[0].set_scope(res)
+
+            crop = get_screen('weapon1butt')
+            res = self.weapon1butt_detect.diff_sum_classify(crop)
+            w1b_change = self.all_states.weapon[0].set_scope(res)
+
+            if w1n_change or w1s_change or w1m_change or w1g_change or w1b_change:
+                self.all_states.weapon[0].set_seq()
+
+            crop = get_screen('weapon2name')
+            res = self.weapon2name_detect.diff_sum_classify(crop)
+            w2n_change = self.all_states.weapon[1].set_name(res)
+
+            crop = get_screen('weapon2scope')
+            res = self.weapon2scope_detect.diff_sum_classify(crop, absent_return="1")
+            w2s_change = self.all_states.weapon[1].set_scope(res)
+
+            crop = get_screen('weapon2muzzle')
+            res = self.weapon2muzzle_detect.diff_sum_classify(crop)
+            w2m_change = self.all_states.weapon[1].set_scope(res)
+
+            crop = get_screen('weapon2grip')
+            res = self.weapon2grip_detect.diff_sum_classify(crop)
+            w2g_change = self.all_states.weapon[1].set_scope(res)
+
+            crop = get_screen('weapon2butt')
+            res = self.weapon2butt_detect.diff_sum_classify(crop)
+            w2b_change = self.all_states.weapon[1].set_scope(res)
+
+            if w2n_change or w2s_change or w2m_change or w2g_change or w2b_change:
+                self.all_states.weapon[1].set_seq()
 
             if w1n_change or w1s_change or w2n_change or w2s_change:
                 self.print_state()
