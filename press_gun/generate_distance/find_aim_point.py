@@ -37,7 +37,7 @@ def get_6_aim_point_kernel(radius=300):
 
 if __name__ == '__main__':
     for i in range(20):
-        screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/vector/'+str(i)+'.png')
+        screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/aug/'+str(i)+'.png')
 
         x0, y0 = search_for_aim_point(screen)
         im = cv2.circle(screen, (int(x0), int(y0)), 5, (255, 0, 255), thickness=20)

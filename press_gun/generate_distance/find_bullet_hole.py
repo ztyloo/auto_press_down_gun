@@ -1,7 +1,25 @@
 import cv2
 import numpy as np
 
-from press_gun.generate_distance.find_aim_point import search_for_aim_point
+
+def is_there_bullet_hole(im, rect=(1140, 140, 2350, 1350)):
+    bullet_hole_max_energy = 30
+    bullet_hole_min_confidence = 253
+
+    dx0, dy0, dx1, dy1 = 0, 0, 0, 0
+    if rect is not None:
+        dx0, dy0, dx1, dy1 = rect
+        im = im[dy0:dy1, dx0:dx1, :]
+
+    im_grey = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+    im_black = np.where(im_grey < bullet_hole_max_energy, 255, 0).astype(np.uint8)
+
+    hole_kernel = get_hole_kernel()
+    hole_confidence = cv2.filter2D(im_black, -1, hole_kernel)
+    max_hole_conf = np.max(hole_confidence)
+    if max_hole_conf > bullet_hole_min_confidence:
+        return True
+    return False
 
 
 def search_for_bullet_hole(im, rect=(1140, 140, 2350, 1350)):
@@ -59,7 +77,7 @@ if __name__ == '__main__':
     from press_gun.generate_distance.find_aim_point import search_for_aim_point
 
     for i in range(20):
-        screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/vector/'+str(i)+'.png')
+        screen = cv2.imread('D:/github_project/auto_press_down_gun/press_gun/generate_distance/aug/'+str(i)+'.png')
 
         aim_point = search_for_aim_point(screen)
         bullet_hole_centers = search_for_bullet_hole(screen, rect=(1500, 250, 1900, aim_point[1]-20))
