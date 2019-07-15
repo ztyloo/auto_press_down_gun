@@ -149,7 +149,7 @@ class Weapon():
             self.grip_factor = 1.25
         elif self.grip == 'half':
             self.grip_factor = 0.9
-        elif self.grip == 'Angled':
+        elif self.grip == 'angled':
             self.grip_factor = 1.0
         elif self.grip == 'vertical':
             self.grip_factor = 0.85
