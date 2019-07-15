@@ -22,13 +22,13 @@ class Tracking_Aim_Point(threading.Thread):
         radius = 100
         temp_path = 'D:/github_project/auto_press_down_gun/auto_hold_breath/temp_fold/temp.png'
         im = win32_cap(temp_path, (1719 - radius, 719 - radius, 1719 + radius, 719 + radius))
-        x0, y0 = self.aim_point.search_aim_point(im, self.scope)
+        x0, y0 = self.aim_point.find(im, self.scope)
         i = 0
         while self._loop:
             radius = 100
             temp_path = 'D:/github_project/auto_press_down_gun/auto_hold_breath/temp_fold/'+str(i)+'.png'
             im = win32_cap(temp_path, (1719-radius, 719-radius,1719+radius, 719+radius))
-            x1, y1 = self.aim_point.search_aim_point(im, self.scope)
+            x1, y1 = self.aim_point.find(im, self.scope)
             dx, dy = x0 - x1, y0 - y1
             print(dx, dy)
             dx = dx if dx<10 else 0

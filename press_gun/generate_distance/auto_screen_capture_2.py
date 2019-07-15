@@ -5,8 +5,8 @@ import time
 from pykeyboard import PyKeyboardEvent
 
 from all_states import All_States
-from press_gun.generate_distance.find_bullet_hole import search_for_bullet_hole, is_there_bullet_hole
-from press_gun.generate_distance.find_aim_point import search_for_aim_point
+from press_gun.generate_distance.find_bullet_hole import find_bullet_hole, is_there_bullet_hole
+from press_gun.generate_distance.find_aim_point import find_aim_point
 from image_detect.detect import Detector
 from auto_position_label.crop_position import crop_screen, screen_position as sc_pos
 from screen_capture import win32_cap
@@ -60,7 +60,7 @@ class Capture_Listener(PyKeyboardEvent):
             time.sleep(0.05)
             self.hole_counter += 1
             save_path = os.path.join(save_fold, str(self.hole_counter)+'.png')
-            screen = win32_cap(save_path, (1500, 250, 1900, 1150))
+            screen = win32_cap(save_path, (1400, 250, 2000, 1150))
 
 
 

@@ -14,7 +14,7 @@ class Aim_Point:
         self.aim_point_max_energy = 5
         self.aim_point_min_confidence = 60
 
-    def search_aim_point(self, im, scope):
+    def find(self, im, scope):
         aim_point_kernel = self.kernal_dict[str(scope)]
         kernal_sum = np.sum(aim_point_kernel)
         im_grey = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     screen = screen[719-radius:719+radius, 1719-radius:1719+radius]
 
     aim_point = Aim_Point()
-    x0, y0 = aim_point.search_aim_point(screen, str(i))
+    x0, y0 = aim_point.find(screen, str(i))
     im = cv2.circle(screen, (int(x0), int(y0)), 2, (255, 0, 255), thickness=2)
 
     cv2.imshow('screen', screen)

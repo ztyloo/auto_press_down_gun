@@ -1,10 +1,15 @@
 import time
+import random
 import cv2
 import win32gui, win32ui, win32con, win32api
 from pykeyboard import PyKeyboardEvent
 
 
-def win32_cap(filename, rect=None):
+def win32_cap(filename=None, rect=None):
+    if filename == None:
+        i = random.randrange(1, 1000)
+        filename = 'D:/github_project/auto_press_down_gun/temp_image/'+str(i) + '.png'
+
     MoniterDev = win32api.EnumDisplayMonitors(None, None)
     w = MoniterDev[0][2][2]
     h = MoniterDev[0][2][3]
